@@ -16,16 +16,19 @@ const RADICE = path.join(__dirname, "..");
 const USCITA = path.join(RADICE, "_site");
 const ITERAZIONI = 600000;
 
+// Su GitHub il messaggio diventa un'annotazione visibile nel riepilogo del workflow.
+function errore(msg) { console.error((process.env.GITHUB_ACTIONS ? "::error::" : "") + msg); process.exit(1); }
+
 function serve(nome) {
   const v = process.env[nome];
-  if (!v) { console.error(`Manca ${nome}: impostalo tra i segreti del repository (Settings → Secrets and variables → Actions).`); process.exit(1); }
+  if (!v) errore(`Manca ${nome}: impostalo tra i segreti del repository (Settings → Secrets and variables → Actions).`);
   return v;
 }
 
 const chiaveSorgente = Buffer.from(serve("CHIAVE_SORGENTE").trim(), "base64");
-if (chiaveSorgente.length !== 32) { console.error("CHIAVE_SORGENTE non è valida: deve essere quella creata con sigilla.js."); process.exit(1); }
+if (chiaveSorgente.length !== 32) errore(`CHIAVE_SORGENTE non è valida: deve essere quella creata con sigilla.js (lunga ${chiaveSorgente.length} byte invece di 32).`);
 const password = serve("PASSWORD");
-if (password.length < 8) { console.error("La password deve avere almeno 8 caratteri."); process.exit(1); }
+if (password.length < 8) errore(`La password deve avere almeno 8 caratteri (ne ha ${password.length}).`);
 
 // Formato dei file cifrati: iv (12 byte) | testo cifrato | tag (16 byte), AES-256-GCM.
 function apri(file) {
@@ -33,7 +36,7 @@ function apri(file) {
   const d = crypto.createDecipheriv("aes-256-gcm", chiaveSorgente, b.subarray(0, 12));
   d.setAuthTag(b.subarray(b.length - 16));
   try { return Buffer.concat([d.update(b.subarray(12, b.length - 16)), d.final()]); }
-  catch (e) { console.error(`Non riesco ad aprire ${path.basename(file)}: CHIAVE_SORGENTE non corrisponde.`); process.exit(1); }
+  catch (e) { errore(`Non riesco ad aprire ${path.basename(file)}: CHIAVE_SORGENTE non corrisponde a quella usata per sigillarlo.`); }
 }
 
 // La stessa password dà la stessa chiave finché il sale non cambia: chi ha già
@@ -52,7 +55,7 @@ fs.mkdirSync(USCITA, { recursive: true });
 const guida = chiudi(apri(path.join(RADICE, "sorgente", "guida.enc")));
 const dati = JSON.stringify({ v: 1, iter: ITERAZIONI, sale: sale.toString("base64"), dati: guida.toString("base64") });
 const porta = fs.readFileSync(path.join(__dirname, "porta.html"), "utf8");
-if (porta.split("__DATI__").length !== 2) { console.error("porta.html deve contenere __DATI__ una volta sola."); process.exit(1); }
+if (porta.split("__DATI__").length !== 2) errore("porta.html deve contenere __DATI__ una volta sola.");
 fs.writeFileSync(path.join(USCITA, "index.html"), porta.replace("__DATI__", () => dati));
 fs.writeFileSync(path.join(USCITA, "quaderno-del-respiro.pdf.enc"), chiudi(apri(path.join(RADICE, "sorgente", "pdf.enc"))));
 
