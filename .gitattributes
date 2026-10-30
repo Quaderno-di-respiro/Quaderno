@@ -1,0 +1,4 @@
+# I file cifrati non vanno mai toccati da git.
+*.enc binary
+*.png binary
+* text=auto eol=lf
