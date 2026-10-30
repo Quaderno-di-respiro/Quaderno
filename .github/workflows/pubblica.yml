@@ -1,0 +1,45 @@
+# Pubblica il Quaderno su GitHub Pages, cifrato con la password del segreto PASSWORD.
+# Parte da solo a ogni aggiornamento dei file; per cambiare password si aggiorna il
+# segreto e si lancia a mano da Actions → Pubblica → Run workflow.
+name: Pubblica
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  costruisci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Cifra la guida con la password
+        run: node strumenti/cifra.js
+        env:
+          CHIAVE_SORGENTE: ${{ secrets.CHIAVE_SORGENTE }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  pubblica:
+    needs: costruisci
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.pagine.outputs.page_url }}
+    steps:
+      - id: pagine
+        uses: actions/deploy-pages@v4

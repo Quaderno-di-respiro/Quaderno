@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- L'albero nel fiume: la chioma è il respiro, il tronco la colonna, le radici i piedi.
+       Tutto dentro il cerchio sicuro delle icone adattive (raggio 40%). -->
+  <rect width="512" height="512" fill="#1B6B5C"/>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M118 372 C150 352 182 352 214 372 S278 392 310 372 S374 352 394 366" stroke="#5DC3AD" stroke-width="16"/>
+    <path d="M150 412 C178 396 206 396 234 412 S290 428 318 412 S350 400 362 406" stroke="#5DC3AD" stroke-width="12" opacity=".7"/>
+    <circle cx="256" cy="176" r="70" stroke="#F1F4F1" stroke-width="22"/>
+    <path d="M256 246 V350" stroke="#F1F4F1" stroke-width="30"/>
+    <path d="M256 340 C240 360 220 368 196 372 M256 340 C272 360 292 368 316 372" stroke="#F1F4F1" stroke-width="18"/>
+    <path d="M256 284 L320 256" stroke="#F1F4F1" stroke-width="18"/>
+  </g>
+</svg>

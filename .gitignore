@@ -1,0 +1,5 @@
+# Il sito si costruisce su GitHub; le chiavi non entrano mai nel repository.
+_site/
+*.key
+chiave-sorgente.txt
+prova-locale.txt

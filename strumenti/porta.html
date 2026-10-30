@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Quaderno del Respiro</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#F1F4F1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1412" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icona.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icona-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Quaderno">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<style>
+/* La porta d'ingresso: una sola scheda al centro, coi colori della guida. */
+:root {
+  --bg: #F1F4F1; --surface: #FFFFFF; --ink: #16201C; --muted: #55625C; --line: #D3DBD6;
+  --breath: #1B6B5C; --on-breath: #FFFFFF; --err: #A3341F;
+  --body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #0E1412; --surface: #151D1A; --ink: #E2EAE5; --muted: #9AA8A1; --line: #27332F;
+          --breath: #5DC3AD; --on-breath: #0E1412; --err: #F08A72; color-scheme: dark; }
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 1.0625rem/1.5 var(--body);
+       display: grid; place-items: center;
+       padding: max(24px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(24px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+main { width: 100%; max-width: 380px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 28px 22px; display: grid; gap: 14px; }
+img { width: 64px; height: 64px; border-radius: 14px; }
+h1 { margin: 0; font-size: 1.6rem; line-height: 1.1; letter-spacing: .01em; text-transform: uppercase; font-weight: 800; }
+p { margin: 0; color: var(--muted); }
+label { font-weight: 700; display: grid; gap: 6px; }
+input[type=password] { font: inherit; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); width: 100%; }
+input:focus-visible, button:focus-visible { outline: 3px solid var(--breath); outline-offset: 2px; }
+.ricorda { display: flex; gap: 8px; align-items: center; font-weight: 400; color: var(--muted); }
+button { font: 700 1.05rem/1 var(--body); min-height: 52px; border-radius: 10px; border: 0; background: var(--breath); color: var(--on-breath); cursor: pointer; }
+button[disabled] { opacity: .6; cursor: wait; }
+#esito { min-height: 1.5em; font-weight: 700; color: var(--err); }
+#esito.ok { color: var(--muted); font-weight: 400; }
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main id="porta" hidden>
+  <img src="icona-180.png" alt="">
+  <h1>Quaderno del Respiro</h1>
+  <p>Respiro, pavimento pelvico e piede: un metodo da praticare. Inserisci la password che ti è stata data.</p>
+  <form id="entra" autocomplete="on">
+    <label for="pw">Password
+      <input type="password" id="pw" name="password" autocomplete="current-password" required>
+    </label>
+    <label class="ricorda" for="ricorda"><input type="checkbox" id="ricorda" checked> Ricordala su questo dispositivo</label>
+    <p id="esito" role="status" aria-live="polite"></p>
+    <button type="submit" id="vai">Entra</button>
+  </form>
+</main>
+<noscript><p style="padding:24px">Per aprire il quaderno serve un browser con JavaScript attivo.</p></noscript>
+<script>
+(function () {
+  "use strict";
+  var C = __DATI__;
+  var MEM = "qg-chiave";
+  function b64(s) { return Uint8Array.from(atob(s), function (c) { return c.charCodeAt(0); }); }
+  function a64(buf) { var s = "", u = new Uint8Array(buf); for (var i = 0; i < u.length; i++) s += String.fromCharCode(u[i]); return btoa(s); }
+  function leggi(m) { try { return m.getItem(MEM); } catch (e) { return null; } }
+  function scrivi(m, v) { try { m.setItem(MEM, v); } catch (e) {} }
+  function togli() { try { localStorage.removeItem(MEM); sessionStorage.removeItem(MEM); } catch (e) {} }
+  var dati = b64(C.dati);
+  var porta = document.getElementById("porta");
+  var esito = document.getElementById("esito");
+  var vai = document.getElementById("vai");
+
+  if (!window.crypto || !crypto.subtle) {
+    porta.hidden = false;
+    esito.textContent = "Questo browser non può aprire il quaderno: aprilo con Safari o Chrome aggiornati.";
+    vai.disabled = true;
+    return;
+  }
+
+  function apriCon(k) {
+    return crypto.subtle.decrypt({ name: "AES-GCM", iv: dati.slice(0, 12) }, k, dati.slice(12))
+      .then(function (pt) { return new TextDecoder().decode(pt); });
+  }
+  function entra(html, k) {
+    // La guida decifrata può aprire anche il PDF cifrato con la stessa chiave.
+    window.QGPorta = { decifra: function (buf) { var u = new Uint8Array(buf); return crypto.subtle.decrypt({ name: "AES-GCM", iv: u.slice(0, 12) }, k, u.slice(12)); } };
+    // Solo a pagina caricata document.open() sostituisce la porta: prima accoderebbe la guida.
+    var scrivi = function () { document.open(); document.write(html); document.close(); };
+    if (document.readyState === "complete") scrivi(); else window.addEventListener("load", scrivi);
+  }
+  function importa(raw) { return crypto.subtle.importKey("raw", b64(raw), "AES-GCM", true, ["decrypt"]); }
+
+  var salvata = leggi(localStorage) || leggi(sessionStorage);
+  var prima = salvata
+    ? importa(salvata).then(function (k) { return apriCon(k).then(function (html) { entra(html, k); return true; }); })
+        .catch(function () { togli(); return false; })
+    : Promise.resolve(false);
+
+  prima.then(function (fatto) {
+    if (fatto) return;
+    porta.hidden = false;
+    if (salvata) esito.textContent = "La password è cambiata: inserisci quella nuova.";
+    document.getElementById("pw").focus();
+  });
+
+  document.getElementById("entra").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var pw = document.getElementById("pw").value;
+    vai.disabled = true;
+    esito.className = "ok";
+    esito.textContent = "Apro il quaderno…";
+    crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveKey"])
+      .then(function (base) {
+        return crypto.subtle.deriveKey({ name: "PBKDF2", salt: b64(C.sale), iterations: C.iter, hash: "SHA-256" },
+          base, { name: "AES-GCM", length: 256 }, true, ["decrypt"]);
+      })
+      .then(function (k) {
+        return apriCon(k).then(function (html) {
+          return crypto.subtle.exportKey("raw", k).then(function (raw) {
+            scrivi(document.getElementById("ricorda").checked ? localStorage : sessionStorage, a64(raw));
+            entra(html, k);
+          });
+        });
+      })
+      .catch(function () {
+        vai.disabled = false;
+        esito.className = "";
+        esito.textContent = "Password sbagliata. Riprova.";
+        document.getElementById("pw").select();
+      });
+  });
+})();
+</script>
+</body>
+</html>
