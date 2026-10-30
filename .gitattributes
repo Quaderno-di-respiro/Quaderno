@@ -1,4 +1,4 @@
-# I file cifrati non vanno mai toccati da git.
+# I file cifrati non vanno mai toccati da git (le regole dopo vincono su quelle prima).
+* text=auto eol=lf
 *.enc binary
 *.png binary
-* text=auto eol=lf
