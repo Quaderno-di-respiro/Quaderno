@@ -25,8 +25,12 @@ function serve(nome) {
   return v;
 }
 
-const chiaveSorgente = Buffer.from(serve("CHIAVE_SORGENTE").trim(), "base64");
-if (chiaveSorgente.length !== 32) errore(`CHIAVE_SORGENTE non è valida: deve essere quella creata con sigilla.js (lunga ${chiaveSorgente.length} byte invece di 32).`);
+// La chiave sono 44 caratteri che finiscono con «=»: se nel copia e incolla sono finiti
+// spazi, virgolette o a capo intorno, si prende solo lei.
+const grezza = serve("CHIAVE_SORGENTE");
+const trovata = grezza.match(/[A-Za-z0-9+/]{43}=/g);
+const chiaveSorgente = Buffer.from(trovata && trovata.length === 1 ? trovata[0] : grezza.trim(), "base64");
+if (chiaveSorgente.length !== 32) errore(`CHIAVE_SORGENTE non è valida: deve essere il contenuto di segreti/chiave-sorgente.txt, 44 caratteri che finiscono con «=» (questa ne ha ${grezza.trim().length}). Incollala di nuovo nel segreto.`);
 const password = serve("PASSWORD");
 if (password.length < 8) errore(`La password deve avere almeno 8 caratteri (ne ha ${password.length}).`);
 
