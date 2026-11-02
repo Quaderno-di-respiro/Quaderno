@@ -4,7 +4,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Quaderno del Respiro</title>
+<meta name="description" content="Respiro, piedi e mobilità per allenarti meglio e vivere meno rigido. Un metodo da praticare: test del respiro e sfida di 7 giorni gratis.">
+<!-- Fuori dai motori di ricerca finché profilo e nome non sono definitivi. -->
 <meta name="robots" content="noindex, nofollow">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="it_IT">
+<meta property="og:site_name" content="Quaderno del Respiro">
+<meta property="og:title" content="Quaderno del Respiro · Prima le radici, poi il colpo">
+<meta property="og:description" content="Respiro, piedi e mobilità per allenarti meglio e vivere meno rigido. Test del respiro e sfida di 7 giorni, gratis.">
+<meta property="og:image" content="icona-512.png">
+<meta property="og:image:width" content="512">
+<meta property="og:image:height" content="512">
+<meta property="og:image:alt" content="L'icona del Quaderno del Respiro">
+<meta name="twitter:card" content="summary">
 <meta name="theme-color" content="#F1F4F1" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0E1412" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="manifest.webmanifest">
@@ -14,54 +26,702 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Quaderno">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
+<script>
+// Chi ha una password ricordata entra nella guida senza vedere la facciata: finché la porta (in
+// fondo alla pagina) non ha provato la chiave, la pagina resta vuota, come prima.
+(function () {
+  function c(m) { try { return m.getItem("qg-chiave"); } catch (e) { return null; } }
+  try { if (window.crypto && crypto.subtle && (c(localStorage) || c(sessionStorage))) document.documentElement.className += " qg-attesa"; } catch (e) {}
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@500;700&display=swap">
 <style>
-/* La porta d'ingresso: una sola scheda al centro, coi colori della guida. */
+/* La facciata: gli stessi colori e caratteri della guida, pensata prima per il telefono. */
 :root {
-  --bg: #F1F4F1; --surface: #FFFFFF; --ink: #16201C; --muted: #55625C; --line: #D3DBD6;
-  --breath: #1B6B5C; --on-breath: #FFFFFF; --err: #A3341F;
+  --bg: #F1F4F1; --surface: #FFFFFF; --surface-2: #E5ECE8; --ink: #16201C; --muted: #55625C;
+  --line: #D3DBD6; --line-strong: #A9B6AF; --breath: #1B6B5C; --breath-soft: #D5EBE4; --on-breath: #FFFFFF;
+  --ground: #93550F; --ground-soft: #F4E5D0; --stop: #A23A2B; --stop-soft: #F6DDD8; --err: #A3341F;
+  --display: "Archivo", "Arial Narrow", system-ui, sans-serif;
   --body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --testata: 54px;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
-  :root { --bg: #0E1412; --surface: #151D1A; --ink: #E2EAE5; --muted: #9AA8A1; --line: #27332F;
-          --breath: #5DC3AD; --on-breath: #0E1412; --err: #F08A72; color-scheme: dark; }
+  :root:not([data-theme="light"]) {
+    --bg: #0E1412; --surface: #151D1A; --surface-2: #1E2925; --ink: #E2EAE5; --muted: #9AA8A1;
+    --line: #27332F; --line-strong: #43534D; --breath: #5DC3AD; --breath-soft: #183B34; --on-breath: #0E1412;
+    --ground: #E3A75B; --ground-soft: #3A2A16; --stop: #E8907F; --stop-soft: #3E1F1A; --err: #F08A72; color-scheme: dark;
+  }
 }
+:root[data-theme="dark"] {
+  --bg: #0E1412; --surface: #151D1A; --surface-2: #1E2925; --ink: #E2EAE5; --muted: #9AA8A1;
+  --line: #27332F; --line-strong: #43534D; --breath: #5DC3AD; --breath-soft: #183B34; --on-breath: #0E1412;
+  --ground: #E3A75B; --ground-soft: #3A2A16; --stop: #E8907F; --stop-soft: #3E1F1A; --err: #F08A72; color-scheme: dark;
+}
+html.qg-attesa body { display: none; }
+
 * { box-sizing: border-box; }
-html, body { height: 100%; }
-body { margin: 0; background: var(--bg); color: var(--ink); font: 400 1.0625rem/1.5 var(--body);
-       display: grid; place-items: center;
-       padding: max(24px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(24px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
-main { width: 100%; max-width: 380px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 28px 22px; display: grid; gap: 14px; }
-img { width: 64px; height: 64px; border-radius: 14px; }
-h1 { margin: 0; font-size: 1.6rem; line-height: 1.1; letter-spacing: .01em; text-transform: uppercase; font-weight: 800; }
-p { margin: 0; color: var(--muted); }
-label { font-weight: 700; display: grid; gap: 6px; }
-input[type=password] { font: inherit; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); width: 100%; }
-input:focus-visible, button:focus-visible { outline: 3px solid var(--breath); outline-offset: 2px; }
-.ricorda { display: flex; gap: 8px; align-items: center; font-weight: 400; color: var(--muted); }
-button { font: 700 1.05rem/1 var(--body); min-height: 52px; border-radius: 10px; border: 0; background: var(--breath); color: var(--on-breath); cursor: pointer; }
-button[disabled] { opacity: .6; cursor: wait; }
+html { background: var(--bg); scroll-behavior: smooth; scroll-padding-top: calc(var(--testata) + env(safe-area-inset-top, 0px) + 10px); -webkit-text-size-adjust: 100%; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 1.0625rem/1.55 var(--body); overflow-x: hidden;
+  padding-top: calc(var(--testata) + env(safe-area-inset-top, 0px)); }
+.wrap { max-width: 1040px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+p { margin: 0 0 .8em; }
+a { color: var(--breath); }
+img, svg { max-width: 100%; }
+[hidden] { display: none !important; }
+button { font: inherit; color: inherit; }
+a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible { outline: 3px solid var(--ground); outline-offset: 2px; }
+q { quotes: "«" "»"; }
+
+/* testata fissa */
+.testata { position: fixed; top: 0; left: 0; right: 0; z-index: 10; background: var(--bg); border-bottom: 1px solid var(--line); padding-top: env(safe-area-inset-top, 0px); }
+.testata .wrap { height: var(--testata); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.marchio { display: inline-flex; align-items: center; gap: 9px; min-width: 0; color: var(--ink); text-decoration: none;
+  font: 800 1.05rem/1 var(--display); font-stretch: 78%; text-transform: uppercase; letter-spacing: .02em; white-space: nowrap; }
+.marchio img { width: 28px; height: 28px; border-radius: 7px; flex: none; }
+.entra-t { flex: none; display: inline-flex; align-items: center; min-height: 40px; padding: 8px 18px; border-radius: 999px;
+  border: 1.5px solid var(--breath); color: var(--breath); font: 700 .95rem/1 var(--body); text-decoration: none; }
+.entra-t:hover { background: var(--breath-soft); }
+
+/* testi */
+.eyebrow { font: 700 .76rem/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--breath); margin: 0 0 .4em; }
+h1 { font-family: var(--display); font-weight: 800; font-stretch: 72%; font-size: clamp(3rem, 12.5vw, 6rem); line-height: .9; letter-spacing: -.005em;
+  text-transform: uppercase; margin: .12em 0 .32em; text-wrap: balance; }
+h1 em { font-style: normal; color: var(--ground); }
+h2 { font-family: var(--display); font-weight: 800; font-stretch: 78%; text-transform: uppercase; font-size: clamp(1.85rem, 7.4vw, 2.6rem); line-height: 1;
+  letter-spacing: .005em; margin: .1em 0 .45em; text-wrap: balance; }
+h3 { font-family: var(--display); font-weight: 700; font-stretch: 88%; font-size: 1.22rem; line-height: 1.2; margin: 0 0 .3em; text-wrap: balance; }
+.intro { max-width: 62ch; color: var(--muted); margin-bottom: 22px; }
+.piccolo { font-size: .9rem; color: var(--muted); }
+
+/* pulsanti */
+.btn { display: inline-flex; align-items: center; justify-content: center; text-align: center; gap: 8px; min-height: 48px; padding: 12px 18px;
+  border-radius: 10px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font: 700 1rem/1.15 var(--body);
+  text-decoration: none; cursor: pointer; }
+.btn:hover { border-color: var(--breath); }
+.btn.primary { background: var(--breath); color: var(--on-breath); border-color: var(--breath); }
+.btn.primary:hover { filter: brightness(1.06); }
+.btn.grande { min-height: 56px; font-size: 1.08rem; padding: 14px 22px; }
+.btn:disabled { opacity: .5; cursor: default; }
+/* il profilo Instagram non c'è ancora: niente aria da pulsante */
+.btn.ig-attesa, .btn.primary.ig-attesa { background: transparent; border: 1px dashed var(--line-strong); color: var(--muted); cursor: default; filter: none; }
+.fig-fb { min-height: 120px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 6px; padding: 18px 10px; color: var(--muted); font-size: .95rem; }
+.fig-fb b { font: 700 1rem var(--display); font-stretch: 85%; text-transform: uppercase; color: var(--ink); }
+
+/* sezioni */
+main > section { padding-block: 44px 46px; border-top: 1px solid var(--line); }
+main > section.apertura { border-top: 0; padding-block: 34px 44px; }
+
+/* apertura */
+.lede { font-size: 1.2rem; line-height: 1.5; color: var(--muted); max-width: 36ch; margin-bottom: 0; }
+.lede b { color: var(--ink); font-weight: 700; }
+.azioni { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+.azioni .btn { flex: 1 1 15rem; }
+.fatti { list-style: none; margin: 26px 0 0; padding: 16px 0 0; border-top: 1px dashed var(--line-strong); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.fatti li { font: 500 .78rem/1.35 var(--mono); color: var(--muted); }
+.fatti b { display: block; font: 800 1.7rem/1 var(--display); font-stretch: 80%; color: var(--ink); margin-bottom: 4px; }
+
+/* figure (le animazioni le monta figure.js) */
+figure { margin: 0; }
+.fig { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px; color: var(--ink); min-width: 0; }
+.fig svg { display: block; width: 100%; height: auto; }
+figcaption { font-size: .86rem; line-height: 1.45; color: var(--muted); margin-top: 8px; }
+svg .b { stroke: currentColor; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+svg .bf { fill: var(--surface-2); stroke: currentColor; stroke-width: 3; stroke-linejoin: round; }
+svg .br { stroke: var(--breath); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+svg .gr { stroke: var(--ground); fill: none; stroke-width: 2.5; stroke-linecap: round; }
+svg .dash { stroke-dasharray: 4 5; }
+svg .ghost { stroke: var(--line-strong); fill: none; stroke-width: 2.5; stroke-dasharray: 5 5; }
+svg .g { stroke: var(--line-strong); stroke-width: 2; }
+svg .mat { fill: var(--surface-2); }
+svg .water { stroke: var(--breath); opacity: .5; fill: none; stroke-width: 2; stroke-linecap: round; }
+svg .fbr { fill: var(--breath); }
+svg .fgr { fill: var(--ground); }
+svg .t { fill: var(--muted); font: 400 12px var(--body); }
+svg .tk { fill: var(--ink); font: 700 12.5px var(--body); }
+svg .tn { fill: var(--surface); font: 700 11px var(--mono); text-anchor: middle; dominant-baseline: central; }
+
+/* il metodo */
+.metodo { display: grid; gap: 22px; }
+.albero { padding: 10px 10px 12px; }
+.quattro { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 4px; }
+.pezzo { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.pezzo .mini { height: 84px; display: flex; align-items: center; justify-content: center; color: var(--ink); margin-bottom: 4px; }
+.pezzo .mini:empty { display: none; }
+.pezzo .mini svg { width: 100%; height: 100%; }
+.pezzo .mini svg text { display: none; }
+.pezzo h3 { margin: 0; font-size: 1.15rem; }
+.pezzo .chi { font: 700 .72rem/1.3 var(--mono); text-transform: uppercase; letter-spacing: .05em; color: var(--breath); margin: 0; }
+.pezzo.carico .chi { color: var(--ground); }
+.pezzo p:last-child { margin: 2px 0 0; font-size: .92rem; line-height: 1.4; color: var(--muted); }
+
+/* il test */
+.test { display: grid; gap: 18px; align-items: start; }
+.passi { margin: 0; padding: 0; list-style: none; counter-reset: p; display: grid; gap: 10px; }
+.passi li { counter-increment: p; display: grid; grid-template-columns: 2rem minmax(0, 1fr); gap: 10px; align-items: start; }
+.passi li::before { content: counter(p); font: 700 .9rem/2rem var(--mono); text-align: center; width: 2rem; height: 2rem; border-radius: 50%; background: var(--breath-soft); color: var(--breath); }
+.tool { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px 16px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.tool .big { font: 700 3.2rem/1 var(--mono); font-variant-numeric: tabular-nums; margin: 4px 0 0; text-align: center; }
+.tool .esito { font-weight: 700; min-height: 1.5em; margin: 0; text-align: center; }
+.soglie { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 3px; font-size: .92rem; }
+.soglie li { display: flex; justify-content: space-between; gap: 10px; padding: 5px 10px; border-radius: 6px; }
+.soglie li.attivo { background: var(--breath-soft); font-weight: 700; }
+.soglie b { font: 600 .82rem/1.6 var(--mono); font-variant-numeric: tabular-nums; }
+.storico { font: 500 .8rem/1.5 var(--mono); color: var(--muted); margin: 0; min-height: 1.2em; text-align: center; }
+.dopo { border-top: 1px dashed var(--line-strong); padding-top: 14px; display: grid; gap: 10px; text-align: center; }
+.dopo p { margin: 0; }
+
+/* esercizio di prova */
+.prova { display: grid; gap: 18px; align-items: start; }
+.prova .fig svg { max-height: 300px; }
+.scheda { margin: 0; display: grid; gap: 4px 14px; }
+.scheda dt { font: 700 .72rem/1.6 var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--breath); margin-top: 10px; }
+.scheda dt:first-child { margin-top: 0; }
+.scheda dt.ev { color: var(--ground); }
+.scheda dd { margin: 0; min-width: 0; }
+.avviso { margin-top: 16px; border-left: 4px solid var(--stop); background: var(--stop-soft); border-radius: 0 10px 10px 0; padding: 12px 14px; }
+.avviso p { margin: 0; }
+.avviso b { color: var(--stop); }
+.nota { font-size: .9rem; color: var(--muted); margin: 12px 0 0; }
+
+/* percorsi */
+.due { display: grid; gap: 14px; }
+.percorso { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px 16px; min-width: 0; }
+.percorso .tag { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font: 700 .74rem/1.3 var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--breath); margin: 0 0 8px; }
+.percorso.marziali .tag { color: var(--ground); }
+.arrivo { font: 700 .66rem/1 var(--mono); padding: 4px 8px; border-radius: 999px; box-shadow: inset 0 0 0 1px currentColor; }
+.percorso h3 { font-size: 1.4rem; }
+.punti { margin: 10px 0 0; padding-left: 1.1em; }
+.punti li { margin-bottom: 4px; }
+.punti li::marker { color: var(--breath); }
+
+/* sfida e offerta */
+.sfida-card { background: var(--breath-soft); border: 1px solid var(--breath); border-radius: 14px; padding: 18px 16px; display: grid; gap: 14px; }
+.sfida-card p { margin: 0; }
+.sfida-card .giorni { display: flex; gap: 5px; }
+.sfida-card .giorni span { flex: 1; height: 10px; border-radius: 3px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--breath); }
+.sfida-card .giorni span:first-child, .sfida-card .giorni span:last-child { background: var(--breath); }
+.sfida-card .leg { font: 600 .74rem/1.4 var(--mono); color: var(--breath); display: flex; justify-content: space-between; gap: 8px; margin-top: -8px; }
+.h-piano { font-family: var(--display); font-weight: 800; font-stretch: 80%; text-transform: uppercase; font-size: clamp(1.5rem, 6vw, 2rem); line-height: 1; margin: 38px 0 .45em; }
+.pac-griglia { display: grid; gap: 12px; }
+.pac { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.pac-lungo { border: 2px solid var(--breath); }
+.pac-testa { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.pac-testa h3 { margin: 0; font-size: 1.35rem; }
+.pac-durata { font: 700 .72rem/1 var(--mono); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); white-space: nowrap; }
+.pac-prezzo { margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; }
+.pac-euro { font: 700 1.7rem/1.1 var(--mono); font-variant-numeric: tabular-nums; }
+.pac-pieno { font: 500 1.05rem/1.1 var(--mono); color: var(--muted); }
+.pac-mese, .pac-fino { flex-basis: 100%; font: 600 .8rem/1.4 var(--mono); color: var(--muted); }
+.pac-fino { color: var(--ground); }
+.pac-dm { font-weight: 700; color: var(--breath); }
+.pac ul { margin: 2px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: .95rem; line-height: 1.4; }
+.pac li { position: relative; padding-left: 1.4em; }
+.pac li::before { content: ""; position: absolute; left: .15em; top: .38em; width: .62em; height: .34em; border-left: 2.5px solid var(--breath); border-bottom: 2.5px solid var(--breath); transform: rotate(-45deg); }
+.pac-breve { margin: 0; font-size: .95rem; color: var(--muted); }
+.pac-nota { font-size: .82rem; color: var(--muted); margin: 10px 0 0; }
+.altro { display: grid; gap: 12px; margin-top: 12px; }
+.one, .gratis { border-radius: 14px; padding: 16px; min-width: 0; }
+.one { border: 1px dashed var(--line-strong); }
+.one h3 { margin-bottom: 4px; }
+.one p { margin: 0; color: var(--muted); }
+.gratis { background: var(--surface-2); display: grid; gap: 12px; }
+.gratis p { margin: 0; }
+.cta { margin-top: 22px; padding: 20px 16px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); text-align: center; display: grid; gap: 12px; justify-items: center; }
+.cta p { margin: 0; font-size: 1.12rem; max-width: 34ch; }
+.cta .btn { width: 100%; max-width: 360px; }
+
+/* per chi è */
+.chi-griglia { display: grid; gap: 12px; }
+.lista { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; min-width: 0; }
+.lista ul { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; }
+.lista.no h3 { color: var(--ground); }
+.sicurezza { margin-top: 12px; border-left: 4px solid var(--stop); background: var(--stop-soft); border-radius: 0 14px 14px 0; padding: 14px 16px; }
+.sicurezza p { margin: 0 0 6px; }
+.sicurezza p:last-child { margin: 0; }
+.sicurezza b { color: var(--stop); }
+
+/* domande */
+.faq { display: grid; gap: 8px; max-width: 760px; }
+.faq details { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+.faq summary { cursor: pointer; list-style: none; padding: 14px 44px 14px 16px; font-weight: 700; position: relative; min-height: 48px; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font: 700 1.3rem/1 var(--mono); color: var(--breath); }
+.faq details[open] summary::after { content: "–"; }
+.faq details p { padding: 0 16px 14px; margin: 0; color: var(--muted); }
+
+/* accesso: il riquadro della password */
+.accesso { display: grid; justify-items: center; }
+#porta { width: 100%; max-width: 420px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 24px 20px; display: grid; gap: 14px; }
+#porta .marca { display: flex; align-items: center; gap: 12px; }
+#porta .marca img { width: 52px; height: 52px; border-radius: 12px; flex: none; }
+#porta h2 { margin: 0; font-size: clamp(1.6rem, 6.4vw, 2rem); }
+#porta p { margin: 0; color: var(--muted); }
+#porta form { display: grid; gap: 14px; }
+#porta label { font-weight: 700; display: grid; gap: 6px; }
+#porta input[type=password] { font: inherit; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--line-strong); background: var(--bg); color: var(--ink); width: 100%; min-height: 50px; }
+#porta .ricorda { display: flex; gap: 10px; align-items: center; font-weight: 400; color: var(--muted); min-height: 40px; }
+#porta .ricorda input { width: 20px; height: 20px; accent-color: var(--breath); }
+#porta button { font: 700 1.05rem/1 var(--body); min-height: 52px; border-radius: 10px; border: 0; background: var(--breath); color: var(--on-breath); cursor: pointer; }
+#porta button[disabled] { opacity: .6; cursor: wait; }
 #esito { min-height: 1.5em; font-weight: 700; color: var(--err); }
 #esito.ok { color: var(--muted); font-weight: 400; }
-[hidden] { display: none !important; }
+
+/* piede */
+footer { border-top: 1px solid var(--line); padding-block: 30px calc(30px + env(safe-area-inset-bottom, 0px)); }
+footer .wrap { display: grid; gap: 10px; }
+footer p { margin: 0; }
+footer .privacy { font-size: .9rem; color: var(--muted); max-width: 60ch; }
+footer .marchio { font-size: .95rem; }
+
+@media (min-width: 720px) {
+  .azioni, .fatti { max-width: 660px; }
+  .quattro { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .test { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; }
+  .prova { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 28px; }
+  .due, .chi-griglia, .altro { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pac-griglia { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .metodo { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); align-items: start; gap: 28px; }
+  .metodo .quattro { grid-column: 1 / -1; }
+  .sfida-card { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+  .sfida-card .giorni, .sfida-card .leg { grid-column: 1 / -1; }
+}
 </style>
 </head>
 <body>
-<main id="porta" hidden>
-  <img src="icona-180.png" alt="">
-  <h1>Quaderno del Respiro</h1>
-  <p>Respiro, pavimento pelvico e piede: un metodo da praticare. Inserisci la password che ti è stata data.</p>
-  <form id="entra" autocomplete="on">
-    <label for="pw">Password
-      <input type="password" id="pw" name="password" autocomplete="current-password" required>
-    </label>
-    <label class="ricorda" for="ricorda"><input type="checkbox" id="ricorda" checked> Ricordala su questo dispositivo</label>
-    <p id="esito" role="status" aria-live="polite"></p>
-    <button type="submit" id="vai">Entra</button>
-  </form>
+<header class="testata">
+  <div class="wrap">
+    <a class="marchio" href="#inizio"><img src="icona-180.png" alt="">Quaderno del Respiro</a>
+    <a class="entra-t" href="#accesso" id="vai-accesso">Entra</a>
+  </div>
+</header>
+
+<main id="facciata">
+<!-- 1. apertura -->
+<section class="apertura" id="inizio">
+  <div class="wrap">
+    <p class="eyebrow">Respiro · piedi · mobilità</p>
+    <h1>Prima le <em>radici</em>, poi il colpo</h1>
+    <p class="lede">Respiro, piedi e mobilità per <b>allenarti meglio</b> e <b>vivere meno rigido</b>. Un metodo da praticare, non da leggere.</p>
+    <div class="azioni">
+      <a class="btn primary grande" href="sfida.html">Inizia la sfida gratuita</a>
+      <a class="btn grande" href="#test">Fai il test del respiro</a>
+    </div>
+    <ul class="fatti">
+      <li><b>12</b>settimane in 3 blocchi</li>
+      <li><b>69</b>schede con figure animate</li>
+      <li><b>3</b>minuti al giorno per la sfida</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 2. il metodo in un'immagine -->
+<section id="metodo">
+  <div class="wrap">
+    <p class="eyebrow">Il metodo in un'immagine</p>
+    <h2>Un albero nel fiume</h2>
+    <div class="metodo">
+      <div>
+        <p class="intro" style="margin-bottom:12px">Il coach spiega il metodo con un'immagine. Per tirare fuori qualcuno dal fiume ti tieni a un ramo: se il ramo è marcio, cadi anche tu. Il ramo sono le anche e le spalle, il tronco è il respiro, le radici sono i piedi.</p>
+        <p class="intro">Qui non si allena la forza: si allena quello che la regge. Si parte a terra e si sale solo quando il gradino sotto è automatico.</p>
+      </div>
+      <figure class="fig albero">
+        <svg viewBox="0 0 560 300" role="img" aria-label="Albero sulla riva di un fiume: il ramo regge una persona da 100 kg, il ramo sono spalle e anche, il tronco è diaframma più pelvico, le radici sono il piede">
+          <defs>
+            <marker id="m-alb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="fgr"/></marker>
+          </defs>
+          <path class="water" d="M14 240 q20 -8 40 0 t40 0 t40 0 t40 0 t40 0"/>
+          <path class="water" d="M14 262 q20 -8 40 0 t40 0 t40 0 t40 0 t40 0"/>
+          <path class="water" d="M14 284 q20 -8 40 0 t40 0 t40 0 t40 0 t40 0"/>
+          <text class="t" x="16" y="222">fiume</text>
+          <line class="g" x1="200" y1="214" x2="548" y2="214"/>
+          <circle class="ghost" cx="392" cy="62" r="44"/>
+          <rect class="bf" x="372" y="84" width="40" height="130" rx="8"/>
+          <line class="b" x1="374" y1="120" x2="238" y2="158" stroke-width="12"/>
+          <line class="b" x1="240" y1="160" x2="240" y2="232" stroke-width="2"/>
+          <circle class="bf" cx="240" cy="244" r="11"/>
+          <line class="gr" x1="266" y1="196" x2="266" y2="238" marker-end="url(#m-alb)"/>
+          <text class="tk" x="274" y="226">100 kg</text>
+          <g class="b" stroke-width="5">
+            <path d="M384 214 C372 236 352 246 330 258"/>
+            <path d="M392 214 L392 274"/>
+            <path d="M400 214 C412 236 432 246 456 258"/>
+          </g>
+          <text class="tk" x="290" y="104" text-anchor="middle">ramo</text>
+          <text class="t" x="290" y="120" text-anchor="middle">spalle, anche</text>
+          <text class="tk" x="424" y="122">tronco</text>
+          <text class="t" x="424" y="138">diaframma + pelvico</text>
+          <text class="t" x="424" y="154">si espande tutto</text>
+          <text class="tk" x="466" y="252">radici</text>
+          <text class="t" x="466" y="268">piede, tre punti</text>
+        </svg>
+        <figcaption>Ramo debole: si spezza. Tronco senza radici: viene giù tutto l'albero. La forza serve solo se ogni pezzo regge.</figcaption>
+      </figure>
+      <div class="quattro">
+        <article class="pezzo">
+          <div class="mini" data-fig="E15" data-t="2.8" aria-hidden="true"></div>
+          <h3>Radici</h3><p class="chi">i piedi</p>
+          <p>Tre punti a terra e dita lunghe: se le radici non tengono, il resto compensa.</p>
+        </article>
+        <article class="pezzo">
+          <div class="mini" data-fig="E4" data-t="3.3" aria-hidden="true"></div>
+          <h3>Tronco</h3><p class="chi">respiro e postura</p>
+          <p>Il diaframma che scende e parla col pavimento pelvico, in un tronco che resta dritto.</p>
+        </article>
+        <article class="pezzo">
+          <div class="mini" data-fig="E57" data-t="5.1" aria-hidden="true"></div>
+          <h3>Rami</h3><p class="chi">anche, spalle, collo</p>
+          <p>Dove stanno le tensioni: prima mobili e stabili, poi ci appendi un peso.</p>
+        </article>
+        <article class="pezzo carico">
+          <div class="mini" data-fig="E28" data-t="3.0" aria-hidden="true"></div>
+          <h3>Il carico</h3><p class="chi">la forza, per ultima</p>
+          <p>Arriva quando ogni pezzo regge: stabilità prima della forza.</p>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. il test del respiro -->
+<section id="test">
+  <div class="wrap">
+    <p class="eyebrow">Il test del respiro · gratis</p>
+    <h2>Quanti secondi reggi senza aria?</h2>
+    <div class="test">
+      <div>
+        <p class="intro">Si chiama BOLT ed è il primo test del Quaderno: dura meno di un minuto e il numero resta solo sul tuo telefono.</p>
+        <ol class="passi">
+          <li>Siediti tranquillo e fai qualche respiro normale dal naso.</li>
+          <li>Dopo un'espirazione normale, non forzata, tappa il naso e tocca «Avvia apnea».</li>
+          <li>Tocca «Stop» al primo segnale: voglia di deglutire, primo spasmo, prima fame d'aria.</li>
+        </ol>
+        <p class="nota">Se alla ripresa boccheggi, sei rimasto troppo: rifallo più tardi e fermati prima.</p>
+      </div>
+      <div class="tool" id="t-bolt">
+        <p class="big" id="bolt-t" aria-live="off">0,0 s</p>
+        <button class="btn primary grande" type="button" id="bolt-b">Avvia apnea</button>
+        <p class="esito" id="bolt-e" aria-live="polite"></p>
+        <ul class="soglie" id="bolt-s">
+          <li data-min="0" data-max="20"><span>Insufficiente</span><b>sotto 20 s</b></li>
+          <li data-min="20" data-max="30"><span>Sufficiente</span><b>20–30 s</b></li>
+          <li data-min="30" data-max="40"><span>Buono</span><b>30–40 s</b></li>
+          <li data-min="40" data-max="9999"><span>Top performance</span><b>oltre 40 s</b></li>
+        </ul>
+        <p class="storico" id="bolt-h"></p>
+        <div class="dopo" id="bolt-dopo" hidden>
+          <p><b>Segnalo: rifallo dopo 7 giorni di sfida.</b></p>
+          <a class="btn primary" href="sfida.html">Inizia la sfida gratuita</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. un esercizio di prova: E64 -->
+<section id="prova">
+  <div class="wrap">
+    <p class="eyebrow">Un esercizio di prova</p>
+    <h2>Al muro: cinque respiri, non di più</h2>
+    <p class="intro">Allinea torace e bacino e allena gli addominali nel loro compito vero, buttare fuori l'aria: cinque respiri al giorno, non di più.</p>
+    <div class="prova">
+      <figure class="fig" id="fig-e64" data-anim="E64"><div class="fig-fb"><b>Al muro</b><span>Schiena al muro, gomiti avanti: inspira col cilindro, poi a bocca aperta fuori tutta l'aria.</span></div></figure>
+      <div>
+        <dl class="scheda">
+          <dt>Come</dt>
+          <dd>Schiena al muro, piedi un passo avanti, ginocchia piegate. Sacro, dorso e testa al muro, mento dentro; sotto la lombare passa la mano, non di più. Petto aperto, cioè lo sterno resta su, e spalle che cadono avanti senza alzarle; la testa tirata su e il sacro giù. Mani nella piega dell'anca, gomiti avanti a 45°, scapole lontane: la schiena alta si arrotonda un poco, la lombare no. Prima respira col cilindro. Poi un bel respiro gonfiando i fianchi, apri la bocca e butta fuori tutta l'aria, fino in fondo. Riprendi aria con la pancia. Cinque respiri così.</dd>
+          <dt>Senti</dt>
+          <dd>Inspirando, le scapole che si allontanano ancora: il respiro spinge indietro. Espirando, l'addome che diventa «duro, duro, duro, duro».</dd>
+          <dt class="ev">Evita</dt>
+          <dd>Troppo spazio sotto la lombare; il mento che sale per arrivare al muro (metti un supporto dietro la testa); le spalle alzate o tirate indietro come in palestra; di irrigidirti. Più di «cinque respiri, non di più». Di continuare se ti gira la testa o ti viene mal di testa: per il coach è «un'alterazione di pressione interna», ma tu fermati e torna al respiro normale.</dd>
+        </dl>
+        <div class="avviso"><p><b>Prima chiedi.</b> Se hai la pressione alta, sei in gravidanza o hai problemi del pavimento pelvico, chiedi prima di farlo.</p></div>
+        <p class="nota">Il cilindro: inspiri dal naso allargando prima le coste di lato, poi pancia e schiena. «Petto aperto» non vuol dire spalle indietro: le scapole si allontanano e il dorso si arrotonda un poco.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. due percorsi -->
+<section id="percorsi">
+  <div class="wrap">
+    <p class="eyebrow">Due percorsi</p>
+    <h2>Dove vuoi arrivare</h2>
+    <div class="due">
+      <article class="percorso">
+        <p class="tag">Benessere</p>
+        <h3>Il Quaderno del Respiro</h3>
+        <p>Un programma di 12 settimane in 3 blocchi: prima a terra, poi in piedi, poi sotto carico. Tre sessioni a settimana da 15–25 minuti, guidate passo per passo.</p>
+        <ul class="punti">
+          <li>Radici, tronco, rami: una sessione per tema, ogni settimana</li>
+          <li>La forza solo dopo la prova delle basi</li>
+          <li>Player guidato, 69 schede animate, test e diario</li>
+        </ul>
+      </article>
+      <article class="percorso marziali">
+        <p class="tag">Arti marziali <span class="arrivo">in arrivo</span></p>
+        <h3>Il corso di kickboxing</h3>
+        <p>Le stesse radici, portate nel colpo. Il corso è in preparazione: lo annuncio su Instagram.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 6. la sfida del mese e l'offerta -->
+<section id="offerta">
+  <div class="wrap">
+    <p class="eyebrow">La sfida del mese · gratis</p>
+    <h2>Respiro al muro, 7 giorni</h2>
+    <div class="sfida-card">
+      <p>Due esercizi, 3 minuti al giorno, per una settimana: un minuto di respiro di pancia e cinque respiri al muro. Il giorno 1 e il giorno 7 fai il test, e vedi se il tuo numero si è mosso.</p>
+      <a class="btn primary grande" href="sfida.html">Inizia la sfida gratuita</a>
+      <div class="giorni" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <p class="leg" aria-hidden="true"><span>giorno 1: test</span><span>giorno 7: test</span></p>
+    </div>
+
+    <h3 class="h-piano">Il piano personalizzato</h3>
+    <p class="intro">Il Quaderno costruito su di te: questionario, test rivisti, programma adattato e un controllo a ogni fine blocco. Tre durate: più è lunga, più cicli costruiamo sui tuoi risultati, e più conviene.</p>
+    <div id="pacchetti">
+      <p>Tre durate: trimestrale, 6 mesi, 1 anno. Il prezzo te lo scrivo in DM.</p>
+    </div>
+    <div class="altro">
+      <article class="one">
+        <h3>One to one</h3>
+        <p id="one-testo">Sessioni dal vivo, online o in presenza. Su richiesta.</p>
+      </article>
+      <div class="gratis">
+        <p><b>Oppure prova gratis:</b> due esercizi, 7 giorni, 3 minuti al giorno.</p>
+        <a class="btn" href="sfida.html">Inizia la sfida gratuita</a>
+      </div>
+    </div>
+    <div class="cta">
+      <p>Scrivi PIANO su Instagram: ti mando cosa contiene e quanto costa.</p>
+      <span class="btn primary grande" data-ig data-ig-testo="Scrivi PIANO su Instagram">Scrivi PIANO su Instagram</span>
+    </div>
+  </div>
+</section>
+
+<!-- 7. per chi è, per chi no, sicurezza -->
+<section id="per-chi">
+  <div class="wrap">
+    <p class="eyebrow">Prima di iniziare</p>
+    <h2>Per chi è, per chi no</h2>
+    <div class="chi-griglia">
+      <div class="lista">
+        <h3>Per chi è</h3>
+        <ul>
+          <li>Chi si allena, nelle arti marziali o altrove, e vuole basi più solide.</li>
+          <li>Chi si sente rigido e vuole muoversi meglio ogni giorno.</li>
+          <li>Chi ha 15–25 minuti tre volte a settimana e vuole un metodo da praticare.</li>
+        </ul>
+      </div>
+      <div class="lista no">
+        <h3>Per chi no</h3>
+        <ul>
+          <li>Chi cerca una cura: non sostituisce un medico né un fisioterapista.</li>
+          <li>Chi ha un dolore acuto o un infortunio in corso: prima il medico.</li>
+          <li>Chi vuole la forza subito: qui arriva per ultima.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="sicurezza">
+      <p><b>Sicurezza.</b> Il Quaderno non sostituisce un medico. Con un dolore che peggiora ti fermi e chiedi.</p>
+      <p>Se ti gira la testa, torna a un respiro lento e normale. Con pressione alta, in gravidanza o con problemi del pavimento pelvico, chiedi prima di fare il respiro al muro.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8. domande frequenti -->
+<section id="domande">
+  <div class="wrap">
+    <p class="eyebrow">Domande frequenti</p>
+    <h2>Le risposte brevi</h2>
+    <div class="faq">
+      <details>
+        <summary>Quanto tempo serve al giorno?</summary>
+        <p>Per la sfida, 3 minuti al giorno per 7 giorni. Il Quaderno chiede tre sessioni a settimana da 15–25 minuti, più cinque respiri al muro ogni giorno.</p>
+      </details>
+      <details>
+        <summary>Serve attrezzatura?</summary>
+        <p>No. Un tappetino o un tappeto, un muro libero e una sedia. Per qualche esercizio una bottiglietta d'acqua o un bastone.</p>
+      </details>
+      <details>
+        <summary>Funziona offline? Si installa sul telefono?</summary>
+        <p>Sì. Il Quaderno si apre dal link, si aggiunge alla schermata Home come un'app e, dopo la prima apertura, funziona anche senza internet. Test e diario restano sul telefono.</p>
+      </details>
+      <details>
+        <summary>Va bene se non ho mai fatto arti marziali?</summary>
+        <p>Sì. Il metodo parte da terra, dal respiro e dai piedi: serve a chi combatte e a chi vuole solo muoversi meglio.</p>
+      </details>
+      <details>
+        <summary>Quanto costa?</summary>
+        <p id="faq-costo">Le sfide sono gratis; il piano te lo dico in DM.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- 9. hai già la password? -->
+<section id="accesso">
+  <div class="wrap accesso">
+    <div id="porta">
+      <div class="marca">
+        <img src="icona-180.png" alt="">
+        <h2>Hai già la password?</h2>
+      </div>
+      <p>Inserisci la password che ti è stata data: si apre il tuo Quaderno.</p>
+      <form id="entra" method="post" autocomplete="on">
+        <label for="pw">Password
+          <input type="password" id="pw" name="password" autocomplete="current-password" required>
+        </label>
+        <label class="ricorda" for="ricorda"><input type="checkbox" id="ricorda" checked> Ricordala su questo dispositivo</label>
+        <p id="esito" role="status" aria-live="polite"></p>
+        <button type="submit" id="vai">Entra</button>
+      </form>
+    </div>
+  </div>
+</section>
 </main>
-<noscript><p style="padding:24px">Per aprire il quaderno serve un browser con JavaScript attivo.</p></noscript>
+
+<footer>
+  <div class="wrap">
+    <a class="marchio" href="#inizio"><img src="icona-180.png" alt="">Quaderno del Respiro</a>
+    <p><span class="btn" data-ig data-ig-testo="Segui il Quaderno su Instagram">Segui il Quaderno su Instagram</span></p>
+    <p class="privacy">Privacy: il test, la sfida e il diario restano su questo dispositivo. Non li riceve nessuno.</p>
+  </div>
+</footer>
+<noscript><p style="padding:24px">Per aprire il quaderno e usare il test serve un browser con JavaScript attivo.</p></noscript>
+
 <script>
+// La facciata: il test del respiro, le figure e l'offerta. Si avvia solo quando la facciata si vede,
+// cioè quando la guida non si apre da sola con la password ricordata.
+(function () {
+  "use strict";
+  var avviata = false, boltT0 = 0, boltRaf = 0;
+  var BOLT = "qg-bolt";
+  function $(id) { return document.getElementById(id); }
+  function leggiJSON(k) { try { return JSON.parse(localStorage.getItem(k) || "null"); } catch (e) { return null; } }
+  function scriviJSON(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }
+  function carica(src, fatto) {
+    var s = document.createElement("script");
+    s.src = src;
+    s.onload = function () { fatto(true); };
+    s.onerror = function () { fatto(false); };
+    document.body.appendChild(s);
+  }
+
+  // «Entra» in testata (e la porta, se la password ricordata non vale più): scorre al riquadro e
+  // mette il fuoco sul campo. Figure, offerta e caratteri arrivano dopo e allungano la pagina sopra
+  // il riquadro: finché chi legge non scorre da sé, la pagina resta ferma sul riquadro.
+  var tieni = false;
+  function tieniSu() { if (tieni) { try { $("accesso").scrollIntoView({ block: "start", behavior: "instant" }); } catch (x) { $("accesso").scrollIntoView(true); } } }
+  function molla() { tieni = false; }
+  function alRiquadro() {
+    var pw = $("pw");
+    try { pw.focus({ preventScroll: true }); } catch (x) { pw.focus(); }
+    tieni = true;
+    tieniSu();
+    setTimeout(molla, 8000);
+  }
+  function vaiAccesso(e) { if (e) e.preventDefault(); alRiquadro(); }
+  ["wheel", "touchstart", "keydown"].forEach(function (t) { window.addEventListener(t, molla, { passive: true }); });
+
+  // il test BOLT, con le soglie della guida
+  function secondi(ms) { return (ms / 1000).toFixed(1).replace(".", ",") + " s"; }
+  function evidenzia(ul, v) {
+    Array.prototype.forEach.call(ul.querySelectorAll("li"), function (li) { li.classList.toggle("attivo", v >= Number(li.dataset.min) && v < Number(li.dataset.max)); });
+  }
+  function giudizio(s) { return s < 20 ? "Insufficiente" : s < 30 ? "Sufficiente" : s < 40 ? "Buono" : "Top performance"; }
+  function quando(iso) { var d = new Date(iso); return isNaN(d.getTime()) ? "" : d.getDate() + "/" + (d.getMonth() + 1); }
+  function storico() {
+    var l = leggiJSON(BOLT);
+    l = Array.isArray(l) ? l.slice(-3).reverse() : [];
+    $("bolt-h").textContent = l.length ? "Ultimi: " + l.map(function (r) { return quando(r.data) + " " + r.valore + " s"; }).join(" · ") : "";
+  }
+  function gira() { $("bolt-t").textContent = secondi(performance.now() - boltT0); boltRaf = requestAnimationFrame(gira); }
+  function bolt() {
+    var b = $("bolt-b");
+    if (!boltT0) {
+      boltT0 = performance.now();
+      b.textContent = "Stop: voglia di respirare";
+      $("bolt-e").textContent = "";
+      evidenzia($("bolt-s"), -1);
+      gira();
+      return;
+    }
+    cancelAnimationFrame(boltRaf);
+    var s = (performance.now() - boltT0) / 1000; boltT0 = 0;
+    $("bolt-t").textContent = secondi(s * 1000);
+    b.textContent = "Rifai";
+    evidenzia($("bolt-s"), s);
+    var l = leggiJSON(BOLT); l = Array.isArray(l) ? l : [];
+    l.push({ data: new Date().toISOString(), valore: Math.round(s) });
+    var ok = scriviJSON(BOLT, l.slice(-10));
+    $("bolt-e").textContent = giudizio(s) + ": " + Math.round(s) + " secondi." + (ok ? " Salvato su questo dispositivo." : "");
+    $("bolt-dopo").hidden = false;
+    storico();
+  }
+
+  // le figure: quelle ferme nei quattro riquadri, quella animata dell'esercizio di prova
+  function figure() {
+    if (!window.QGFig) return tieniSu();
+    Array.prototype.forEach.call(document.querySelectorAll(".mini[data-fig]"), function (el) {
+      try { el.innerHTML = QGFig.frame(el.getAttribute("data-fig"), Number(el.getAttribute("data-t")) || 0); } catch (e) {}
+    });
+    try { QGFig.mount($("fig-e64")); } catch (e) {}
+    tieniSu();
+  }
+
+  // l'offerta e il profilo Instagram, da offerta.js
+  function offerta() {
+    if (window.QGOfferta) {
+      QGOfferta.pacchetti($("pacchetti"));
+      QGOfferta.contatti(document);
+      var one = QGOfferta.oneToOne(); if (one) $("one-testo").textContent = one;
+      if (QGOfferta.haPrezzi()) $("faq-costo").textContent = "Le sfide sono gratis. I prezzi del piano sono nell'offerta qui sopra; in DM ti dico cosa contiene.";
+    }
+    tieniSu();
+  }
+
+  function avvia() {
+    if (avviata) return;
+    avviata = true;
+    $("vai-accesso").addEventListener("click", vaiAccesso);
+    $("bolt-b").addEventListener("click", bolt);
+    storico();
+    carica("offerta.js", offerta);
+    carica("figure.js", figure);
+    try { document.fonts.ready.then(tieniSu); } catch (e) {}
+    window.addEventListener("load", tieniSu);
+  }
+  // Prima di aprire la guida: si fermano cronometro e animazioni della facciata.
+  function ferma() {
+    if (boltRaf) cancelAnimationFrame(boltRaf);
+    boltT0 = 0;
+    Array.prototype.forEach.call(document.querySelectorAll("figure[data-anim]"), function (f) { if (f._qg) f._qg.play = false; });
+  }
+  window.QGFacciata = { avvia: avvia, ferma: ferma, alRiquadro: alRiquadro };
+
+  // Protezione: il modulo non deve mai partire da solo (finirebbe la password nell'indirizzo). Di
+  // solito lo ferma già la porta qui sotto; se la porta non è partita (per esempio un browser che
+  // vieta del tutto la memoria del sito), lo si dice invece di non fare niente.
+  $("entra").addEventListener("submit", function (e) {
+    e.preventDefault();
+    setTimeout(function () {
+      if (!$("vai").disabled && !$("esito").textContent) $("esito").textContent = "Non riesco ad aprire il quaderno su questo browser: controlla che i dati del sito non siano bloccati.";
+    }, 0);
+  });
+  document.addEventListener("DOMContentLoaded", function () {
+    if (!/\bqg-attesa\b/.test(document.documentElement.className)) avvia();
+  });
+})();
+</script>
+<script>
+// La porta: la guida cifrata e la logica d'ingresso. Non cambia con la facciata.
 (function () {
   "use strict";
   var C = __DATI__;
@@ -71,13 +731,20 @@ button[disabled] { opacity: .6; cursor: wait; }
   function leggi(m) { try { return m.getItem(MEM); } catch (e) { return null; } }
   function scrivi(m, v) { try { m.setItem(MEM, v); } catch (e) {} }
   function togli() { try { localStorage.removeItem(MEM); sessionStorage.removeItem(MEM); } catch (e) {} }
+  // Con la memoria del sito bloccata anche solo leggere localStorage dà errore: si passa da qui.
+  function memoria(n) { try { return window[n]; } catch (e) { return null; } }
   var dati = b64(C.dati);
   var porta = document.getElementById("porta");
   var esito = document.getElementById("esito");
   var vai = document.getElementById("vai");
+  // La facciata compare solo quando la guida non si apre da sola (vedi lo script in testa).
+  function mostra() {
+    document.documentElement.classList.remove("qg-attesa");
+    if (window.QGFacciata) window.QGFacciata.avvia();
+  }
 
   if (!window.crypto || !crypto.subtle) {
-    porta.hidden = false;
+    mostra();
     esito.textContent = "Questo browser non può aprire il quaderno: aprilo con Safari o Chrome aggiornati.";
     vai.disabled = true;
     return;
@@ -107,12 +774,12 @@ button[disabled] { opacity: .6; cursor: wait; }
     // La guida decifrata può aprire anche il PDF cifrato con la stessa chiave.
     window.QGPorta = { decifra: function (buf) { var u = new Uint8Array(buf); return crypto.subtle.decrypt({ name: "AES-GCM", iv: u.slice(0, 12) }, k, u.slice(12)); } };
     // Solo a pagina caricata document.open() sostituisce la porta: prima accoderebbe la guida.
-    var scrivi = function () { document.open(); document.write(html); document.close(); };
+    var scrivi = function () { if (window.QGFacciata) window.QGFacciata.ferma(); document.open(); document.write(html); document.close(); };
     if (document.readyState === "complete") scrivi(); else window.addEventListener("load", scrivi);
   }
   function importa(raw) { return crypto.subtle.importKey("raw", b64(raw), "AES-GCM", true, ["decrypt"]); }
 
-  var salvata = leggi(localStorage) || leggi(sessionStorage);
+  var salvata = leggi(memoria("localStorage")) || leggi(memoria("sessionStorage"));
   var prima = salvata
     ? importa(salvata).then(apri).then(function (r) { entra(r.html, r.k); return true; })
         .catch(function () { togli(); return false; })
@@ -120,9 +787,14 @@ button[disabled] { opacity: .6; cursor: wait; }
 
   prima.then(function (fatto) {
     if (fatto) return;
-    porta.hidden = false;
-    if (salvata) esito.textContent = "La password è cambiata o non vale più: inserisci quella che ti è stata data.";
-    document.getElementById("pw").focus();
+    mostra();
+    // Chi aveva una password ricordata che non vale più va dritto al riquadro; gli altri leggono
+    // la facciata dall'inizio (il fuoco sul campo li porterebbe in fondo alla pagina).
+    if (salvata) {
+      esito.textContent = "La password è cambiata o non vale più: inserisci quella che ti è stata data.";
+      if (window.QGFacciata) window.QGFacciata.alRiquadro();
+      else { porta.scrollIntoView(); document.getElementById("pw").focus(); }
+    }
   });
 
   document.getElementById("entra").addEventListener("submit", function (e) {
@@ -141,7 +813,7 @@ button[disabled] { opacity: .6; cursor: wait; }
         // anche quando la guida si aggiorna, finché la password è nell'elenco.
         return apri(k).then(function (r) {
           return crypto.subtle.exportKey("raw", k).then(function (raw) {
-            scrivi(document.getElementById("ricorda").checked ? localStorage : sessionStorage, a64(raw));
+            scrivi(memoria(document.getElementById("ricorda").checked ? "localStorage" : "sessionStorage"), a64(raw));
             entra(r.html, r.k);
           });
         });

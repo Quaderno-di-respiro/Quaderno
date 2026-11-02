@@ -63,6 +63,69 @@ Si fa dal PC, dalla cartella dell'archivio:
 Poi si caricano su GitHub i due file nuovi in `sorgente/`: il workflow riparte da solo.
 Il file `segreti/chiave-sorgente.txt` non va mai caricato su GitHub.
 
+## La facciata e le sfide
+
+Chi apre il link senza una password ricordata vede una pagina pubblica: il metodo, il test del
+respiro (BOLT), un esercizio di prova, i due percorsi, la sfida del mese con l'offerta, e in fondo
+il riquadro «Hai già la password?». Chi ha la password ricordata entra nella guida come prima,
+senza vedere la facciata. La sfida gratuita «Respiro al muro» è una pagina a sé, `sfida.html`,
+senza password: i giorni fatti e i test restano sul telefono di chi la fa.
+
+| file | cosa |
+|---|---|
+| `strumenti/porta.html` | la facciata, con dentro la porta della guida cifrata (diventa `index.html`) |
+| `pubblici/sfida.html` | la sfida «Respiro al muro», 7 giorni |
+| `pubblici/offerta.js` | **il profilo Instagram e l'offerta: è l'unico file da toccare per cambiarli** |
+| `pubblici/figure.js` | le figure animate, copia di `guida/sorgenti/figure.js` |
+
+### Cambiare profilo, prezzi e vantaggi (anche dal telefono)
+
+Su GitHub apri `pubblici/offerta.js`, tocca la matita, cambia solo i valori in cima al file e
+salva con **Commit changes**: il workflow **Pubblica** riparte da solo e dopo un paio di minuti
+le due pagine mostrano la versione nuova.
+
+- **Instagram**: `var INSTAGRAM = "";`. Scrivi l'indirizzo intero tra le virgolette, per esempio
+  `var INSTAGRAM = "https://www.instagram.com/nomeprofilo/";`. Finché è vuoto, al posto dei link
+  compare «Scrivi PIANO su Instagram (profilo in arrivo)»; quando c'è, i pulsanti portano al
+  profilo e la sfida, al giorno 7, invita a taggare `@nomeprofilo`.
+- **Prezzi**: in ogni pacchetto `prezzo` è il prezzo pieno in euro, un numero senza virgolette
+  (`120`, oppure `89.5` col punto). Con `null` la pagina non mostra numeri e scrive «Il prezzo te
+  lo scrivo in DM». Il prezzo al mese si calcola da solo da `prezzo` e `mesi`.
+- **Prezzo di lancio**: `prezzoLancio` in ogni pacchetto, e una sola `scadenzaLancio` per tutti,
+  l'ultimo giorno valido nella forma `"AAAA-MM-GG"` (per esempio `"2026-12-31"`). Il prezzo pieno
+  barrato, il prezzo di lancio e «fino al 31 dicembre 2026» compaiono solo se ci sono `prezzo`,
+  `prezzoLancio` e `scadenzaLancio`, se il prezzo di lancio è più basso del pieno e se la data del
+  telefono non ha superato la scadenza. Sotto i pacchetti compare «Prezzo di lancio valido fino
+  alla data indicata.». Il giorno dopo la scadenza lo sconto sparisce da solo, senza ripubblicare.
+  Una data scritta in un altro modo (per esempio `31/12/2026`) vale come nessuna scadenza.
+- **Vantaggi**: `vantaggi` è l'elenco del pacchetto, una voce per riga tra virgolette, separate
+  da virgole. `breve` è la riga che compare nel riepilogo al giorno 7 della sfida.
+- **One to one**: la riga `oneToOne`.
+
+Esempio di un pacchetto con prezzo di lancio:
+
+    { nome: "Trimestrale", mesi: 3, prezzo: 120, prezzoLancio: 99, breve: "…", vantaggi: [ … ] },
+
+Se qualcosa si rompe (una virgola o una virgoletta in meno), le pagine restano in piedi e
+mostrano il testo di riserva: «Tre durate: trimestrale, 6 mesi, 1 anno. Il prezzo te lo scrivo
+in DM.». Ricontrolla la riga cambiata.
+
+### Altre cose da sapere
+
+- **Motori di ricerca**: `strumenti/porta.html` e `pubblici/sfida.html` hanno
+  `<meta name="robots" content="noindex, nofollow">`. Quando profilo e nome sono definitivi si
+  toglie quella riga da tutti e due. Nello stesso momento conviene scrivere per intero l'indirizzo
+  dell'immagine dell'anteprima (`og:image`, oggi `icona-512.png`), per esempio
+  `https://nome.github.io/quaderno/icona-512.png`: alcune app la vogliono completa.
+- **Le figure**: quando cambia `guida/sorgenti/figure.js`, copialo di nuovo in `pubblici/figure.js`.
+- **I testi degli esercizi** della facciata (E64) e della sfida (E1, E64) sono copiati dalle schede
+  della guida: se cambia la scheda, aggiornali lì.
+- **Senza internet**: il service worker (`pubblici/sw.js`) salva ogni pagina col suo indirizzo, la
+  radice come `index.html`, così aprire la sfida non sovrascrive la copia della guida. Una pagina
+  pubblica nuova si aggiunge all'elenco `FILE` in cima a `pubblici/sw.js`.
+- **I dati sul telefono**: la sfida usa la chiave `qg-sfida-respiro` di localStorage, il test
+  della facciata `qg-bolt`. Il BOLT fatto oggi sulla facciata vale come test del giorno 1.
+
 ## Prima pubblicazione
 
 1. Crea il repository e carica questi file (senza `_site/`).

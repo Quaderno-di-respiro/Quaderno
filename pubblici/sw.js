@@ -1,10 +1,17 @@
 // Quaderno del Respiro: funziona anche senza internet.
-// La pagina si chiede prima alla rete (così gli aggiornamenti arrivano) e, offline,
-// si prende dalla memoria; tutto il resto si serve dalla memoria. Cambiare VERSIONE
-// a ogni pubblicazione fa ripartire la memoria con i file nuovi.
+// Le pagine si chiedono prima alla rete (così gli aggiornamenti arrivano) e, offline, si prendono
+// dalla memoria; tutto il resto si serve dalla memoria. Ogni pagina si salva col suo indirizzo
+// (la radice come index.html): aprire sfida.html non sovrascrive la copia della facciata e della
+// guida. Cambiare VERSIONE a ogni pubblicazione fa ripartire la memoria con i file nuovi.
 const VERSIONE = "qg-__VERSIONE__";
 const FONT = "qg-font";
-const FILE = ["./", "index.html", "manifest.webmanifest", "icona.svg", "icona-180.png", "icona-192.png", "icona-512.png", "quaderno-del-respiro.pdf.enc"];
+const FILE = ["./", "index.html", "sfida.html", "figure.js", "offerta.js", "manifest.webmanifest", "icona.svg", "icona-180.png", "icona-192.png", "icona-512.png", "quaderno-del-respiro.pdf.enc"];
+const RADICE = new URL("index.html", self.location).href;
+
+// L'indirizzo con cui si salva una pagina: senza ?… e #…, e «cartella/» diventa «cartella/index.html».
+function pagina(u) {
+  return u.origin + (u.pathname.endsWith("/") ? u.pathname + "index.html" : u.pathname);
+}
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(VERSIONE).then((c) => c.addAll(FILE)).then(() => self.skipWaiting()));
@@ -31,10 +38,19 @@ self.addEventListener("fetch", (e) => {
   if (u.origin !== self.location.origin) return;
 
   if (r.mode === "navigate") {
+    const chiave = pagina(u);
     e.respondWith(
       fetch(r)
-        .then((res) => { const copia = res.clone(); caches.open(VERSIONE).then((c) => c.put("index.html", copia)); return res; })
-        .catch(() => caches.match("index.html"))
+        .then((res) => {
+          // Si salva solo una pagina vera: niente errori (404) e niente redirezioni, che Safari
+          // rifiuta quando poi gliele si serve dalla memoria.
+          if (res.ok && !res.redirected) {
+            const copia = res.clone();
+            e.waitUntil(caches.open(VERSIONE).then((c) => c.put(chiave, copia)));
+          }
+          return res;
+        })
+        .catch(() => caches.match(chiave).then((m) => m || caches.match(RADICE)))
     );
     return;
   }

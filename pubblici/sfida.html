@@ -1,0 +1,780 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Respiro al muro · Quaderno del Respiro</title>
+<meta name="description" content="Sfida gratuita di 7 giorni, 3 minuti al giorno: un minuto di respiro di pancia e cinque respiri al muro. Test il giorno 1 e il giorno 7.">
+<!-- Fuori dai motori di ricerca finché profilo e nome non sono definitivi. -->
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="it_IT">
+<meta property="og:site_name" content="Quaderno del Respiro">
+<meta property="og:title" content="Respiro al muro · la sfida gratuita di 7 giorni">
+<meta property="og:description" content="3 minuti al giorno: un minuto di respiro di pancia e cinque respiri al muro. Il test il giorno 1 e il giorno 7.">
+<meta property="og:image" content="icona-512.png">
+<meta property="og:image:width" content="512">
+<meta property="og:image:height" content="512">
+<meta property="og:image:alt" content="L'icona del Quaderno del Respiro">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#F1F4F1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1412" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icona.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icona-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* La sfida «Respiro al muro»: gli stessi colori e caratteri della guida e della facciata. */
+:root {
+  --bg: #F1F4F1; --surface: #FFFFFF; --surface-2: #E5ECE8; --ink: #16201C; --muted: #55625C;
+  --line: #D3DBD6; --line-strong: #A9B6AF; --breath: #1B6B5C; --breath-soft: #D5EBE4; --on-breath: #FFFFFF;
+  --ground: #93550F; --ground-soft: #F4E5D0; --stop: #A23A2B; --stop-soft: #F6DDD8;
+  --display: "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --testata: 54px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E1412; --surface: #151D1A; --surface-2: #1E2925; --ink: #E2EAE5; --muted: #9AA8A1;
+    --line: #27332F; --line-strong: #43534D; --breath: #5DC3AD; --breath-soft: #183B34; --on-breath: #0E1412;
+    --ground: #E3A75B; --ground-soft: #3A2A16; --stop: #E8907F; --stop-soft: #3E1F1A; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E1412; --surface: #151D1A; --surface-2: #1E2925; --ink: #E2EAE5; --muted: #9AA8A1;
+  --line: #27332F; --line-strong: #43534D; --breath: #5DC3AD; --breath-soft: #183B34; --on-breath: #0E1412;
+  --ground: #E3A75B; --ground-soft: #3A2A16; --stop: #E8907F; --stop-soft: #3E1F1A; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { background: var(--bg); scroll-behavior: smooth; scroll-padding-top: calc(var(--testata) + env(safe-area-inset-top, 0px) + 10px); -webkit-text-size-adjust: 100%; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 1.0625rem/1.55 var(--body); overflow-x: hidden;
+  padding-top: calc(var(--testata) + env(safe-area-inset-top, 0px)); }
+.wrap { max-width: 980px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+p { margin: 0 0 .8em; }
+a { color: var(--breath); }
+img, svg { max-width: 100%; }
+[hidden] { display: none !important; }
+button, select { font: inherit; color: inherit; }
+a:focus-visible, button:focus-visible, select:focus-visible { outline: 3px solid var(--ground); outline-offset: 2px; }
+q { quotes: "«" "»"; }
+
+/* testata */
+.testata { position: fixed; top: 0; left: 0; right: 0; z-index: 10; background: var(--bg); border-bottom: 1px solid var(--line); padding-top: env(safe-area-inset-top, 0px); }
+.testata .wrap { height: var(--testata); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.marchio { display: inline-flex; align-items: center; gap: 9px; min-width: 0; color: var(--ink); text-decoration: none;
+  font: 800 1.05rem/1 var(--display); font-stretch: 78%; text-transform: uppercase; letter-spacing: .02em; white-space: nowrap; }
+.marchio img { width: 28px; height: 28px; border-radius: 7px; flex: none; }
+.dove { flex: none; font: 700 .8rem/1 var(--mono); color: var(--breath); padding: 8px 12px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px var(--breath); white-space: nowrap; }
+
+/* testi */
+.eyebrow { font: 700 .76rem/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--breath); margin: 0 0 .4em; }
+h1 { font-family: var(--display); font-weight: 800; font-stretch: 72%; font-size: clamp(3rem, 14vw, 5.6rem); line-height: .9; text-transform: uppercase; margin: .12em 0 .3em; text-wrap: balance; }
+h2 { font-family: var(--display); font-weight: 800; font-stretch: 78%; text-transform: uppercase; font-size: clamp(1.8rem, 7.2vw, 2.4rem); line-height: 1; margin: .1em 0 .45em; text-wrap: balance; }
+h3 { font-family: var(--display); font-weight: 700; font-stretch: 88%; font-size: 1.22rem; line-height: 1.2; margin: 0 0 .3em; text-wrap: balance; }
+.lede { font-size: 1.18rem; line-height: 1.5; color: var(--muted); max-width: 40ch; }
+.intro { max-width: 62ch; color: var(--muted); }
+main > section { padding-block: 34px 38px; border-top: 1px solid var(--line); }
+main > section.cima { border-top: 0; padding-top: 28px; }
+
+/* pulsanti */
+.btn { display: inline-flex; align-items: center; justify-content: center; text-align: center; gap: 8px; min-height: 48px; padding: 12px 18px;
+  border-radius: 10px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font: 700 1rem/1.15 var(--body); text-decoration: none; cursor: pointer; }
+.btn:hover { border-color: var(--breath); }
+.btn.primary { background: var(--breath); color: var(--on-breath); border-color: var(--breath); }
+.btn.grande { min-height: 58px; font-size: 1.1rem; padding: 14px 22px; }
+.btn:disabled { opacity: .5; cursor: default; }
+.btn.tocca { min-height: 72px; font-size: 1.15rem; width: 100%; }
+.btn.ig-attesa, .btn.primary.ig-attesa { background: transparent; border: 1px dashed var(--line-strong); color: var(--muted); cursor: default; }
+.link { background: none; border: 0; padding: 6px 0; color: var(--muted); text-decoration: underline; cursor: pointer; font: inherit; font-size: .92rem; }
+
+/* in cima */
+.tre { display: grid; gap: 12px; margin-top: 22px; }
+.tre > div { border-top: 2px solid var(--breath); padding-top: 10px; min-width: 0; }
+.tre p { margin: 0; color: var(--muted); }
+.avviso { margin-top: 18px; border-left: 4px solid var(--stop); background: var(--stop-soft); border-radius: 0 12px 12px 0; padding: 12px 14px; }
+.avviso p { margin: 0 0 6px; }
+.avviso p:last-child { margin: 0; }
+.avviso b { color: var(--stop); }
+
+/* i 7 giorni */
+.sette { list-style: none; margin: 4px 0 12px; padding: 0; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+.sette li { aspect-ratio: 1; max-height: 64px; border-radius: 10px; display: grid; place-items: center; font: 700 1rem/1 var(--mono);
+  background: var(--surface); color: var(--muted); box-shadow: inset 0 0 0 1px var(--line-strong); position: relative; }
+.sette li.test::after { content: "test"; position: absolute; bottom: -1.35em; left: 0; right: 0; text-align: center; font: 600 .62rem/1 var(--mono); color: var(--muted); letter-spacing: .03em; }
+.sette li.fatta { background: var(--breath); color: var(--on-breath); box-shadow: none; }
+.sette li.oggi { box-shadow: inset 0 0 0 3px var(--breath); color: var(--breath); }
+.stato { font-weight: 700; margin: 22px 0 4px; }
+.salto { color: var(--muted); margin: 0; }
+.memoria { margin-top: 12px; font-size: .92rem; color: var(--stop); }
+
+/* strumenti dei test */
+.test-griglia { display: grid; gap: 14px; }
+.tool { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.tool h3 { margin: 0; }
+.tool .come { font-size: .95rem; color: var(--muted); margin: 0; }
+.tool .big { font: 700 2.8rem/1 var(--mono); font-variant-numeric: tabular-nums; margin: 4px 0; text-align: center; }
+.tool .esito { font-weight: 700; min-height: 1.5em; margin: 0; text-align: center; }
+.soglie { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 3px; font-size: .9rem; }
+.soglie li { display: flex; justify-content: space-between; gap: 10px; padding: 4px 10px; border-radius: 6px; }
+.soglie li.attivo { background: var(--breath-soft); font-weight: 700; }
+.soglie b { font: 600 .8rem/1.6 var(--mono); font-variant-numeric: tabular-nums; }
+.usa { display: grid; gap: 8px; padding: 10px 12px; border-radius: 10px; background: var(--breath-soft); font-size: .95rem; }
+.usa p { margin: 0; }
+
+/* il mini-player */
+.passi-tab { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.passi-tab button { text-align: left; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line-strong); background: var(--surface); cursor: pointer; min-height: 60px; }
+.passi-tab button b { display: block; font: 700 1rem/1.2 var(--body); }
+.passi-tab button small { display: block; font: 600 .74rem/1.3 var(--mono); color: var(--muted); margin-top: 3px; }
+.passi-tab button[aria-pressed="true"] { border: 2px solid var(--breath); background: var(--breath-soft); }
+.passi-tab button.fatto small::after { content: " · fatto"; color: var(--breath); }
+.passo { display: grid; gap: 14px; align-items: start; }
+.passo .fig svg { max-height: 220px; margin: 0 auto; }
+.comandi { display: grid; gap: 10px; justify-items: center; text-align: center; }
+.comandi .btn { width: 100%; max-width: 360px; }
+.passo h3 { font-size: 1.35rem; margin: 0; }
+.clock { font: 700 2.2rem/1 var(--mono); font-variant-numeric: tabular-nums; margin: 0; }
+.clock small { display: block; font: 600 .82rem/1.3 var(--mono); color: var(--muted); margin-top: 6px; }
+.clock.conta { font-size: 1.55rem; }
+.ritmo { display: inline-flex; gap: 8px; align-items: center; font-size: .92rem; color: var(--muted); min-height: 40px; }
+.ritmo select { color: var(--ink); background: var(--surface); border: 1px solid var(--line-strong); border-radius: 8px; padding: 6px 8px; }
+.pacer-box { width: min(170px, 46vw); aspect-ratio: 1; position: relative; display: grid; place-items: center; }
+.pacer-ring { position: absolute; inset: 0; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--line); }
+.pacer-dot { position: absolute; inset: 0; border-radius: 50%; background: var(--breath-soft); box-shadow: inset 0 0 0 3px var(--breath); transform: scale(.42); will-change: transform; }
+.pacer-lab { position: relative; font: 800 1rem/1.15 var(--display); font-stretch: 85%; text-transform: uppercase; color: var(--breath); padding: 0 14px; margin: 0; }
+.pacer-lab small { display: block; font: 700 1.6rem/1.1 var(--mono); color: var(--ink); text-transform: none; margin-top: 2px; }
+.pacer-lab small:empty { display: none; }
+.cinque { list-style: none; margin: 0; padding: 0; display: flex; gap: 8px; justify-content: center; }
+.cinque li { width: 18px; height: 18px; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--breath); }
+.cinque li.si { background: var(--breath); }
+.cinque li.ora { background: var(--breath-soft); box-shadow: inset 0 0 0 3px var(--ground); }
+.fine-passo { font-weight: 700; color: var(--breath); margin: 0; }
+.scheda { margin: 0; display: grid; gap: 2px; }
+.scheda dt { font: 700 .72rem/1.6 var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--breath); margin-top: 10px; }
+.scheda dt:first-child { margin-top: 0; }
+.scheda dt.ev { color: var(--ground); }
+.scheda dd { margin: 0; }
+.avviso.piccolo { margin-top: 12px; font-size: .95rem; }
+.fatto-box { margin-top: 22px; padding-top: 18px; border-top: 1px dashed var(--line-strong); display: grid; gap: 8px; justify-items: center; text-align: center; }
+.fatto-box .btn { width: 100%; max-width: 360px; }
+.fatto-box p { margin: 0; font-weight: 700; color: var(--breath); min-height: 1.5em; }
+
+/* figure */
+figure { margin: 0; }
+.fig { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px; color: var(--ink); min-width: 0; }
+.fig svg { display: block; width: 100%; height: auto; }
+.fig-fb { min-height: 120px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 6px; padding: 18px 10px; color: var(--muted); font-size: .95rem; }
+.fig-fb b { font: 700 1rem var(--display); font-stretch: 85%; text-transform: uppercase; color: var(--ink); }
+svg .b { stroke: currentColor; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+svg .bf { fill: var(--surface-2); stroke: currentColor; stroke-width: 3; stroke-linejoin: round; }
+svg .br { stroke: var(--breath); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+svg .gr { stroke: var(--ground); fill: none; stroke-width: 2.5; stroke-linecap: round; }
+svg .dash { stroke-dasharray: 4 5; }
+svg .ghost { stroke: var(--line-strong); fill: none; stroke-width: 2.5; stroke-dasharray: 5 5; }
+svg .g { stroke: var(--line-strong); stroke-width: 2; }
+svg .mat { fill: var(--surface-2); }
+svg .water { stroke: var(--breath); opacity: .5; fill: none; stroke-width: 2; stroke-linecap: round; }
+svg .fbr { fill: var(--breath); }
+svg .fgr { fill: var(--ground); }
+svg .t { fill: var(--muted); font: 400 12px var(--body); }
+svg .tk { fill: var(--ink); font: 700 12.5px var(--body); }
+svg .tn { fill: var(--surface); font: 700 11px var(--mono); text-anchor: middle; dominant-baseline: central; }
+
+/* il giorno 7 */
+.confronto { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.conf { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; min-width: 0; display: grid; gap: 6px; }
+.conf h3 { margin: 0; font-size: 1.05rem; }
+.conf .riga { display: flex; justify-content: space-between; gap: 8px; font: 600 .82rem/1.4 var(--mono); color: var(--muted); }
+.conf .riga b { color: var(--ink); font-size: 1rem; }
+.conf .delta { font: 700 1.5rem/1.1 var(--mono); color: var(--muted); margin-top: 2px; }
+.conf .delta.meglio { color: var(--breath); }
+.frase { font: 800 1.5rem/1.15 var(--display); font-stretch: 85%; text-transform: uppercase; margin: 20px 0 6px; text-wrap: balance; }
+.h-piano { margin-top: 28px; }
+.pac-griglia { display: grid; gap: 10px; }
+.pac { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.pac-lungo { border: 2px solid var(--breath); }
+.pac-testa { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.pac-testa h3 { margin: 0; font-size: 1.25rem; }
+.pac-durata { font: 700 .72rem/1 var(--mono); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); white-space: nowrap; }
+.pac-prezzo { margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; }
+.pac-euro { font: 700 1.5rem/1.1 var(--mono); font-variant-numeric: tabular-nums; }
+.pac-pieno { font: 500 1rem/1.1 var(--mono); color: var(--muted); }
+.pac-mese, .pac-fino { flex-basis: 100%; font: 600 .78rem/1.4 var(--mono); color: var(--muted); }
+.pac-fino { color: var(--ground); }
+.pac-dm { font-weight: 700; color: var(--breath); }
+.pac-breve { margin: 0; font-size: .95rem; color: var(--muted); }
+.pac ul { margin: 2px 0 0; padding-left: 1.1em; font-size: .95rem; }
+.pac-nota { font-size: .82rem; color: var(--muted); margin: 10px 0 0; }
+.one { margin-top: 10px; border: 1px dashed var(--line-strong); border-radius: 14px; padding: 14px 16px; }
+.one p { margin: 0; color: var(--muted); }
+.cta { margin-top: 18px; padding: 18px 16px; border-radius: 14px; background: var(--breath-soft); text-align: center; display: grid; gap: 12px; justify-items: center; }
+.cta p { margin: 0; font-size: 1.08rem; max-width: 34ch; }
+.cta .btn { width: 100%; max-width: 360px; }
+.condividi { margin-top: 14px; padding: 14px 16px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); }
+.condividi p { margin: 0; }
+
+/* piede */
+footer { border-top: 1px solid var(--line); padding-block: 26px calc(30px + env(safe-area-inset-bottom, 0px)); }
+footer .wrap { display: grid; gap: 10px; }
+footer p { margin: 0; }
+.privacy { font-size: .9rem; color: var(--muted); }
+.conferma { border: 1px solid var(--stop); border-radius: 12px; padding: 14px; display: grid; gap: 10px; background: var(--surface); }
+.conferma .bottoni { display: flex; flex-wrap: wrap; gap: 8px; }
+.conferma .btn { flex: 1 1 10rem; }
+.conferma .si { background: var(--stop); border-color: var(--stop); color: var(--on-breath); }
+
+@media (min-width: 720px) {
+  .tre { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+  .test-griglia, .pac-griglia { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pac-griglia { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .passo { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; }
+  .passo .testi { grid-column: 2; grid-row: 1 / span 2; }
+  .sette li { max-height: none; }
+  .sette { max-width: 560px; }
+}
+</style>
+</head>
+<body>
+<header class="testata">
+  <div class="wrap">
+    <a class="marchio" href="./"><img src="icona-180.png" alt="">Quaderno del Respiro</a>
+    <span class="dove" id="dove">Giorno 1/7</span>
+  </div>
+</header>
+
+<main>
+<!-- in cima: cos'è, perché, cosa misuri, avvertenze -->
+<section class="cima">
+  <div class="wrap">
+    <p class="eyebrow">Sfida gratuita · 7 giorni</p>
+    <h1>Respiro al muro</h1>
+    <p class="lede">Tre minuti al giorno, per sette giorni, sempre la stessa routine: un minuto di respiro di pancia e cinque respiri al muro.</p>
+    <div class="tre">
+      <div>
+        <h3>Cos'è</h3>
+        <p>Due esercizi del Quaderno. Il primo insegna al diaframma a scendere; il secondo allinea torace e bacino e fa lavorare gli addominali nel loro compito vero, buttare fuori l'aria.</p>
+      </div>
+      <div>
+        <h3>Perché sempre la stessa</h3>
+        <p>Il metodo sale per gradini: si va avanti quando un gesto è diventato automatico. Ripeterlo ogni giorno serve a questo, e rende il confronto onesto: cambia solo il giorno.</p>
+      </div>
+      <div>
+        <h3>Cosa misuri</h3>
+        <p>Il giorno 1 e il giorno 7 fai due test da un minuto: il BOLT, i secondi che reggi senza aria dopo un'espirazione normale, e i respiri al minuto.</p>
+      </div>
+    </div>
+    <div class="avviso">
+      <p><b>Prima di iniziare.</b> Se hai la pressione alta, sei in gravidanza o hai problemi del pavimento pelvico, chiedi prima di fare il respiro al muro.</p>
+      <p>Se ti gira la testa o ti viene mal di testa, fermati e torna al respiro normale. La sfida non sostituisce un medico: con un dolore che peggiora ti fermi e chiedi.</p>
+    </div>
+  </div>
+</section>
+
+<!-- i 7 giorni -->
+<section id="giorni">
+  <div class="wrap">
+    <p class="eyebrow">I 7 giorni</p>
+    <ol class="sette" id="sette" aria-label="I giorni della sfida">
+      <li class="test">1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li class="test">7</li>
+    </ol>
+    <p class="stato" id="stato" aria-live="polite">Giorno 1 di 7: oggi i test e la prima routine.</p>
+    <p class="salto" id="salto">Se salti un giorno non si blocca niente: riparti da qui.</p>
+    <p class="memoria" id="memoria" hidden>Questo browser non salva i dati della pagina: la sfida funziona, ma chiudendola perdi i giorni fatti e i test.</p>
+  </div>
+</section>
+
+<!-- il giorno 1 e il giorno 7: i test -->
+<section id="test" hidden>
+  <div class="wrap">
+    <p class="eyebrow" id="test-occhiello">Il giorno 1</p>
+    <h2 id="test-titolo">Prima della routine, i due test</h2>
+    <p class="intro" id="test-intro">Seduto e tranquillo, prima degli esercizi. I numeri restano su questo telefono: il giorno 7 li rifai nelle stesse condizioni e li confronti.</p>
+    <div class="test-griglia">
+      <div class="tool" id="t-bolt">
+        <h3>BOLT: apnea dopo l'espirazione</h3>
+        <p class="come">Seduto e tranquillo, qualche respiro normale dal naso. Dopo un'espirazione normale, non forzata, tappa il naso e avvia. Ferma al primo segnale: voglia di deglutire, primo spasmo, prima fame d'aria. Se alla ripresa boccheggi, sei rimasto troppo.</p>
+        <div class="usa" id="bolt-usa" hidden>
+          <p id="bolt-usa-t"></p>
+          <button class="btn" type="button" id="bolt-usa-b">Usa questo risultato</button>
+        </div>
+        <p class="big" id="bolt-t">0,0 s</p>
+        <button class="btn primary grande" type="button" id="bolt-b">Avvia apnea</button>
+        <p class="esito" id="bolt-e" aria-live="polite"></p>
+        <ul class="soglie" id="bolt-s">
+          <li data-min="0" data-max="20"><span>Insufficiente</span><b>sotto 20 s</b></li>
+          <li data-min="20" data-max="30"><span>Sufficiente</span><b>20–30 s</b></li>
+          <li data-min="30" data-max="40"><span>Buono</span><b>30–40 s</b></li>
+          <li data-min="40" data-max="9999"><span>Top performance</span><b>oltre 40 s</b></li>
+        </ul>
+      </div>
+      <div class="tool" id="t-resp">
+        <h3>Respiri al minuto</h3>
+        <p class="come">Seduto, rilassato, appoggiato allo schienale se c'è. Respira normalmente: avvia il minuto e tocca il pulsante grande a ogni inspirazione. Non rallentare apposta perché ti osservi.</p>
+        <p class="big" id="resp-t">1:00</p>
+        <button class="btn primary grande" type="button" id="resp-b">Avvia 60 s</button>
+        <button class="btn tocca" type="button" id="resp-tap" disabled>Inspiro · 0</button>
+        <p class="esito" id="resp-e" aria-live="polite"></p>
+        <ul class="soglie" id="resp-s">
+          <li data-min="0" data-max="7"><span>Top</span><b>6 o meno</b></li>
+          <li data-min="7" data-max="13"><span>Va benissimo</span><b>7–12</b></li>
+          <li data-min="13" data-max="999"><span>Alto</span><b>oltre 12</b></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- il giorno 7: il confronto -->
+<section id="fine" hidden>
+  <div class="wrap">
+    <p class="eyebrow">Il giorno 7</p>
+    <h2>Il confronto</h2>
+    <div class="confronto" id="confronto"></div>
+    <p class="frase" id="frase"></p>
+    <h2 class="h-piano">Se vuoi continuare</h2>
+    <p class="intro">Il piano personalizzato parte dai tuoi numeri: il Quaderno costruito su di te, in tre durate.</p>
+    <div id="pacchetti"><p>Tre durate: trimestrale, 6 mesi, 1 anno. Il prezzo te lo scrivo in DM.</p></div>
+    <div class="one"><p><b>One to one</b> · <span id="one-testo">Sessioni dal vivo, online o in presenza. Su richiesta.</span></p></div>
+    <div class="cta">
+      <p>Per il piano o per il one to one, scrivi PIANO su Instagram: ti mando cosa contiene e quanto costa.</p>
+      <span class="btn primary grande" data-ig data-ig-testo="Scrivi PIANO su Instagram">Scrivi PIANO su Instagram</span>
+    </div>
+    <div class="condividi">
+      <p><b>Condividilo nelle storie.</b> Fai uno screenshot del confronto e pubblicalo taggando <span data-ig-nome>il profilo del Quaderno</span>.</p>
+    </div>
+  </div>
+</section>
+<!-- la routine di oggi -->
+<section id="routine">
+  <div class="wrap">
+    <p class="eyebrow" id="routine-occhiello">La routine di oggi</p>
+    <h2>Tre minuti, due esercizi</h2>
+    <div class="passi-tab">
+      <button type="button" id="tab-1" aria-pressed="true" aria-controls="passo-1"><b>1 · Respiro di pancia</b><small>1 minuto</small></button>
+      <button type="button" id="tab-2" aria-pressed="false" aria-controls="passo-2"><b>2 · Al muro</b><small>5 respiri</small></button>
+    </div>
+
+    <div class="passo" id="passo-1">
+      <figure class="fig" data-anim="E1" id="fig-e1"><div class="fig-fb"><b>Respiro di pancia</b><span>Pancia in su, una mano sulla pancia che sale col respiro.</span></div></figure>
+      <div class="comandi">
+        <h3>Respiro di pancia, supino</h3>
+        <div class="pacer-box"><div class="pacer-ring"></div><div class="pacer-dot" id="p1-dot"></div><p class="pacer-lab" id="p1-lab">Pronto<small id="p1-sec"></small></p></div>
+        <p class="clock" id="p1-clock">1:00</p>
+        <button class="btn primary grande" type="button" id="p1-via">Avvia il minuto</button>
+        <label class="ritmo" for="p1-ritmo">Ritmo
+          <select id="p1-ritmo">
+            <option value="4-5" selected>4 s dentro, 5 fuori</option>
+            <option value="3-4">3 s dentro, 4 fuori</option>
+          </select>
+        </label>
+        <p class="fine-passo" id="p1-fine" hidden>Fatto il minuto.</p>
+        <button class="btn" type="button" id="p1-avanti" hidden>Avanti: al muro</button>
+      </div>
+      <dl class="scheda testi">
+        <dt>Come</dt>
+        <dd>Pancia in su, ginocchia piegate e piedi a terra (o polpacci su una sedia), mento un po' dentro. Una mano sul petto, una sulla pancia. Solo naso: la pancia si gonfia inspirando e si sgonfia espirando.</dd>
+        <dt>Senti</dt>
+        <dd>La mano sulla pancia che sale e scende; quella sul petto quasi ferma.</dd>
+        <dt class="ev">Evita</dt>
+        <dd>Di correre: 3–4 secondi dentro, 4–5 fuori. Di gonfiare la pancia spingendo con gli addominali o inarcando la schiena: la pancia sale da sola, perché il diaframma scende. Il petto si muove un po', va bene, ma cerca la pancia.</dd>
+      </dl>
+    </div>
+
+    <div class="passo" id="passo-2" hidden>
+      <figure class="fig" data-anim="E64" id="fig-e64"><div class="fig-fb"><b>Al muro</b><span>Schiena al muro, gomiti avanti: inspira col cilindro, poi a bocca aperta fuori tutta l'aria.</span></div></figure>
+      <div class="comandi">
+        <h3>Al muro: cinque respiri</h3>
+        <div class="pacer-box"><div class="pacer-ring"></div><div class="pacer-dot" id="p2-dot"></div><p class="pacer-lab" id="p2-lab">Pronto<small id="p2-sec"></small></p></div>
+        <ol class="cinque" id="p2-pallini" aria-hidden="true"><li></li><li></li><li></li><li></li><li></li></ol>
+        <p class="clock conta" id="p2-conta">0 di 5<small>uno alla volta: tocca per il prossimo</small></p>
+        <button class="btn primary grande" type="button" id="p2-via">Inizia il respiro 1</button>
+        <p class="fine-passo" id="p2-fine" hidden>Cinque respiri, non di più: per oggi basta così.</p>
+      </div>
+      <div class="testi">
+        <dl class="scheda">
+          <dt>Come</dt>
+          <dd>Schiena al muro, piedi un passo avanti, ginocchia piegate. Sacro, dorso e testa al muro, mento dentro; sotto la lombare passa la mano, non di più. Petto aperto, cioè lo sterno resta su, e spalle che cadono avanti senza alzarle; la testa tirata su e il sacro giù. Mani nella piega dell'anca, gomiti avanti a 45°, scapole lontane: la schiena alta si arrotonda un poco, la lombare no. Prima respira col cilindro. Poi un bel respiro gonfiando i fianchi, apri la bocca e butta fuori tutta l'aria, fino in fondo. Riprendi aria con la pancia. Cinque respiri così.</dd>
+          <dt>Senti</dt>
+          <dd>Inspirando, le scapole che si allontanano ancora: il respiro spinge indietro. Espirando, l'addome che diventa «duro, duro, duro, duro».</dd>
+          <dt class="ev">Evita</dt>
+          <dd>Troppo spazio sotto la lombare; il mento che sale per arrivare al muro (metti un supporto dietro la testa); le spalle alzate o tirate indietro come in palestra; di irrigidirti. Più di «cinque respiri, non di più». Di continuare se ti gira la testa o ti viene mal di testa: per il coach è «un'alterazione di pressione interna», ma tu fermati e torna al respiro normale.</dd>
+        </dl>
+        <div class="avviso piccolo"><p><b>Prima chiedi</b> se hai la pressione alta, sei in gravidanza o hai problemi del pavimento pelvico.</p></div>
+      </div>
+    </div>
+
+    <div class="fatto-box" id="fatto-box">
+      <button class="btn primary grande" type="button" id="fatto">Fatto oggi</button>
+      <p id="fatto-e" aria-live="polite"></p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><a href="./">Il Quaderno del Respiro</a></p>
+    <p class="privacy">Privacy: i giorni fatti e i test restano su questo dispositivo. Non li riceve nessuno.</p>
+    <p><button class="link" type="button" id="ricomincia">Ricomincia la sfida</button></p>
+    <div class="conferma" id="conferma" hidden role="group" aria-labelledby="conferma-t">
+      <p id="conferma-t">Ricominci da zero: cancelli i giorni fatti e i test di questa sfida su questo dispositivo.</p>
+      <div class="bottoni">
+        <button class="btn si" type="button" id="conferma-si">Sì, ricomincia</button>
+        <button class="btn" type="button" id="conferma-no">No, lascia così</button>
+      </div>
+    </div>
+  </div>
+</footer>
+<noscript><p style="padding:24px">Per usare cronometri e contatori della sfida serve un browser con JavaScript attivo.</p></noscript>
+
+<script src="offerta.js"></script>
+<script src="figure.js"></script>
+<script>
+(function () {
+  "use strict";
+  // Tutto in localStorage, chiave qg-sfida-respiro; senza storage la pagina funziona, ma non ricorda.
+  var CHIAVE = "qg-sfida-respiro", BOLT_FACCIATA = "qg-bolt";
+  var lessMotion = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : { matches: false };
+  function $(id) { return document.getElementById(id); }
+  function due(n) { return (n < 10 ? "0" : "") + n; }
+  function oggi(d) { d = d || new Date(); return d.getFullYear() + "-" + due(d.getMonth() + 1) + "-" + due(d.getDate()); }
+  function ieri() { var d = new Date(); d.setDate(d.getDate() - 1); return oggi(d); }
+  function mmss(ms) { var s = Math.max(0, Math.ceil(ms / 1000)); return Math.floor(s / 60) + ":" + due(s % 60); }
+  function secondi(ms) { return (ms / 1000).toFixed(1).replace(".", ",") + " s"; }
+  function numero(v) { return typeof v === "number" && isFinite(v) && v >= 0 ? v : null; }
+
+  // ---- i dati ----
+  var memoria = true;
+  function nuovo() { return { v: 1, inizio: null, fatti: [], test: { g1: { bolt: null, resp: null }, g7: { bolt: null, resp: null } } }; }
+  function carica() {
+    var s = null;
+    try { s = JSON.parse(localStorage.getItem(CHIAVE) || "null"); } catch (e) { memoria = false; s = null; }
+    if (!s || typeof s !== "object" || !Array.isArray(s.fatti)) return nuovo();
+    var v = nuovo();
+    v.inizio = typeof s.inizio === "string" ? s.inizio : null;
+    v.fatti = s.fatti.filter(function (d) { return typeof d === "string" && /^\d{4}-\d{2}-\d{2}$/.test(d); }).slice(0, 7);
+    ["g1", "g7"].forEach(function (g) {
+      var t = s.test && s.test[g] ? s.test[g] : {};
+      v.test[g] = { bolt: numero(t.bolt), resp: numero(t.resp) };
+    });
+    return v;
+  }
+  function salva() {
+    try { localStorage.setItem(CHIAVE, JSON.stringify(S)); memoria = true; } catch (e) { memoria = false; }
+    $("memoria").hidden = memoria;
+  }
+  var S = carica();
+
+  function stato() {
+    var n = S.fatti.length, fattoOggi = S.fatti.indexOf(oggi()) !== -1;
+    return { n: n, fattoOggi: fattoOggi, giorno: n >= 7 ? 7 : fattoOggi ? n : n + 1, finita: n >= 7 };
+  }
+  function fase() { var g = stato().giorno; return g === 1 ? "g1" : g === 7 ? "g7" : null; }
+
+  // ---- schermo acceso dove si può ----
+  var lock = null, vuole = false;
+  function sveglio(si) {
+    vuole = si;
+    try {
+      if (si) {
+        if (lock || !navigator.wakeLock || !navigator.wakeLock.request) return;
+        navigator.wakeLock.request("screen").then(function (l) {
+          lock = l;
+          try { l.addEventListener("release", function () { if (lock === l) lock = null; }); } catch (e) {}
+          if (!vuole) { lock = null; l.release().catch(function () {}); }
+        }).catch(function () {});
+      } else if (lock) { var l = lock; lock = null; l.release().catch(function () {}); }
+    } catch (e) {}
+  }
+  document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible" && vuole) sveglio(true); });
+
+  // ---- le soglie ----
+  function evidenzia(ul, v) {
+    Array.prototype.forEach.call(ul.querySelectorAll("li"), function (li) { li.classList.toggle("attivo", v >= Number(li.dataset.min) && v < Number(li.dataset.max)); });
+  }
+  function giudizioBolt(s) { return s < 20 ? "Insufficiente" : s < 30 ? "Sufficiente" : s < 40 ? "Buono" : "Top performance"; }
+  function giudizioResp(n) { return n <= 6 ? "Top" : n <= 12 ? "Va benissimo" : "Alto"; }
+
+  // ---- BOLT, come nella facciata ----
+  var boltT0 = 0, boltRaf = 0;
+  function boltGira() { $("bolt-t").textContent = secondi(performance.now() - boltT0); boltRaf = requestAnimationFrame(boltGira); }
+  function boltSalva(s) {
+    var f = fase(); if (!f) return;
+    S.test[f].bolt = s; salva();
+    $("bolt-e").textContent = giudizioBolt(s) + ": " + s + " secondi." + (memoria ? " Salvato." : "");
+    disegnaTest(); disegnaFine();
+  }
+  $("bolt-b").addEventListener("click", function () {
+    if (!boltT0) {
+      boltT0 = performance.now(); $("bolt-b").textContent = "Stop: voglia di respirare"; $("bolt-e").textContent = "";
+      evidenzia($("bolt-s"), -1); boltGira(); return;
+    }
+    cancelAnimationFrame(boltRaf);
+    var s = (performance.now() - boltT0) / 1000; boltT0 = 0;
+    $("bolt-t").textContent = secondi(s * 1000); $("bolt-b").textContent = "Rifai";
+    evidenzia($("bolt-s"), s);
+    boltSalva(Math.round(s));
+  });
+  // Il BOLT fatto oggi sulla pagina principale vale come test del giorno 1: non serve rifarlo subito.
+  function boltDiOggi() {
+    try {
+      var l = JSON.parse(localStorage.getItem(BOLT_FACCIATA) || "null");
+      var r = Array.isArray(l) && l.length ? l[l.length - 1] : null;
+      return r && numero(r.valore) !== null && oggi(new Date(r.data)) === oggi() ? r.valore : null;
+    } catch (e) { return null; }
+  }
+  $("bolt-usa-b").addEventListener("click", function () {
+    var v = boltDiOggi(); if (v === null) return;
+    $("bolt-t").textContent = v + " s"; evidenzia($("bolt-s"), v); $("bolt-b").textContent = "Rifai";
+    boltSalva(v);
+  });
+
+  // ---- respiri al minuto ----
+  var respN = 0, respTimer = 0;
+  $("resp-b").addEventListener("click", function () {
+    var fine = performance.now() + 60000;
+    respN = 0;
+    $("resp-tap").disabled = false; $("resp-tap").textContent = "Inspiro · 0";
+    $("resp-e").textContent = ""; $("resp-b").disabled = true;
+    evidenzia($("resp-s"), -1);
+    sveglio(true);
+    clearInterval(respTimer);
+    respTimer = setInterval(function () {
+      var r = fine - performance.now();
+      if (r > 0) { $("resp-t").textContent = mmss(r); return; }
+      clearInterval(respTimer); respTimer = 0;
+      $("resp-t").textContent = "0:00"; $("resp-tap").disabled = true; $("resp-b").disabled = false; $("resp-b").textContent = "Rifai";
+      evidenzia($("resp-s"), respN);
+      sveglio(attivo());
+      var f = fase(); if (!f) return;
+      S.test[f].resp = respN; salva();
+      $("resp-e").textContent = giudizioResp(respN) + ": " + respN + " respiri al minuto." + (memoria ? " Salvato." : "");
+      disegnaFine();
+    }, 200);
+  });
+  $("resp-tap").addEventListener("click", function () { respN++; $("resp-tap").textContent = "Inspiro · " + respN; });
+
+  // ---- il cerchio del respiro ----
+  function cerchio(dot, scala) { dot.style.transform = "scale(" + (lessMotion.matches ? (scala > 0.71 ? 1 : 0.42) : scala.toFixed(3)) + ")"; }
+  function morbido(q) { return 0.5 - 0.5 * Math.cos(Math.PI * Math.min(1, Math.max(0, q))); }
+
+  // passo 1: E1, un minuto col cerchio
+  var P1 = { stato: "pronto", resta: 60000, t: 0, ultimo: 0, raf: 0 };
+  function ritmo() { var v = $("p1-ritmo").value.split("-"); return [Number(v[0]) * 1000, Number(v[1]) * 1000]; }
+  function disegnaP1() {
+    var via = $("p1-via");
+    via.textContent = P1.stato === "corsa" ? "Pausa" : P1.stato === "pausa" ? "Riprendi" : P1.stato === "fine" ? "Rifai il minuto" : "Avvia il minuto";
+    $("p1-clock").textContent = mmss(P1.resta);
+    var lab = $("p1-lab"), sec = $("p1-sec"), dot = $("p1-dot");
+    if (P1.stato !== "corsa") {
+      cerchio(dot, 0.42);
+      lab.firstChild.nodeValue = P1.stato === "pausa" ? "In pausa" : P1.stato === "fine" ? "Fatto" : "Pronto";
+      sec.textContent = "";
+      return;
+    }
+    var c = ritmo(), tot = c[0] + c[1], t = P1.t % tot, dentro = t < c[0];
+    var e = morbido(dentro ? t / c[0] : (t - c[0]) / c[1]);
+    cerchio(dot, dentro ? 0.42 + 0.58 * e : 1 - 0.58 * e);
+    lab.firstChild.nodeValue = dentro ? "Inspira" : "Espira";
+    sec.textContent = String(Math.ceil((dentro ? c[0] - t : tot - t) / 1000));
+  }
+  function giraP1(ora) {
+    if (P1.stato !== "corsa") return;
+    var dt = Math.min(1000, ora - P1.ultimo); P1.ultimo = ora;
+    P1.resta -= dt; P1.t += dt;
+    if (P1.resta <= 0) {
+      P1.resta = 0; P1.stato = "fine";
+      $("p1-fine").hidden = false; $("p1-avanti").hidden = false;
+      $("tab-1").classList.add("fatto");
+      disegnaP1(); return;
+    }
+    disegnaP1();
+    P1.raf = requestAnimationFrame(giraP1);
+  }
+  function fermaP1() { if (P1.stato === "corsa") { P1.stato = "pausa"; cancelAnimationFrame(P1.raf); disegnaP1(); } }
+  $("p1-via").addEventListener("click", function () {
+    if (P1.stato === "corsa") { fermaP1(); sveglio(attivo()); return; }
+    if (P1.stato === "fine" || P1.stato === "pronto") { P1.resta = 60000; P1.t = 0; $("p1-fine").hidden = true; $("p1-avanti").hidden = true; }
+    P1.stato = "corsa"; P1.ultimo = performance.now();
+    sveglio(true);
+    P1.raf = requestAnimationFrame(giraP1);
+  });
+  $("p1-ritmo").addEventListener("change", function () { P1.t = 0; disegnaP1(); });
+  $("p1-avanti").addEventListener("click", function () { passo(2); $("routine").scrollIntoView({ block: "start" }); });
+
+  // passo 2: E64, cinque respiri guidati uno alla volta
+  var DENTRO = 5000, FUORI = 5000;
+  var P2 = { n: 0, stato: "pronto", t0: 0, raf: 0 };
+  function disegnaP2(ora) {
+    var lab = $("p2-lab"), sec = $("p2-sec"), dot = $("p2-dot"), via = $("p2-via");
+    var inCorso = P2.stato === "dentro" || P2.stato === "fuori";
+    Array.prototype.forEach.call($("p2-pallini").children, function (li, i) {
+      li.className = i < P2.n ? "si" : (inCorso && i === P2.n ? "ora" : "");
+    });
+    $("p2-conta").firstChild.nodeValue = inCorso ? "Respiro " + (P2.n + 1) + " di 5" : P2.n + " di 5";
+    via.disabled = P2.stato === "fine";
+    via.textContent = inCorso ? "Ferma questo respiro" : P2.stato === "fine" ? "Cinque respiri fatti" : P2.n ? "Respiro " + (P2.n + 1) + " di 5" : "Inizia il respiro 1";
+    $("p2-fine").hidden = P2.stato !== "fine";
+    if (!inCorso) {
+      cerchio(dot, 0.42);
+      lab.firstChild.nodeValue = P2.stato === "attesa" ? "Riprendi aria con la pancia" : P2.stato === "fine" ? "Basta così" : "Pronto";
+      sec.textContent = "";
+      return;
+    }
+    var t = (ora || performance.now()) - P2.t0;
+    if (P2.stato === "dentro") { cerchio(dot, 0.42 + 0.58 * morbido(t / DENTRO)); lab.firstChild.nodeValue = "Inspira · gonfia i fianchi"; sec.textContent = String(Math.ceil((DENTRO - t) / 1000)); }
+    else { cerchio(dot, 1 - 0.58 * morbido((t - DENTRO) / FUORI)); lab.firstChild.nodeValue = "Bocca aperta · fuori tutta l'aria"; sec.textContent = ""; }
+  }
+  function giraP2(ora) {
+    if (P2.stato !== "dentro" && P2.stato !== "fuori") return;
+    var t = ora - P2.t0;
+    if (t >= DENTRO + FUORI) {
+      P2.n++;
+      P2.stato = P2.n >= 5 ? "fine" : "attesa";
+      if (P2.stato === "fine") { $("tab-2").classList.add("fatto"); sveglio(attivo()); }
+      disegnaP2(ora); return;
+    }
+    P2.stato = t < DENTRO ? "dentro" : "fuori";
+    disegnaP2(ora);
+    P2.raf = requestAnimationFrame(giraP2);
+  }
+  $("p2-via").addEventListener("click", function () {
+    if (P2.stato === "dentro" || P2.stato === "fuori") { // si ferma: quel respiro non conta
+      cancelAnimationFrame(P2.raf); P2.stato = P2.n ? "attesa" : "pronto"; disegnaP2(); sveglio(attivo()); return;
+    }
+    if (P2.stato === "fine") return;
+    P2.stato = "dentro"; P2.t0 = performance.now();
+    sveglio(true);
+    P2.raf = requestAnimationFrame(giraP2);
+  });
+  function fermaP2() { if (P2.stato === "dentro" || P2.stato === "fuori") { cancelAnimationFrame(P2.raf); P2.stato = P2.n ? "attesa" : "pronto"; disegnaP2(); } }
+  function attivo() { return P1.stato === "corsa" || P2.stato === "dentro" || P2.stato === "fuori" || !!respTimer; }
+
+  function passo(k) {
+    if (k === 2) fermaP1(); else fermaP2();
+    sveglio(attivo());
+    $("passo-1").hidden = k !== 1; $("passo-2").hidden = k !== 2;
+    $("tab-1").setAttribute("aria-pressed", k === 1 ? "true" : "false");
+    $("tab-2").setAttribute("aria-pressed", k === 2 ? "true" : "false");
+  }
+  $("tab-1").addEventListener("click", function () { passo(1); });
+  $("tab-2").addEventListener("click", function () { passo(2); });
+
+  // ---- «Fatto oggi» ----
+  $("fatto").addEventListener("click", function () {
+    var st = stato();
+    if (st.fattoOggi || st.finita) return;
+    if (!S.inizio) S.inizio = oggi();
+    S.fatti.push(oggi());
+    salva();
+    fermaP1(); fermaP2(); sveglio(false);
+    var n = S.fatti.length;
+    $("fatto-e").textContent = n >= 7 ? "Settimana completata." : "Segnato il giorno " + n + ". A domani.";
+    disegna();
+    if (n >= 7) $(S.test.g7.bolt !== null || S.test.g7.resp !== null ? "fine" : "test").scrollIntoView({ block: "start" });
+  });
+
+  // ---- disegno della pagina ----
+  function disegnaGiorni() {
+    var st = stato();
+    Array.prototype.forEach.call($("sette").children, function (li, i) {
+      li.classList.toggle("fatta", i < st.n);
+      li.classList.toggle("oggi", !st.fattoOggi && !st.finita && i === st.n);
+      li.setAttribute("aria-label", "Giorno " + (i + 1) + (i < st.n ? ", fatto" : !st.fattoOggi && i === st.n ? ", oggi" : ""));
+    });
+    $("dove").textContent = st.finita ? "Fatta 7/7" : "Giorno " + st.giorno + "/7";
+    var t;
+    if (st.finita) t = "Sfida completata: sette giorni su sette.";
+    else if (st.fattoOggi) t = st.n === 6 ? "Giorno 6 fatto. Domani il giorno 7: di nuovo i test, poi il confronto." : "Giorno " + st.n + " fatto. Domani il giorno " + (st.n + 1) + ".";
+    else if (st.n === 0) t = "Giorno 1 di 7: oggi i test e la prima routine.";
+    else if (st.n === 6) t = "Giorno 7 di 7: prima i test, poi l'ultima routine.";
+    else t = "Giorno " + (st.n + 1) + " di 7.";
+    $("stato").textContent = t;
+    var ultimo = st.n ? S.fatti[st.n - 1] : null;
+    $("salto").textContent = !st.finita && !st.fattoOggi && ultimo && ultimo < ieri()
+      ? "Hai saltato qualche giorno: non si blocca niente, riparti da qui."
+      : "Se salti un giorno non si blocca niente: riparti da qui.";
+    $("routine-occhiello").textContent = st.finita ? "La routine, se vuoi continuare" : "La routine di oggi";
+    $("fatto").hidden = st.fattoOggi || st.finita;
+    $("fatto-box").hidden = st.finita && !$("fatto-e").textContent;
+  }
+  function disegnaTest() {
+    var f = fase();
+    $("test").hidden = !f;
+    if (!f) return;
+    var g7 = f === "g7";
+    $("test-occhiello").textContent = g7 ? "Il giorno 7" : "Il giorno 1";
+    $("test-titolo").textContent = g7 ? "Di nuovo i due test" : "Prima della routine, i due test";
+    $("test-intro").textContent = g7
+      ? "Nelle stesse condizioni del giorno 1: seduto e tranquillo, prima degli esercizi. Poi trovi il confronto."
+      : "Seduto e tranquillo, prima degli esercizi. I numeri restano su questo telefono: il giorno 7 li rifai nelle stesse condizioni e li confronti.";
+    var t = S.test[f];
+    if (!boltT0) {
+      if (t.bolt !== null) { $("bolt-t").textContent = t.bolt + " s"; evidenzia($("bolt-s"), t.bolt); $("bolt-b").textContent = "Rifai"; if (!$("bolt-e").textContent) $("bolt-e").textContent = giudizioBolt(t.bolt) + ": " + t.bolt + " secondi."; }
+      else { $("bolt-t").textContent = "0,0 s"; evidenzia($("bolt-s"), -1); $("bolt-b").textContent = "Avvia apnea"; $("bolt-e").textContent = ""; }
+    }
+    if (!respTimer) {
+      if (t.resp !== null) { $("resp-t").textContent = "0:00"; evidenzia($("resp-s"), t.resp); $("resp-b").textContent = "Rifai"; if (!$("resp-e").textContent) $("resp-e").textContent = giudizioResp(t.resp) + ": " + t.resp + " respiri al minuto."; }
+      else { $("resp-t").textContent = "1:00"; evidenzia($("resp-s"), -1); $("resp-b").textContent = "Avvia 60 s"; $("resp-e").textContent = ""; }
+    }
+    var usa = f === "g1" && t.bolt === null ? boltDiOggi() : null;
+    $("bolt-usa").hidden = usa === null;
+    if (usa !== null) $("bolt-usa-t").textContent = "Oggi hai già fatto il BOLT sulla pagina del Quaderno: " + usa + " secondi. Non serve rifarlo subito.";
+  }
+  function voce(nome, unita, a, b, meglioSeAlto) {
+    var h = '<div class="conf"><h3>' + nome + "</h3>";
+    h += '<p class="riga"><span>Giorno 1</span><b>' + (a !== null ? a + unita : "—") + "</b></p>";
+    h += '<p class="riga"><span>Giorno 7</span><b>' + (b !== null ? b + unita : "—") + "</b></p>";
+    if (a !== null && b !== null) {
+      var d = b - a, meglio = meglioSeAlto ? d > 0 : d < 0;
+      h += '<p class="delta' + (meglio ? " meglio" : "") + '">' + (d > 0 ? "+" : d < 0 ? "−" : "±") + Math.abs(d) + unita + "</p>";
+    }
+    return h + "</div>";
+  }
+  function disegnaFine() {
+    var st = stato(), g1 = S.test.g1, g7 = S.test.g7;
+    var mostra = st.giorno === 7 && (g7.bolt !== null || g7.resp !== null);
+    $("fine").hidden = !mostra;
+    if (!mostra) return;
+    $("confronto").innerHTML = voce("BOLT", " s", g1.bolt, g7.bolt, true) + voce("Respiri al minuto", "", g1.resp, g7.resp, false);
+    var confronto = (g1.bolt !== null && g7.bolt !== null) || (g1.resp !== null && g7.resp !== null);
+    var meglio = (g1.bolt !== null && g7.bolt !== null && g7.bolt > g1.bolt) || (g1.resp !== null && g7.resp !== null && g7.resp < g1.resp);
+    $("frase").textContent = !confronto
+      ? "Senza il test del giorno 1 non c'è un confronto: il numero di oggi è il tuo punto di partenza."
+      : meglio ? "Il tuo numero è cambiato in 7 giorni." : "Sette giorni sono pochi per alcuni: il piano parte proprio da qui.";
+  }
+  function disegna() { disegnaGiorni(); disegnaTest(); disegnaFine(); }
+
+  // ---- ricomincia, con conferma dentro la pagina ----
+  $("ricomincia").addEventListener("click", function () { $("conferma").hidden = false; $("conferma-no").focus(); });
+  $("conferma-no").addEventListener("click", function () { $("conferma").hidden = true; });
+  $("conferma-si").addEventListener("click", function () {
+    S = nuovo(); salva();
+    fermaP1(); fermaP2(); sveglio(false);
+    P1 = { stato: "pronto", resta: 60000, t: 0, ultimo: 0, raf: 0 }; P2 = { n: 0, stato: "pronto", t0: 0, raf: 0 };
+    $("p1-fine").hidden = true; $("p1-avanti").hidden = true; $("tab-1").classList.remove("fatto"); $("tab-2").classList.remove("fatto");
+    $("bolt-e").textContent = ""; $("resp-e").textContent = ""; $("fatto-e").textContent = "";
+    $("conferma").hidden = true;
+    passo(1); disegnaP1(); disegnaP2(); disegna();
+    window.scrollTo(0, 0);
+  });
+
+  // ---- avvio ----
+  if (window.QGFig) { try { QGFig.mount($("fig-e1")); QGFig.mount($("fig-e64")); } catch (e) {} }
+  if (window.QGOfferta) {
+    QGOfferta.pacchetti($("pacchetti"), { breve: true });
+    QGOfferta.contatti(document);
+    var one = QGOfferta.oneToOne(); if (one) $("one-testo").textContent = one;
+  }
+  $("memoria").hidden = memoria;
+  disegnaP1(); disegnaP2(); disegna();
+})();
+</script>
+</body>
+</html>
