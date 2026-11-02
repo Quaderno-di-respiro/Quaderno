@@ -87,6 +87,22 @@ button[disabled] { opacity: .6; cursor: wait; }
     return crypto.subtle.decrypt({ name: "AES-GCM", iv: dati.slice(0, 12) }, k, dati.slice(12))
       .then(function (pt) { return new TextDecoder().decode(pt); });
   }
+  // Dalla versione 2 ogni password apre una copia della chiave della guida: si provano tutte
+  // con la chiave della password (una sola derivazione), la prima che si apre è quella buona.
+  function chiaveGuida(k) {
+    if (!C.chiavi) return Promise.resolve(k);
+    var i = 0;
+    function prova() {
+      if (i >= C.chiavi.length) return Promise.reject(new Error("nessuna chiave"));
+      var u = b64(C.chiavi[i++]);
+      return crypto.subtle.decrypt({ name: "AES-GCM", iv: u.slice(0, 12) }, k, u.slice(12))
+        .then(function (raw) { return crypto.subtle.importKey("raw", raw, "AES-GCM", false, ["decrypt"]); }, prova);
+    }
+    return prova();
+  }
+  function apri(k) {
+    return chiaveGuida(k).then(function (g) { return apriCon(g).then(function (html) { return { html: html, k: g }; }); });
+  }
   function entra(html, k) {
     // La guida decifrata può aprire anche il PDF cifrato con la stessa chiave.
     window.QGPorta = { decifra: function (buf) { var u = new Uint8Array(buf); return crypto.subtle.decrypt({ name: "AES-GCM", iv: u.slice(0, 12) }, k, u.slice(12)); } };
@@ -98,14 +114,14 @@ button[disabled] { opacity: .6; cursor: wait; }
 
   var salvata = leggi(localStorage) || leggi(sessionStorage);
   var prima = salvata
-    ? importa(salvata).then(function (k) { return apriCon(k).then(function (html) { entra(html, k); return true; }); })
+    ? importa(salvata).then(apri).then(function (r) { entra(r.html, r.k); return true; })
         .catch(function () { togli(); return false; })
     : Promise.resolve(false);
 
   prima.then(function (fatto) {
     if (fatto) return;
     porta.hidden = false;
-    if (salvata) esito.textContent = "La password è cambiata: inserisci quella nuova.";
+    if (salvata) esito.textContent = "La password è cambiata o non vale più: inserisci quella che ti è stata data.";
     document.getElementById("pw").focus();
   });
 
@@ -121,10 +137,12 @@ button[disabled] { opacity: .6; cursor: wait; }
           base, { name: "AES-GCM", length: 256 }, true, ["decrypt"]);
       })
       .then(function (k) {
-        return apriCon(k).then(function (html) {
+        // Si ricorda la chiave della password, non quella della guida: così resta valida
+        // anche quando la guida si aggiorna, finché la password è nell'elenco.
+        return apri(k).then(function (r) {
           return crypto.subtle.exportKey("raw", k).then(function (raw) {
             scrivi(document.getElementById("ricorda").checked ? localStorage : sessionStorage, a64(raw));
-            entra(html, k);
+            entra(r.html, r.k);
           });
         });
       })

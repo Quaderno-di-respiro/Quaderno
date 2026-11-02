@@ -30,6 +30,7 @@ jobs:
         env:
           CHIAVE_SORGENTE: ${{ secrets.CHIAVE_SORGENTE }}
           PASSWORD: ${{ secrets.PASSWORD }}
+          PASSWORDS: ${{ secrets.PASSWORDS }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site

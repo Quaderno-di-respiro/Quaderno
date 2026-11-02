@@ -1,12 +1,15 @@
 "use strict";
-// Costruisce il sito da pubblicare in _site/, con la guida cifrata dalla password.
+// Costruisce il sito da pubblicare in _site/, con la guida cifrata dalle password.
 //
-//   CHIAVE_SORGENTE=... PASSWORD=... node strumenti/cifra.js
+//   CHIAVE_SORGENTE=... PASSWORD=... PASSWORDS=... node strumenti/cifra.js
 //
 // I sorgenti in sorgente/ sono sigillati con CHIAVE_SORGENTE (vedi sigilla.js), così il
 // repository pubblico non contiene la guida in chiaro. Qui si aprono e si richiudono con
-// una chiave ricavata da PASSWORD: chi apre il sito la inserisce e il browser decifra.
-// Cambiare il segreto PASSWORD su GitHub e rilanciare il workflow cambia la password.
+// una chiave nuova a ogni pubblicazione; quella chiave viene poi chiusa una volta per ogni
+// password, e chi apre il sito con una qualsiasi di loro la riapre nel browser.
+// Le password vengono dal segreto PASSWORD (una) e dal segreto PASSWORDS (una per riga; le
+// righe che iniziano con # sono note, per esempio il nome della persona). Togliere una riga
+// e rilanciare il workflow toglie quella password.
 
 const fs = require("fs");
 const path = require("path");
@@ -31,8 +34,21 @@ const grezza = serve("CHIAVE_SORGENTE");
 const trovata = grezza.match(/[A-Za-z0-9+/]{43}=/g);
 const chiaveSorgente = Buffer.from(trovata && trovata.length === 1 ? trovata[0] : grezza.trim(), "base64");
 if (chiaveSorgente.length !== 32) errore(`CHIAVE_SORGENTE non è valida: deve essere il contenuto di segreti/chiave-sorgente.txt, 44 caratteri che finiscono con «=» (questa ne ha ${grezza.trim().length}). Incollala di nuovo nel segreto.`);
-const password = serve("PASSWORD");
-if (password.length < 8) errore(`La password deve avere almeno 8 caratteri (ne ha ${password.length}).`);
+// Le password: PASSWORD da sola, poi PASSWORDS riga per riga. Nei messaggi d'errore si dice
+// solo il numero di riga, mai la password.
+const password = [];
+const una = (process.env.PASSWORD || "").trim();
+if (una) {
+  if (una.length < 8) errore(`Il segreto PASSWORD deve avere almeno 8 caratteri (ne ha ${una.length}).`);
+  password.push(una);
+}
+(process.env.PASSWORDS || "").split(/\r?\n/).forEach(function (riga, i) {
+  const p = riga.trim();
+  if (!p || p.startsWith("#")) return;
+  if (p.length < 8) errore(`Nel segreto PASSWORDS la riga ${i + 1} ha una password di ${p.length} caratteri: ne servono almeno 8.`);
+  if (!password.includes(p)) password.push(p);
+});
+if (!password.length) errore("Manca la password: imposta il segreto PASSWORD o il segreto PASSWORDS (Settings → Secrets and variables → Actions).");
 
 // Formato dei file cifrati: iv (12 byte) | testo cifrato | tag (16 byte), AES-256-GCM.
 function apri(file) {
@@ -46,18 +62,24 @@ function apri(file) {
 // La stessa password dà la stessa chiave finché il sale non cambia: chi ha già
 // inserito la password non deve rifarlo a ogni aggiornamento della guida.
 const sale = Buffer.from(fs.readFileSync(path.join(__dirname, "sale.txt"), "utf8").trim(), "base64");
-const chiave = crypto.pbkdf2Sync(password, sale, ITERAZIONI, 32, "sha256");
-function chiudi(buf) {
+function chiudiCon(chiave, buf) {
   const iv = crypto.randomBytes(12);
   const c = crypto.createCipheriv("aes-256-gcm", chiave, iv);
   return Buffer.concat([iv, c.update(buf), c.final(), c.getAuthTag()]);
 }
+// La guida e il PDF si chiudono con una chiave nuova; la chiave si chiude con ogni password.
+// L'ordine delle chiavi si mescola, così la posizione non dice di chi è.
+const chiave = crypto.randomBytes(32);
+const chiudi = buf => chiudiCon(chiave, buf);
+const chiavi = password
+  .map(p => chiudiCon(crypto.pbkdf2Sync(p, sale, ITERAZIONI, 32, "sha256"), chiave).toString("base64"))
+  .map(c => [crypto.randomBytes(4).readUInt32LE(0), c]).sort((a, b) => a[0] - b[0]).map(x => x[1]);
 
 fs.rmSync(USCITA, { recursive: true, force: true });
 fs.mkdirSync(USCITA, { recursive: true });
 
 const guida = chiudi(apri(path.join(RADICE, "sorgente", "guida.enc")));
-const dati = JSON.stringify({ v: 1, iter: ITERAZIONI, sale: sale.toString("base64"), dati: guida.toString("base64") });
+const dati = JSON.stringify({ v: 2, iter: ITERAZIONI, sale: sale.toString("base64"), chiavi: chiavi, dati: guida.toString("base64") });
 const porta = fs.readFileSync(path.join(__dirname, "porta.html"), "utf8");
 if (porta.split("__DATI__").length !== 2) errore("porta.html deve contenere __DATI__ una volta sola.");
 fs.writeFileSync(path.join(USCITA, "index.html"), porta.replace("__DATI__", () => dati));
@@ -72,4 +94,4 @@ const versione = new Date().toISOString().replace(/\D/g, "").slice(0, 12) + "-" 
 fs.writeFileSync(path.join(USCITA, "sw.js"), fs.readFileSync(path.join(pubblici, "sw.js"), "utf8").replace("__VERSIONE__", versione));
 fs.writeFileSync(path.join(USCITA, ".nojekyll"), "");
 
-console.log(`Sito pronto in _site/ (versione ${versione}): guida ${Math.round(guida.length / 1024)} KB, PDF cifrato.`);
+console.log(`Sito pronto in _site/ (versione ${versione}): guida ${Math.round(guida.length / 1024)} KB, PDF cifrato, ${password.length} password.`);

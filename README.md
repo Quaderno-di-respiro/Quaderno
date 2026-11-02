@@ -10,10 +10,36 @@ i file sono illeggibili, sia nel repository sia sul sito.
 
 - `sorgente/` contiene guida e PDF sigillati con una chiave che sta solo tra i segreti del
   repository (`CHIAVE_SORGENTE`).
-- A ogni pubblicazione il workflow **Pubblica** li apre e li richiude con la password
-  (`PASSWORD`), e mette il risultato su GitHub Pages.
-- Chi apre il sito inserisce la password e il browser decifra la guida sul suo dispositivo.
-  Può spuntare «Ricordala su questo dispositivo» e non dovrà reinserirla.
+- A ogni pubblicazione il workflow **Pubblica** li apre e li richiude con una chiave nuova.
+  Quella chiave viene chiusa una volta per ogni password (`PASSWORD` e `PASSWORDS`), e il
+  risultato va su GitHub Pages.
+- Chi apre il sito inserisce la sua password e il browser decifra la guida sul suo
+  dispositivo. Può spuntare «Ricordala su questo dispositivo» e non dovrà reinserirla.
+
+## Più password, una per persona (anche dal telefono)
+
+Puoi dare a ogni persona una password sua: tutte aprono la stessa guida, e quando ne togli
+una smette di funzionare solo quella.
+
+1. Sul repository: **Settings → Secrets and variables → Actions**.
+2. Crea il segreto **PASSWORDS** (**New repository secret**) o, se c'è già, tocca la sua
+   matita. Scrivi **una password per riga**, ognuna di almeno 8 caratteri. Le righe che
+   iniziano con `#` sono note per te, per esempio il nome della persona:
+
+       # Persona 1
+       prima-password
+       # Persona 2
+       seconda-password
+
+3. Salva e vai su **Actions → Pubblica → Run workflow → Run workflow**.
+
+Per **aggiungere** una persona aggiungi una riga; per **toglierla** cancella la sua riga.
+Poi rilancia il workflow. GitHub non ti mostra più il contenuto di un segreto dopo averlo
+salvato: tieni l'elenco anche da un'altra parte sicura, così quando lo modifichi lo riscrivi
+intero. La password del segreto `PASSWORD` continua a funzionare insieme a queste.
+
+Se una riga è più corta di 8 caratteri il workflow si ferma e dice quale riga sistemare,
+senza mostrare la password.
 
 ## Cambiare la password (anche dal telefono)
 
