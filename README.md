@@ -92,10 +92,11 @@ le due pagine mostrano la versione nuova.
   (`120`, oppure `89.5` col punto). Con `null` la pagina non mostra numeri e scrive «Il prezzo te
   lo scrivo in DM». Il prezzo al mese si calcola da solo da `prezzo` e `mesi`.
 - **Prezzo di lancio**: `prezzoLancio` in ogni pacchetto, e una sola `scadenzaLancio` per tutti,
-  l'ultimo giorno valido nella forma `"AAAA-MM-GG"` (per esempio `"2026-12-31"`). Il prezzo pieno
-  barrato, il prezzo di lancio e «fino al 31 dicembre 2026» compaiono solo se ci sono `prezzo`,
-  `prezzoLancio` e `scadenzaLancio`, se il prezzo di lancio è più basso del pieno e se la data del
-  telefono non ha superato la scadenza. Sotto i pacchetti compare «Prezzo di lancio valido fino
+  l'ultimo giorno valido nella forma `"AAAA-MM-GG"` (per esempio `"2026-12-31"`). Il prezzo di
+  lancio e «Prezzo di lancio fino al 31 dicembre 2026. Dal 1 gennaio 2027: 179 €» compaiono solo se
+  ci sono `prezzo`, `prezzoLancio` e `scadenzaLancio`, se il prezzo di lancio è più basso del pieno e
+  se la data del telefono non ha superato la scadenza. Il prezzo pieno non si barra: un prezzo mai
+  praticato non va presentato come sconto. Sotto i pacchetti compare «Prezzo di lancio valido fino
   alla data indicata.». Il giorno dopo la scadenza lo sconto sparisce da solo, senza ripubblicare.
   Una data scritta in un altro modo (per esempio `31/12/2026`) vale come nessuna scadenza.
 - **Vantaggi**: `vantaggi` è l'elenco del pacchetto, una voce per riga tra virgolette, separate

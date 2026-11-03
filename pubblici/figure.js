@@ -2214,7 +2214,7 @@
       keys: [
         { d: 2, s: 'Gira le mani: dita verso le ginocchia', ss: 'Gira le mani', p: { hr: 180 } },
         { d: 3, s: 'Braccia tese, siediti indietro', ss: 'Braccia tese, siediti indietro', p: { th: -52 } },
-        { d: 6, s: 'Tieni, respira libero dal naso', ss: 'Tieni (in lezione ~20 s)', n: 1, p: {}, k: 'no' },
+        { d: 6, s: 'Tieni, respira libero dal naso', ss: 'Tieni 20–30 s', n: 1, p: {}, k: 'no' },
         { d: 2, s: 'Molla: torna avanti, gira le mani', ss: 'Molla', p: { th: 0, hr: 0 } }
       ],
       main: 2, strip: [0, 1, 2],
@@ -2231,7 +2231,7 @@
       keys: [
         { d: 1.5, s: 'Chiudi forte i pugni', ss: 'Chiudi forte i pugni', p: { fi: 1, wy: 4 } },
         { d: 2, s: 'Pugni a terra sul dorso, braccia tese', ss: 'Pugni sul dorso, braccia tese', p: { pu: 1 } },
-        { d: 6, s: 'Tieni, pugni chiusi: respira libero dal naso', ss: 'Tieni, resta qua (in lezione ~35 s)', n: 1, p: { rq: 1 }, k: 'no', vis: 'in' },
+        { d: 6, s: 'Tieni, pugni chiusi: respira libero dal naso', ss: 'Tieni, resta qua 20–30 s', n: 1, p: { rq: 1 }, k: 'no', vis: 'in' },
         { d: 2, s: 'Rilassa', p: { fi: 0, pu: 0, wy: 0, rq: 0 } }
       ],
       main: 2, strip: [0, 1, 2],

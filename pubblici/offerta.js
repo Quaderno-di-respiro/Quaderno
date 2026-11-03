@@ -86,11 +86,12 @@ var OFFERTA = {
   function lancioAttivo(ora) { return conf().pacchetti.some(function (p) { var x = prezzoDi(p, ora); return x && x.lancio; }); }
   function bloccoPrezzo(x) {
     if (!x) return '<p class="pac-prezzo"><span class="pac-dm">Il prezzo te lo scrivo in DM</span></p>';
+    // Niente prezzo barrato: un prezzo pieno mai praticato non si barra. Si dice invece fino a quando
+    // vale il lancio e quanto costerà dal giorno dopo.
     var h = '<p class="pac-prezzo">';
-    if (x.lancio) h += '<s class="pac-pieno" aria-label="prezzo pieno ' + esc(euro(x.pieno)) + '">' + esc(euro(x.pieno)) + "</s> ";
     h += '<b class="pac-euro">' + esc(euro(x.vale)) + "</b>";
     if (x.alMese && x.alMese !== x.vale) h += '<span class="pac-mese">' + esc(euro(x.alMese)) + " al mese</span>";
-    if (x.lancio) h += '<span class="pac-fino">Prezzo di lancio fino al ' + esc(giorno(x.fino)) + "</span>";
+    if (x.lancio) h += '<span class="pac-fino">Prezzo di lancio fino al ' + esc(giorno(x.fino)) + ". Dal " + esc(giorno(new Date(x.fino.getTime() + 1))) + ": " + esc(euro(x.pieno)) + "</span>";
     return h + "</p>";
   }
   // I pacchetti dentro el. opz.breve: una riga per pacchetto (per il riepilogo della sfida).
