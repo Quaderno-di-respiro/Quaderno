@@ -12,7 +12,10 @@ i file sono illeggibili, sia nel repository sia sul sito.
   repository (`CHIAVE_SORGENTE`).
 - A ogni pubblicazione il workflow **Pubblica** li apre e li richiude con una chiave nuova.
   Quella chiave viene chiusa una volta per ogni password (`PASSWORD` e `PASSWORDS`), e il
-  risultato va su GitHub Pages.
+  risultato va su GitHub Pages: la pagina d'ingresso `index.html`, i dati cifrati della guida in
+  `guida.json` e il PDF cifrato.
+- La pagina d'ingresso scarica `guida.json` solo quando serve: con una password ricordata, o
+  quando si preme «Entra». Chi apre il link da Instagram scarica solo la facciata, leggera.
 - Chi apre il sito inserisce la sua password e il browser decifra la guida sul suo
   dispositivo. Può spuntare «Ricordala su questo dispositivo» e non dovrà reinserirla.
 
@@ -65,32 +68,48 @@ Il file `segreti/chiave-sorgente.txt` non va mai caricato su GitHub.
 
 ## La facciata e le sfide
 
-Chi apre il link senza una password ricordata vede una pagina pubblica: il metodo, il test del
-respiro (BOLT), un esercizio di prova, i due percorsi, la sfida del mese con l'offerta, e in fondo
-il riquadro «Hai già la password?». Chi ha la password ricordata entra nella guida come prima,
+Chi apre il link senza una password ricordata vede una pagina pubblica, in quest'ordine:
+l'apertura (sul desktop col player accanto), «Così è dentro» con tre schermate vere del Quaderno,
+il test del respiro (BOLT), un esercizio di prova, la sfida del mese con l'offerta, il metodo in
+un'immagine, per chi è, le domande frequenti e in fondo il riquadro «Hai già la password?» (in
+testata il link «Ho la password»). Chi ha la password ricordata entra nella guida come prima,
 senza vedere la facciata. La sfida gratuita «Respiro al muro» è una pagina a sé, `sfida.html`,
-senza password: i giorni fatti e i test restano sul telefono di chi la fa.
+senza password: giorni fatti, test e risposte restano sul telefono di chi la fa.
 
 | file | cosa |
 |---|---|
 | `strumenti/porta.html` | la facciata, con dentro la porta della guida cifrata (diventa `index.html`) |
 | `pubblici/sfida.html` | la sfida «Respiro al muro», 7 giorni |
-| `pubblici/offerta.js` | **il profilo Instagram e l'offerta: è l'unico file da toccare per cambiarli** |
+| `pubblici/offerta.js` | **contatto, profilo Instagram e offerta: è l'unico file da toccare per cambiarli** |
 | `pubblici/figure.js` | le figure animate, copia di `guida/sorgenti/figure.js` |
+| `pubblici/dentro-*.webp` | le tre schermate di «Così è dentro» (programma, player, scheda) |
 
-### Cambiare profilo, prezzi e vantaggi (anche dal telefono)
+### Cambiare contatto, profilo, prezzi e vantaggi (anche dal telefono)
 
 Su GitHub apri `pubblici/offerta.js`, tocca la matita, cambia solo i valori in cima al file e
 salva con **Commit changes**: il workflow **Pubblica** riparte da solo e dopo un paio di minuti
 le due pagine mostrano la versione nuova.
 
+- **Contatto**: `var CONTATTO = { email: "", modulo: "" };`. I pulsanti «Voglio il piano» e
+  «Avvisami della prossima sfida» stanno nell'offerta, al giorno 7 della sfida e nel piede.
+  - **Modulo**: scrivi in `modulo` l'indirizzo intero del modulo esterno, quello scelto col
+    consulente privacy (per esempio `modulo: "https://…"`). I pulsanti aprono il modulo.
+  - **Solo email**: scrivi l'indirizzo in `email` (per esempio `email: "nome@dominio.it"`) e
+    lascia `modulo` vuoto. Le pagine mostrano l'indirizzo da selezionare, il pulsante «Copia» e
+    un link che apre l'app della posta con l'oggetto già scritto.
+  - **Tutto vuoto**: resta l'invito «Scrivi PIANO su Instagram (profilo in arrivo)».
+  - Con un contatto acceso, sopra i pacchetti la riga dei prezzi invita a lasciare l'email.
+  - Un indirizzo scritto male (senza `https://`, o un'email senza `@`) vale come vuoto.
+  - Contatori di visite: nessuno. Lo strumento lo sceglie il consulente.
 - **Instagram**: `var INSTAGRAM = "";`. Scrivi l'indirizzo intero tra le virgolette, per esempio
   `var INSTAGRAM = "https://www.instagram.com/nomeprofilo/";`. Finché è vuoto, al posto dei link
-  compare «Scrivi PIANO su Instagram (profilo in arrivo)»; quando c'è, i pulsanti portano al
-  profilo e la sfida, al giorno 7, invita a taggare `@nomeprofilo`.
+  compare «Scrivi PIANO su Instagram (profilo in arrivo)»; quando c'è, i link portano al
+  profilo, e la sfida, al giorno 7, invita a taggare `@nomeprofilo` e lo scrive sulla carta da
+  condividere.
 - **Prezzi**: in ogni pacchetto `prezzo` è il prezzo pieno in euro, un numero senza virgolette
-  (`120`, oppure `89.5` col punto). Con `null` la pagina non mostra numeri e scrive «Il prezzo te
-  lo scrivo in DM». Il prezzo al mese si calcola da solo da `prezzo` e `mesi`.
+  (`120`, oppure `89.5` col punto). Con `null` la pagina non mostra numeri e scrive una riga sola
+  sopra i pacchetti: «I prezzi escono presto.». Il prezzo al mese («circa … al mese») si calcola
+  da solo da `prezzo` e `mesi`.
 - **Prezzo di lancio**: `prezzoLancio` in ogni pacchetto, e una sola `scadenzaLancio` per tutti,
   l'ultimo giorno valido nella forma `"AAAA-MM-GG"` (per esempio `"2026-12-31"`). Il prezzo di
   lancio e «Prezzo di lancio fino al 31 dicembre 2026. Dal 1 gennaio 2027: 179 €» compaiono solo se
@@ -101,15 +120,25 @@ le due pagine mostrano la versione nuova.
   Una data scritta in un altro modo (per esempio `31/12/2026`) vale come nessuna scadenza.
 - **Vantaggi**: `vantaggi` è l'elenco del pacchetto, una voce per riga tra virgolette, separate
   da virgole. `breve` è la riga che compare nel riepilogo al giorno 7 della sfida.
+- **Ordine e pacchetto consigliato**: i pacchetti compaiono nell'ordine in cui sono scritti (oggi
+  1 anno, 6 mesi, 3 mesi). `consigliato: true` mette il riquadro in evidenza con «Consigliato»:
+  tienilo su un pacchetto solo (oggi il 6 mesi).
+- **Rate**: `rate: 2` fa comparire «Anche in 2 rate» sotto il prezzo; `null` la toglie.
+- **Garanzia**: `garanzia: ""`. Il testo lo scrive il consulente; finché è vuoto non compare.
+  Scritto, compare sotto i pacchetti come «Garanzia. …».
+- **Domande frequenti da compilare**: in `domande` ci sono tre risposte vuote: `chiMiSegue`
+  («Chi mi segue?»), `recesso` («Posso cambiare idea dopo aver pagato?») e `durataAccesso` («Per
+  quanto tempo posso usare il Quaderno?»). Ogni domanda compare in fondo alle domande frequenti
+  solo quando la sua risposta è scritta.
 - **One to one**: la riga `oneToOne`.
 
-Esempio di un pacchetto con prezzo di lancio:
+Esempio di un pacchetto con prezzo di lancio e rate:
 
-    { nome: "Trimestrale", mesi: 3, prezzo: 120, prezzoLancio: 99, breve: "…", vantaggi: [ … ] },
+    { nome: "1 anno", mesi: 12, prezzo: 900, prezzoLancio: 800, rate: 2, consigliato: false, breve: "…", vantaggi: [ … ] },
 
 Se qualcosa si rompe (una virgola o una virgoletta in meno), le pagine restano in piedi e
-mostrano il testo di riserva: «Tre durate: trimestrale, 6 mesi, 1 anno. Il prezzo te lo scrivo
-in DM.». Ricontrolla la riga cambiata.
+mostrano il testo di riserva: «Tre durate: 1 anno, 6 mesi, 3 mesi. I prezzi escono presto.» e
+l'invito a Instagram. Ricontrolla la riga cambiata.
 
 ### Altre cose da sapere
 
@@ -119,13 +148,21 @@ in DM.». Ricontrolla la riga cambiata.
   dell'immagine dell'anteprima (`og:image`, oggi `icona-512.png`), per esempio
   `https://nome.github.io/quaderno/icona-512.png`: alcune app la vogliono completa.
 - **Le figure**: quando cambia `guida/sorgenti/figure.js`, copialo di nuovo in `pubblici/figure.js`.
-- **I testi degli esercizi** della facciata (E64) e della sfida (E1, E64) sono copiati dalle schede
-  della guida: se cambia la scheda, aggiornali lì.
+- **I testi degli esercizi** della facciata (E64, in tre indicazioni) e della sfida (E1, E64)
+  vengono dalle schede della guida: se cambia la scheda, aggiornali lì.
+- **Le schermate di «Così è dentro»** sono ritagli delle foto del Quaderno, in WebP sotto i 60 KB.
+  Se il Quaderno cambia aspetto, rifalle con le stesse misure e lo stesso nome.
 - **Senza internet**: il service worker (`pubblici/sw.js`) salva ogni pagina col suo indirizzo, la
-  radice come `index.html`, così aprire la sfida non sovrascrive la copia della guida. Una pagina
-  pubblica nuova si aggiunge all'elenco `FILE` in cima a `pubblici/sw.js`.
-- **I dati sul telefono**: la sfida usa la chiave `qg-sfida-respiro` di localStorage, il test
-  della facciata `qg-bolt`. Il BOLT fatto oggi sulla facciata vale come test del giorno 1.
+  radice come `index.html`, così aprire la sfida non sovrascrive la copia della guida. In memoria ci
+  sono anche `guida.json`, il PDF cifrato e le schermate: dopo una visita con la password, la guida
+  si apre anche offline. Un file pubblico nuovo si aggiunge all'elenco `FILE` in cima a
+  `pubblici/sw.js`.
+- **I dati sul telefono**: la sfida usa la chiave `qg-sfida-respiro` di localStorage (giorni fatti,
+  test, le tre domande del giorno 1 e del giorno 7, l'ora dei promemoria), il test della facciata
+  `qg-bolt`. Il BOLT fatto oggi sulla facciata vale come test del giorno 1.
+- **Il calendario e la carta della sfida** si fanno sul telefono: il file `.ics` con un
+  promemoria al giorno e l'immagine del risultato (condivisa col menu del telefono, o scaricata
+  dove non c'è). Nessun dato parte dalla pagina.
 
 ## Prima pubblicazione
 

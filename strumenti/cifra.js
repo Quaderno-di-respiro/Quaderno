@@ -1,5 +1,6 @@
 "use strict";
-// Costruisce il sito da pubblicare in _site/, con la guida cifrata dalle password.
+// Costruisce il sito da pubblicare in _site/, con la guida cifrata dalle password: la pagina
+// d'ingresso (index.html, da porta.html), i dati della guida (guida.json) e il PDF cifrato.
 //
 //   CHIAVE_SORGENTE=... PASSWORD=... PASSWORDS=... node strumenti/cifra.js
 //
@@ -78,11 +79,16 @@ const chiavi = password
 fs.rmSync(USCITA, { recursive: true, force: true });
 fs.mkdirSync(USCITA, { recursive: true });
 
+// La guida cifrata non sta più dentro la pagina: va in guida.json, che la porta scarica solo quando
+// serve (password ricordata o «Entra»). Così la facciata pesa poco per chi la apre da Instagram.
+// Il formato dei dati è lo stesso di prima (versione 2).
 const guida = chiudi(apri(path.join(RADICE, "sorgente", "guida.enc")));
 const dati = JSON.stringify({ v: 2, iter: ITERAZIONI, sale: sale.toString("base64"), chiavi: chiavi, dati: guida.toString("base64") });
 const porta = fs.readFileSync(path.join(__dirname, "porta.html"), "utf8");
-if (porta.split("__DATI__").length !== 2) errore("porta.html deve contenere __DATI__ una volta sola.");
-fs.writeFileSync(path.join(USCITA, "index.html"), porta.replace("__DATI__", () => dati));
+if (porta.includes("__DATI__")) errore("porta.html contiene ancora __DATI__: i dati della guida vanno in guida.json, non nella pagina.");
+if (!porta.includes('"guida.json"')) errore("porta.html deve scaricare guida.json: la porta non troverebbe la guida.");
+fs.writeFileSync(path.join(USCITA, "index.html"), porta);
+fs.writeFileSync(path.join(USCITA, "guida.json"), dati);
 fs.writeFileSync(path.join(USCITA, "quaderno-del-respiro.pdf.enc"), chiudi(apri(path.join(RADICE, "sorgente", "pdf.enc"))));
 
 const pubblici = path.join(RADICE, "pubblici");

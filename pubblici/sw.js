@@ -3,9 +3,12 @@
 // dalla memoria; tutto il resto si serve dalla memoria. Ogni pagina si salva col suo indirizzo
 // (la radice come index.html): aprire sfida.html non sovrascrive la copia della facciata e della
 // guida. Cambiare VERSIONE a ogni pubblicazione fa ripartire la memoria con i file nuovi.
+// guida.json (i dati cifrati della guida) e il PDF cifrato stanno in memoria: senza internet la porta
+// li prende da qui, e sono sempre della stessa pubblicazione.
 const VERSIONE = "qg-__VERSIONE__";
 const FONT = "qg-font";
-const FILE = ["./", "index.html", "sfida.html", "figure.js", "offerta.js", "manifest.webmanifest", "icona.svg", "icona-180.png", "icona-192.png", "icona-512.png", "quaderno-del-respiro.pdf.enc"];
+const FILE = ["./", "index.html", "guida.json", "sfida.html", "figure.js", "offerta.js", "manifest.webmanifest", "icona.svg", "icona-180.png", "icona-192.png", "icona-512.png",
+  "dentro-programma.webp", "dentro-player.webp", "dentro-scheda.webp", "quaderno-del-respiro.pdf.enc"];
 const RADICE = new URL("index.html", self.location).href;
 
 // L'indirizzo con cui si salva una pagina: senza ?… e #…, e «cartella/» diventa «cartella/index.html».

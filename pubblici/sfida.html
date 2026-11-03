@@ -31,6 +31,8 @@
   --bg: #F1F4F1; --surface: #FFFFFF; --surface-2: #E5ECE8; --ink: #16201C; --muted: #55625C;
   --line: #D3DBD6; --line-strong: #A9B6AF; --breath: #1B6B5C; --breath-soft: #D5EBE4; --on-breath: #FFFFFF;
   --ground: #93550F; --ground-soft: #F4E5D0; --stop: #A23A2B; --stop-soft: #F6DDD8;
+  /* bordo di pulsanti e campi: almeno 3:1 sullo sfondo */
+  --bordo: #7A8781;
   --display: "Archivo", "Arial Narrow", system-ui, sans-serif;
   --body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
@@ -41,13 +43,13 @@
   :root:not([data-theme="light"]) {
     --bg: #0E1412; --surface: #151D1A; --surface-2: #1E2925; --ink: #E2EAE5; --muted: #9AA8A1;
     --line: #27332F; --line-strong: #43534D; --breath: #5DC3AD; --breath-soft: #183B34; --on-breath: #0E1412;
-    --ground: #E3A75B; --ground-soft: #3A2A16; --stop: #E8907F; --stop-soft: #3E1F1A; color-scheme: dark;
+    --ground: #E3A75B; --ground-soft: #3A2A16; --stop: #E8907F; --stop-soft: #3E1F1A; --bordo: #667870; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #0E1412; --surface: #151D1A; --surface-2: #1E2925; --ink: #E2EAE5; --muted: #9AA8A1;
   --line: #27332F; --line-strong: #43534D; --breath: #5DC3AD; --breath-soft: #183B34; --on-breath: #0E1412;
-  --ground: #E3A75B; --ground-soft: #3A2A16; --stop: #E8907F; --stop-soft: #3E1F1A; color-scheme: dark;
+  --ground: #E3A75B; --ground-soft: #3A2A16; --stop: #E8907F; --stop-soft: #3E1F1A; --bordo: #667870; color-scheme: dark;
 }
 * { box-sizing: border-box; }
 html { background: var(--bg); scroll-behavior: smooth; scroll-padding-top: calc(var(--testata) + env(safe-area-inset-top, 0px) + 10px); -webkit-text-size-adjust: 100%; }
@@ -59,14 +61,14 @@ p { margin: 0 0 .8em; }
 a { color: var(--breath); }
 img, svg { max-width: 100%; }
 [hidden] { display: none !important; }
-button, select { font: inherit; color: inherit; }
-a:focus-visible, button:focus-visible, select:focus-visible { outline: 3px solid var(--ground); outline-offset: 2px; }
+button, select, input { font: inherit; color: inherit; }
+a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-visible { outline: 3px solid var(--ground); outline-offset: 2px; }
 q { quotes: "«" "»"; }
 
 /* testata */
 .testata { position: fixed; top: 0; left: 0; right: 0; z-index: 10; background: var(--bg); border-bottom: 1px solid var(--line); padding-top: env(safe-area-inset-top, 0px); }
 .testata .wrap { height: var(--testata); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.marchio { display: inline-flex; align-items: center; gap: 9px; min-width: 0; color: var(--ink); text-decoration: none;
+.marchio { display: inline-flex; align-items: center; gap: 9px; min-width: 0; min-height: 44px; color: var(--ink); text-decoration: none;
   font: 800 1.05rem/1 var(--display); font-stretch: 78%; text-transform: uppercase; letter-spacing: .02em; white-space: nowrap; }
 .marchio img { width: 28px; height: 28px; border-radius: 7px; flex: none; }
 .dove { flex: none; font: 700 .8rem/1 var(--mono); color: var(--breath); padding: 8px 12px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px var(--breath); white-space: nowrap; }
@@ -78,21 +80,23 @@ h2 { font-family: var(--display); font-weight: 800; font-stretch: 78%; text-tran
 h3 { font-family: var(--display); font-weight: 700; font-stretch: 88%; font-size: 1.22rem; line-height: 1.2; margin: 0 0 .3em; text-wrap: balance; }
 .lede { font-size: 1.18rem; line-height: 1.5; color: var(--muted); max-width: 40ch; }
 .intro { max-width: 62ch; color: var(--muted); }
+.piccolo { font-size: .92rem; color: var(--muted); }
 main > section { padding-block: 34px 38px; border-top: 1px solid var(--line); }
-main > section.cima { border-top: 0; padding-top: 28px; }
+main > section:first-child { border-top: 0; }
+main > section.cima { padding-top: 28px; }
 
 /* pulsanti */
 .btn { display: inline-flex; align-items: center; justify-content: center; text-align: center; gap: 8px; min-height: 48px; padding: 12px 18px;
-  border-radius: 10px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font: 700 1rem/1.15 var(--body); text-decoration: none; cursor: pointer; }
+  border-radius: 10px; border: 1px solid var(--bordo); background: var(--surface); color: var(--ink); font: 700 1rem/1.15 var(--body); text-decoration: none; cursor: pointer; }
 .btn:hover { border-color: var(--breath); }
 .btn.primary { background: var(--breath); color: var(--on-breath); border-color: var(--breath); }
 .btn.grande { min-height: 58px; font-size: 1.1rem; padding: 14px 22px; }
 .btn:disabled { opacity: .5; cursor: default; }
 .btn.tocca { min-height: 72px; font-size: 1.15rem; width: 100%; }
 .btn.ig-attesa, .btn.primary.ig-attesa { background: transparent; border: 1px dashed var(--line-strong); color: var(--muted); cursor: default; }
-.link { background: none; border: 0; padding: 6px 0; color: var(--muted); text-decoration: underline; cursor: pointer; font: inherit; font-size: .92rem; }
+.link { background: none; border: 0; padding: 6px 0; min-height: 44px; color: var(--muted); text-decoration: underline; cursor: pointer; font: inherit; font-size: .92rem; }
 
-/* in cima */
+/* in cima: dal giorno 2 la presentazione si chiude e la pagina parte da giorni e routine */
 .tre { display: grid; gap: 12px; margin-top: 22px; }
 .tre > div { border-top: 2px solid var(--breath); padding-top: 10px; min-width: 0; }
 .tre p { margin: 0; color: var(--muted); }
@@ -100,6 +104,18 @@ main > section.cima { border-top: 0; padding-top: 28px; }
 .avviso p { margin: 0 0 6px; }
 .avviso p:last-child { margin: 0; }
 .avviso b { color: var(--stop); }
+.presenta > summary { cursor: pointer; list-style: none; position: relative; min-height: 48px; display: flex; align-items: center; padding: 10px 44px 10px 14px; font-weight: 700; }
+.presenta > summary::-webkit-details-marker { display: none; }
+.presenta > summary::after { content: "+"; position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font: 700 1.3rem/1 var(--mono); color: var(--breath); }
+.presenta[open] > summary::after { content: "–"; }
+.cima:not(.compatta) .presenta > summary { display: none; }
+.cima.compatta { padding-block: 16px 18px; }
+.cima.compatta h1 { font-size: clamp(2rem, 9vw, 3rem); margin-bottom: .25em; }
+.cima.compatta .lede { display: none; }
+.cima.compatta .presenta { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.cima.compatta .presenta > :not(summary) { margin-left: 14px; margin-right: 14px; }
+.cima.compatta .presenta > .tre { margin-top: 4px; }
+.cima.compatta .presenta > .avviso { margin-bottom: 14px; }
 
 /* i 7 giorni */
 .sette { list-style: none; margin: 4px 0 12px; padding: 0; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
@@ -111,6 +127,22 @@ main > section.cima { border-top: 0; padding-top: 28px; }
 .stato { font-weight: 700; margin: 22px 0 4px; }
 .salto { color: var(--muted); margin: 0; }
 .memoria { margin-top: 12px; font-size: .92rem; color: var(--stop); }
+/* promemoria nel calendario */
+.promemoria { margin-top: 16px; border-radius: 12px; background: var(--surface-2); }
+.pm-corpo { padding: 12px 14px; display: grid; gap: 10px; }
+.promemoria p { margin: 0; font-size: .95rem; }
+.promemoria > summary { cursor: pointer; list-style: none; position: relative; min-height: 48px; display: flex; align-items: center; padding: 10px 44px 10px 14px; font-weight: 700; font-size: .95rem; }
+.promemoria > summary::-webkit-details-marker { display: none; }
+.promemoria > summary::after { content: "+"; position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font: 700 1.3rem/1 var(--mono); color: var(--breath); }
+.promemoria[open] > summary::after { content: "–"; }
+.promemoria[open] > summary + .pm-corpo { padding-top: 0; }
+.promemoria:not(.aggiunto) > summary { display: none; }
+.promemoria:not(.aggiunto) > .pm-corpo { padding-top: 12px; }
+.pm-riga { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.pm-ora { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; }
+.pm-ora input { min-height: 44px; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--bordo); background: var(--surface); color: var(--ink); font: 700 1rem var(--mono); }
+.pm-riga .btn { flex: 1 1 12rem; min-height: 44px; }
+.pm-e { min-height: 1.2em; color: var(--breath); font-weight: 700; }
 
 /* strumenti dei test */
 .test-griglia { display: grid; gap: 14px; }
@@ -128,7 +160,7 @@ main > section.cima { border-top: 0; padding-top: 28px; }
 
 /* il mini-player */
 .passi-tab { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
-.passi-tab button { text-align: left; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line-strong); background: var(--surface); cursor: pointer; min-height: 60px; }
+.passi-tab button { text-align: left; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--bordo); background: var(--surface); cursor: pointer; min-height: 60px; }
 .passi-tab button b { display: block; font: 700 1rem/1.2 var(--body); }
 .passi-tab button small { display: block; font: 600 .74rem/1.3 var(--mono); color: var(--muted); margin-top: 3px; }
 .passi-tab button[aria-pressed="true"] { border: 2px solid var(--breath); background: var(--breath-soft); }
@@ -141,8 +173,8 @@ main > section.cima { border-top: 0; padding-top: 28px; }
 .clock { font: 700 2.2rem/1 var(--mono); font-variant-numeric: tabular-nums; margin: 0; }
 .clock small { display: block; font: 600 .82rem/1.3 var(--mono); color: var(--muted); margin-top: 6px; }
 .clock.conta { font-size: 1.55rem; }
-.ritmo { display: inline-flex; gap: 8px; align-items: center; font-size: .92rem; color: var(--muted); min-height: 40px; }
-.ritmo select { color: var(--ink); background: var(--surface); border: 1px solid var(--line-strong); border-radius: 8px; padding: 6px 8px; }
+.ritmo { display: inline-flex; gap: 8px; align-items: center; font-size: .92rem; color: var(--muted); min-height: 44px; }
+.ritmo select { color: var(--ink); background: var(--surface); border: 1px solid var(--bordo); border-radius: 8px; padding: 6px 8px; min-height: 44px; }
 .pacer-box { width: min(170px, 46vw); aspect-ratio: 1; position: relative; display: grid; place-items: center; }
 .pacer-ring { position: absolute; inset: 0; border-radius: 50%; box-shadow: inset 0 0 0 2px var(--line); }
 .pacer-dot { position: absolute; inset: 0; border-radius: 50%; background: var(--breath-soft); box-shadow: inset 0 0 0 3px var(--breath); transform: scale(.42); will-change: transform; }
@@ -159,15 +191,30 @@ main > section.cima { border-top: 0; padding-top: 28px; }
 .scheda dt:first-child { margin-top: 0; }
 .scheda dt.ev { color: var(--ground); }
 .scheda dd { margin: 0; }
-.avviso.piccolo { margin-top: 12px; font-size: .95rem; }
+.avviso.piccolo { margin-top: 12px; font-size: .95rem; color: inherit; }
 .fatto-box { margin-top: 22px; padding-top: 18px; border-top: 1px dashed var(--line-strong); display: grid; gap: 8px; justify-items: center; text-align: center; }
 .fatto-box .btn { width: 100%; max-width: 360px; }
 .fatto-box p { margin: 0; font-weight: 700; color: var(--breath); min-height: 1.5em; }
+
+/* tre domande sulle sensazioni, il giorno 1 e il giorno 7 */
+.sensazioni { margin-top: 22px; padding-top: 18px; border-top: 1px dashed var(--line-strong); display: grid; gap: 14px; }
+.sensazioni h3, .sensazioni p { margin: 0; }
+.domanda { display: grid; gap: 8px; }
+.domanda > p { font-weight: 700; }
+.sino { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; max-width: 360px; }
+.sino button, .sens button { border: 1px solid var(--bordo); background: var(--surface); border-radius: 10px; cursor: pointer; }
+.sino button { min-height: 48px; font-weight: 700; }
+.sens { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; max-width: 520px; }
+.sens button { padding: 8px 2px; min-height: 64px; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: .78rem; line-height: 1.15; }
+.sens button b { font: 700 1.35rem var(--mono); }
+.sino button[aria-pressed="true"], .sens button[aria-pressed="true"] { background: var(--breath-soft); border: 2px solid var(--breath); color: var(--breath); }
+.sens-e { min-height: 1.2em; font-size: .92rem; color: var(--breath); font-weight: 700; }
 
 /* figure */
 figure { margin: 0; }
 .fig { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px; color: var(--ink); min-width: 0; }
 .fig svg { display: block; width: 100%; height: auto; }
+.fig .qg-play { min-height: 44px; border-color: var(--bordo); }
 .fig-fb { min-height: 120px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 6px; padding: 18px 10px; color: var(--muted); font-size: .95rem; }
 .fig-fb b { font: 700 1rem var(--display); font-stretch: 85%; text-transform: uppercase; color: var(--ink); }
 svg .b { stroke: currentColor; fill: none; stroke-linecap: round; stroke-linejoin: round; }
@@ -186,43 +233,68 @@ svg .tk { fill: var(--ink); font: 700 12.5px var(--body); }
 svg .tn { fill: var(--surface); font: 700 11px var(--mono); text-anchor: middle; dominant-baseline: central; }
 
 /* il giorno 7 */
+.frase { font: 800 1.5rem/1.15 var(--display); font-stretch: 85%; text-transform: uppercase; margin: 6px 0 16px; text-wrap: balance; }
 .confronto { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-.conf { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; min-width: 0; display: grid; gap: 6px; }
+.conf { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; min-width: 0; display: grid; gap: 6px; align-content: start; }
 .conf h3 { margin: 0; font-size: 1.05rem; }
-.conf .riga { display: flex; justify-content: space-between; gap: 8px; font: 600 .82rem/1.4 var(--mono); color: var(--muted); }
-.conf .riga b { color: var(--ink); font-size: 1rem; }
-.conf .delta { font: 700 1.5rem/1.1 var(--mono); color: var(--muted); margin-top: 2px; }
+.conf .riga { display: flex; justify-content: space-between; gap: 8px; font: 600 .82rem/1.4 var(--mono); color: var(--muted); margin: 0; }
+.conf .riga b { color: var(--ink); font-size: 1rem; text-align: right; }
+.conf .delta { font: 700 1.5rem/1.1 var(--mono); color: var(--muted); margin: 2px 0 0; }
 .conf .delta.meglio { color: var(--breath); }
-.frase { font: 800 1.5rem/1.15 var(--display); font-stretch: 85%; text-transform: uppercase; margin: 20px 0 6px; text-wrap: balance; }
-.h-piano { margin-top: 28px; }
+.conf-sens { grid-column: 1 / -1; }
+.conf-sens .riga { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; }
+.conf-sens .riga span { font-family: var(--body); font-weight: 400; font-size: .92rem; color: var(--ink); }
+.conf-sens .riga b { white-space: nowrap; font-size: .88rem; }
+.frase-resp { margin: 14px 0 0; font-weight: 700; }
+.condividi { margin-top: 18px; padding: 16px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); display: grid; gap: 10px; justify-items: center; text-align: center; }
+.condividi p { margin: 0; }
+.condividi .btn { width: 100%; max-width: 360px; }
+.carta-img { width: min(240px, 70%); height: auto; border-radius: 12px; border: 1px solid var(--line); }
+.carta-e { min-height: 1.2em; font-weight: 700; color: var(--breath); }
+.h-piano { margin-top: 30px; }
 .pac-griglia { display: grid; gap: 10px; }
 .pac { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-.pac-lungo { border: 2px solid var(--breath); }
-.pac-testa { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.pac-consigliato { border: 2px solid var(--breath); }
+.pac-testa { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; }
 .pac-testa h3 { margin: 0; font-size: 1.25rem; }
 .pac-durata { font: 700 .72rem/1 var(--mono); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); white-space: nowrap; }
+.pac-badge { margin-left: auto; font: 700 .72rem/1 var(--mono); text-transform: uppercase; letter-spacing: .05em; color: var(--on-breath); background: var(--breath); padding: 5px 9px; border-radius: 999px; }
 .pac-prezzo { margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; }
 .pac-euro { font: 700 1.5rem/1.1 var(--mono); font-variant-numeric: tabular-nums; }
-.pac-pieno { font: 500 1rem/1.1 var(--mono); color: var(--muted); }
 .pac-mese, .pac-fino { flex-basis: 100%; font: 600 .78rem/1.4 var(--mono); color: var(--muted); }
 .pac-fino { color: var(--ground); }
-.pac-dm { font-weight: 700; color: var(--breath); }
+.pac-rate { margin: 0; font: 600 .78rem/1.4 var(--mono); color: var(--muted); }
 .pac-breve { margin: 0; font-size: .95rem; color: var(--muted); }
 .pac ul { margin: 2px 0 0; padding-left: 1.1em; font-size: .95rem; }
+.pac-presto { margin: 0 0 10px; font-weight: 700; }
 .pac-nota { font-size: .82rem; color: var(--muted); margin: 10px 0 0; }
+.pac-garanzia { margin: 12px 0 0; padding: 12px 14px; border-radius: 10px; background: var(--surface-2); }
 .one { margin-top: 10px; border: 1px dashed var(--line-strong); border-radius: 14px; padding: 14px 16px; }
 .one p { margin: 0; color: var(--muted); }
 .cta { margin-top: 18px; padding: 18px 16px; border-radius: 14px; background: var(--breath-soft); text-align: center; display: grid; gap: 12px; justify-items: center; }
 .cta p { margin: 0; font-size: 1.08rem; max-width: 34ch; }
-.cta .btn { width: 100%; max-width: 360px; }
-.condividi { margin-top: 14px; padding: 14px 16px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); }
-.condividi p { margin: 0; }
+.cta p.piccolo { font-size: .92rem; }
+.cta .btn, .cta-azioni .btn { width: 100%; max-width: 360px; }
+.cta-azioni { display: grid; gap: 10px; justify-items: center; width: 100%; }
+.ce { display: grid; gap: 8px; justify-items: center; width: 100%; }
+.ce p { margin: 0; font-size: 1rem; }
+.ce-riga { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 10px; }
+.ce-ind { font: 700 1.05rem/1.3 var(--mono); color: var(--ink); user-select: all; -webkit-user-select: all; overflow-wrap: anywhere; }
+.cta .ce-copia, .ce-copia { width: auto; min-height: 44px; padding: 8px 16px; }
+.ce-link a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; }
+.ce-esito { min-height: 1.3em; font-size: .9rem !important; color: var(--muted); }
+.ce-esito:empty { min-height: 0; }
+.cta-azioni .ce-copia { width: auto; }
+.non-ora { margin-top: 16px; display: grid; gap: 8px; justify-items: center; text-align: center; }
+.non-ora p { margin: 0; color: var(--muted); }
+.non-ora .ce-riga { justify-content: center; }
 
 /* piede */
 footer { border-top: 1px solid var(--line); padding-block: 26px calc(30px + env(safe-area-inset-bottom, 0px)); }
 footer .wrap { display: grid; gap: 10px; }
 footer p { margin: 0; }
 .privacy { font-size: .9rem; color: var(--muted); }
+.al-sito { display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; }
 .conferma { border: 1px solid var(--stop); border-radius: 12px; padding: 14px; display: grid; gap: 10px; background: var(--surface); }
 .conferma .bottoni { display: flex; flex-wrap: wrap; gap: 8px; }
 .conferma .btn { flex: 1 1 10rem; }
@@ -235,7 +307,7 @@ footer p { margin: 0; }
   .passo { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; }
   .passo .testi { grid-column: 2; grid-row: 1 / span 2; }
   .sette li { max-height: none; }
-  .sette { max-width: 560px; }
+  .sette, .promemoria { max-width: 560px; }
 }
 </style>
 </head>
@@ -247,31 +319,34 @@ footer p { margin: 0; }
   </div>
 </header>
 
-<main>
-<!-- in cima: cos'è, perché, cosa misuri, avvertenze -->
-<section class="cima">
+<main id="pagina">
+<!-- in cima: cos'è, perché, cosa misuri, avvertenze. Dal giorno 2 si chiude e si apre a richiesta. -->
+<section class="cima" id="cima">
   <div class="wrap">
     <p class="eyebrow">Sfida gratuita · 7 giorni</p>
     <h1>Respiro al muro</h1>
     <p class="lede">Tre minuti al giorno, per sette giorni, sempre la stessa routine: un minuto di respiro di pancia e cinque respiri al muro.</p>
-    <div class="tre">
-      <div>
-        <h3>Cos'è</h3>
-        <p>Due esercizi del Quaderno. Il primo insegna al diaframma a scendere; il secondo allinea torace e bacino e fa lavorare gli addominali nel loro compito vero, buttare fuori l'aria.</p>
+    <details class="presenta" id="presenta" open>
+      <summary>Come funziona, e prima di iniziare</summary>
+      <div class="tre">
+        <div>
+          <h3>Cos'è</h3>
+          <p>Due esercizi del Quaderno. Il primo insegna al diaframma a scendere; il secondo allinea torace e bacino e fa lavorare gli addominali nel loro compito vero, buttare fuori l'aria.</p>
+        </div>
+        <div>
+          <h3>Perché sempre la stessa</h3>
+          <p>Il metodo sale per gradini: si va avanti quando un gesto è diventato automatico. Ripeterlo ogni giorno serve a questo, e rende il confronto onesto: cambia solo il giorno.</p>
+        </div>
+        <div>
+          <h3>Cosa misuri</h3>
+          <p>Il giorno 1 e il giorno 7 fai due test da un minuto: il BOLT, i secondi che reggi senza aria dopo un'espirazione normale, e i respiri al minuto.</p>
+        </div>
       </div>
-      <div>
-        <h3>Perché sempre la stessa</h3>
-        <p>Il metodo sale per gradini: si va avanti quando un gesto è diventato automatico. Ripeterlo ogni giorno serve a questo, e rende il confronto onesto: cambia solo il giorno.</p>
+      <div class="avviso">
+        <p><b>Prima di iniziare.</b> Se hai la pressione alta, sei in gravidanza o hai problemi del pavimento pelvico, chiedi prima di fare il respiro al muro.</p>
+        <p>Se ti gira la testa o ti viene mal di testa, fermati e torna al respiro normale. La sfida non sostituisce un medico: con un dolore che peggiora ti fermi e chiedi.</p>
       </div>
-      <div>
-        <h3>Cosa misuri</h3>
-        <p>Il giorno 1 e il giorno 7 fai due test da un minuto: il BOLT, i secondi che reggi senza aria dopo un'espirazione normale, e i respiri al minuto.</p>
-      </div>
-    </div>
-    <div class="avviso">
-      <p><b>Prima di iniziare.</b> Se hai la pressione alta, sei in gravidanza o hai problemi del pavimento pelvico, chiedi prima di fare il respiro al muro.</p>
-      <p>Se ti gira la testa o ti viene mal di testa, fermati e torna al respiro normale. La sfida non sostituisce un medico: con un dolore che peggiora ti fermi e chiedi.</p>
-    </div>
+    </details>
   </div>
 </section>
 
@@ -285,6 +360,17 @@ footer p { margin: 0; }
     <p class="stato" id="stato" aria-live="polite">Giorno 1 di 7: oggi i test e la prima routine.</p>
     <p class="salto" id="salto">Se salti un giorno non si blocca niente: riparti da qui.</p>
     <p class="memoria" id="memoria" hidden>Questo browser non salva i dati della pagina: la sfida funziona, ma chiudendola perdi i giorni fatti e i test.</p>
+    <details class="promemoria" id="promemoria" open>
+      <summary id="pm-sum">Promemoria nel calendario</summary>
+      <div class="pm-corpo">
+      <p id="pm-tit"><b>Un promemoria al giorno</b>, all'ora che scegli. Il file del calendario si crea su questo telefono: non parte nessun dato.</p>
+      <div class="pm-riga">
+        <label class="pm-ora" for="pm-ora">Alle <input type="time" id="pm-ora" value="08:00"></label>
+        <button class="btn" type="button" id="pm-b">Aggiungi al calendario</button>
+      </div>
+      <p class="pm-e" id="pm-e" role="status" aria-live="polite"></p>
+      </div>
+    </details>
   </div>
 </section>
 
@@ -306,7 +392,7 @@ footer p { margin: 0; }
         <button class="btn primary grande" type="button" id="bolt-b">Avvia apnea</button>
         <p class="esito" id="bolt-e" aria-live="polite"></p>
         <ul class="soglie" id="bolt-s">
-          <li data-min="0" data-max="20"><span>Insufficiente</span><b>sotto 20 s</b></li>
+          <li data-min="0" data-max="20"><span>Da allenare</span><b>sotto 20 s</b></li>
           <li data-min="20" data-max="30"><span>Sufficiente</span><b>20–30 s</b></li>
           <li data-min="30" data-max="40"><span>Buono</span><b>30–40 s</b></li>
           <li data-min="40" data-max="9999"><span>Top performance</span><b>oltre 40 s</b></li>
@@ -329,26 +415,42 @@ footer p { margin: 0; }
   </div>
 </section>
 
-<!-- il giorno 7: il confronto -->
+<!-- il giorno 7: il confronto (a sfida finita sale in cima) -->
 <section id="fine" hidden>
   <div class="wrap">
     <p class="eyebrow">Il giorno 7</p>
     <h2>Il confronto</h2>
-    <div class="confronto" id="confronto"></div>
     <p class="frase" id="frase"></p>
-    <h2 class="h-piano">Se vuoi continuare</h2>
-    <p class="intro">Il piano personalizzato parte dai tuoi numeri: il Quaderno costruito su di te, in tre durate.</p>
-    <div id="pacchetti"><p>Tre durate: trimestrale, 6 mesi, 1 anno. Il prezzo te lo scrivo in DM.</p></div>
-    <div class="one"><p><b>One to one</b> · <span id="one-testo">Sessioni dal vivo, online o in presenza. Su richiesta.</span></p></div>
-    <div class="cta">
-      <p>Per il piano o per il one to one, scrivi PIANO su Instagram: ti mando cosa contiene e quanto costa.</p>
-      <span class="btn primary grande" data-ig data-ig-testo="Scrivi PIANO su Instagram">Scrivi PIANO su Instagram</span>
-    </div>
+    <div class="confronto" id="confronto"></div>
+    <p class="frase-resp" id="frase-resp" hidden></p>
     <div class="condividi">
-      <p><b>Condividilo nelle storie.</b> Fai uno screenshot del confronto e pubblicalo taggando <span data-ig-nome>il profilo del Quaderno</span>.</p>
+      <img class="carta-img" id="carta-img" alt="L'immagine da condividere: Respiro al muro, BOLT e respiri al minuto del giorno 1 e del giorno 7." width="1080" height="1350" hidden>
+      <button class="btn primary grande" type="button" id="carta-b">Condividi il tuo risultato</button>
+      <p class="piccolo">Un'immagine pronta con i tuoi due numeri, senza nomi.<span data-se="ig" hidden> Se la pubblichi, tagga <span data-ig-nome></span>.</span></p>
+      <p class="carta-e" id="carta-e" role="status" aria-live="polite"></p>
     </div>
+
+    <h2 class="h-piano">Il passo dopo</h2>
+    <p class="intro">Il piano su misura parte dai tuoi numeri: le 12 settimane del Quaderno, adattate a te e seguite.</p>
+    <div id="pacchetti"><p class="pac-presto">Tre durate: 1 anno, 6 mesi, 3 mesi. I prezzi escono presto.</p></div>
+    <div class="one"><p><b>One to one</b> · <span id="one-testo">Correzioni dal vivo, online o in presenza. Pochi posti: si entra dopo una chiamata di 15 minuti.</span></p></div>
+    <div class="cta">
+      <p data-se="modulo" hidden>Vuoi il piano? Lascia nome ed email: ti rispondo col questionario.</p>
+      <p data-se="email" hidden>Vuoi il piano? Scrivimi a questo indirizzo: ti rispondo col questionario.</p>
+      <p data-se="vuoto">Per il piano o per il one to one, scrivi PIANO su Instagram: ti mando cosa contiene e quanto costa.</p>
+      <div class="cta-azioni cta-forte" data-contatto="piano">
+        <span class="btn primary grande" data-ig data-ig-testo="Scrivi PIANO su Instagram">Scrivi PIANO su Instagram</span>
+      </div>
+      <p class="piccolo" data-se="contatto ig" hidden>Oppure <span data-ig data-ig-testo="scrivi PIANO su Instagram">scrivi PIANO su Instagram</span>.</p>
+    </div>
+    <div class="non-ora" data-se="contatto" hidden>
+      <p>Non ora?</p>
+      <div class="cta-azioni" data-contatto="avvisi"></div>
+    </div>
+    <p class="non-ora" data-se="vuoto">Non ora? <span data-ig data-ig-testo="Le prossime sfide escono su Instagram">Le prossime sfide escono su Instagram</span></p>
   </div>
 </section>
+
 <!-- la routine di oggi -->
 <section id="routine">
   <div class="wrap">
@@ -402,10 +504,35 @@ footer p { margin: 0; }
           <dt>Senti</dt>
           <dd>Inspirando, le scapole che si allontanano ancora: il respiro spinge indietro. Espirando, l'addome che diventa «duro, duro, duro, duro».</dd>
           <dt class="ev">Evita</dt>
-          <dd>Troppo spazio sotto la lombare; il mento che sale per arrivare al muro (metti un supporto dietro la testa); le spalle alzate o tirate indietro come in palestra; di irrigidirti. Più di «cinque respiri, non di più». Di continuare se ti gira la testa o ti viene mal di testa: per il coach è «un'alterazione di pressione interna», ma tu fermati e torna al respiro normale.</dd>
+          <dd>Troppo spazio sotto la lombare; il mento che sale per arrivare al muro (metti un supporto dietro la testa); le spalle alzate o tirate indietro come in palestra; di irrigidirti. Più di «cinque respiri, non di più». Di continuare se ti gira la testa o ti viene mal di testa: fermati e torna al respiro normale.</dd>
         </dl>
         <div class="avviso piccolo"><p><b>Prima chiedi</b> se hai la pressione alta, sei in gravidanza o hai problemi del pavimento pelvico.</p></div>
       </div>
+    </div>
+
+    <!-- il giorno 1 e il giorno 7: tre domande, salvate sul telefono -->
+    <div class="sensazioni" id="sensazioni" hidden>
+      <h3>Tre domande, dopo la routine</h3>
+      <p class="piccolo" id="sens-intro">Le risposte restano su questo telefono: il giorno 7 le ritrovi accanto ai numeri.</p>
+      <div class="domanda" role="group" aria-labelledby="d-e1">
+        <p id="d-e1">Respiro di pancia: la mano sulla pancia sale e scende, e quella sul petto resta quasi ferma?</p>
+        <div class="sino" data-chiave="e1"><button type="button" data-v="1" aria-pressed="false">Sì</button><button type="button" data-v="0" aria-pressed="false">Non ancora</button></div>
+      </div>
+      <div class="domanda" role="group" aria-labelledby="d-e64">
+        <p id="d-e64">Al muro: buttando fuori l'aria a bocca aperta, senti l'addome che si indurisce?</p>
+        <div class="sino" data-chiave="e64"><button type="button" data-v="1" aria-pressed="false">Sì</button><button type="button" data-v="0" aria-pressed="false">Non ancora</button></div>
+      </div>
+      <div class="domanda" role="group" aria-labelledby="d-come">
+        <p id="d-come">Come ti senti?</p>
+        <div class="sens" data-chiave="come">
+          <button type="button" data-v="1" aria-pressed="false"><b>1</b>pesante</button>
+          <button type="button" data-v="2" aria-pressed="false"><b>2</b>così così</button>
+          <button type="button" data-v="3" aria-pressed="false"><b>3</b>normale</button>
+          <button type="button" data-v="4" aria-pressed="false"><b>4</b>bene</button>
+          <button type="button" data-v="5" aria-pressed="false"><b>5</b>leggero</button>
+        </div>
+      </div>
+      <p class="sens-e" id="sens-e" role="status" aria-live="polite"></p>
     </div>
 
     <div class="fatto-box" id="fatto-box">
@@ -419,11 +546,11 @@ footer p { margin: 0; }
 
 <footer>
   <div class="wrap">
-    <p><a href="./">Prima le Radici</a></p>
-    <p class="privacy">Privacy: i giorni fatti e i test restano su questo dispositivo. Non li riceve nessuno.</p>
+    <p><a class="al-sito" href="./">Prima le Radici</a></p>
+    <p class="privacy">Privacy: i giorni fatti, i test e le risposte restano su questo dispositivo. Non li riceve nessuno.</p>
     <p><button class="link" type="button" id="ricomincia">Ricomincia la sfida</button></p>
     <div class="conferma" id="conferma" hidden role="group" aria-labelledby="conferma-t">
-      <p id="conferma-t">Ricominci da zero: cancelli i giorni fatti e i test di questa sfida su questo dispositivo.</p>
+      <p id="conferma-t">Ricominci da zero: cancelli i giorni fatti, i test e le risposte di questa sfida su questo dispositivo.</p>
       <div class="bottoni">
         <button class="btn si" type="button" id="conferma-si">Sì, ricomincia</button>
         <button class="btn" type="button" id="conferma-no">No, lascia così</button>
@@ -448,10 +575,15 @@ footer p { margin: 0; }
   function mmss(ms) { var s = Math.max(0, Math.ceil(ms / 1000)); return Math.floor(s / 60) + ":" + due(s % 60); }
   function secondi(ms) { return (ms / 1000).toFixed(1).replace(".", ",") + " s"; }
   function numero(v) { return typeof v === "number" && isFinite(v) && v >= 0 ? v : null; }
+  function siNo(v) { return v === 0 || v === 1 ? v : null; }
+  function scala(v) { return typeof v === "number" && v >= 1 && v <= 5 && Math.floor(v) === v ? v : null; }
 
   // ---- i dati ----
+  // sens: le tre domande del giorno 1 e del giorno 7 (e1, e64: 1 sì, 0 non ancora; come: da 1 a 5).
+  // ora: l'ora scelta per i promemoria del calendario.
   var memoria = true;
-  function nuovo() { return { v: 1, inizio: null, fatti: [], test: { g1: { bolt: null, resp: null }, g7: { bolt: null, resp: null } } }; }
+  function vuote() { return { e1: null, e64: null, come: null }; }
+  function nuovo() { return { v: 1, inizio: null, fatti: [], test: { g1: { bolt: null, resp: null }, g7: { bolt: null, resp: null } }, sens: { g1: vuote(), g7: vuote() }, ora: null }; }
   function carica() {
     var s = null;
     try { s = JSON.parse(localStorage.getItem(CHIAVE) || "null"); } catch (e) { memoria = false; s = null; }
@@ -462,7 +594,10 @@ footer p { margin: 0; }
     ["g1", "g7"].forEach(function (g) {
       var t = s.test && s.test[g] ? s.test[g] : {};
       v.test[g] = { bolt: numero(t.bolt), resp: numero(t.resp) };
+      var x = s.sens && s.sens[g] ? s.sens[g] : {};
+      v.sens[g] = { e1: siNo(x.e1), e64: siNo(x.e64), come: scala(x.come) };
     });
+    v.ora = typeof s.ora === "string" && /^\d{2}:\d{2}$/.test(s.ora) ? s.ora : null;
     return v;
   }
   function salva() {
@@ -495,13 +630,15 @@ footer p { margin: 0; }
   document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible" && vuole) sveglio(true); });
 
   // ---- le soglie ----
+  var FASCE = ["Da allenare", "Sufficiente", "Buono", "Top performance"], SOGLIE = [20, 30, 40];
+  function fascia(s) { return s < 20 ? 0 : s < 30 ? 1 : s < 40 ? 2 : 3; }
   function evidenzia(ul, v) {
     Array.prototype.forEach.call(ul.querySelectorAll("li"), function (li) { li.classList.toggle("attivo", v >= Number(li.dataset.min) && v < Number(li.dataset.max)); });
   }
-  function giudizioBolt(s) { return s < 20 ? "Insufficiente" : s < 30 ? "Sufficiente" : s < 40 ? "Buono" : "Top performance"; }
+  function giudizioBolt(s) { return FASCE[fascia(s)]; }
   function giudizioResp(n) { return n <= 6 ? "Top" : n <= 12 ? "Va benissimo" : "Alto"; }
 
-  // ---- BOLT, come nella facciata ----
+  // ---- BOLT, come nella facciata: il numero si arrotonda al secondo una volta sola ----
   var boltT0 = 0, boltRaf = 0;
   function boltGira() { $("bolt-t").textContent = secondi(performance.now() - boltT0); boltRaf = requestAnimationFrame(boltGira); }
   function boltSalva(s) {
@@ -516,10 +653,10 @@ footer p { margin: 0; }
       evidenzia($("bolt-s"), -1); boltGira(); return;
     }
     cancelAnimationFrame(boltRaf);
-    var s = (performance.now() - boltT0) / 1000; boltT0 = 0;
-    $("bolt-t").textContent = secondi(s * 1000); $("bolt-b").textContent = "Rifai";
+    var s = Math.round((performance.now() - boltT0) / 1000); boltT0 = 0;
+    $("bolt-t").textContent = s + " s"; $("bolt-b").textContent = "Rifai";
     evidenzia($("bolt-s"), s);
-    boltSalva(Math.round(s));
+    boltSalva(s);
   });
   // Il BOLT fatto oggi sulla pagina principale vale come test del giorno 1: non serve rifarlo subito.
   function boltDiOggi() {
@@ -666,6 +803,100 @@ footer p { margin: 0; }
   $("tab-1").addEventListener("click", function () { passo(1); });
   $("tab-2").addEventListener("click", function () { passo(2); });
 
+  // ---- tre domande sulle sensazioni, il giorno 1 e il giorno 7 ----
+  Array.prototype.forEach.call(document.querySelectorAll("#sensazioni [data-chiave]"), function (gr) {
+    gr.addEventListener("click", function (e) {
+      var b = e.target.closest ? e.target.closest("button") : null, f = fase();
+      if (!b || !f) return;
+      var k = gr.getAttribute("data-chiave"), v = Number(b.getAttribute("data-v"));
+      S.sens[f][k] = k === "come" ? scala(v) : siNo(v);
+      salva();
+      disegnaSens();
+      $("sens-e").textContent = memoria ? "Salvato su questo telefono." : "";
+      disegnaFine();
+    });
+  });
+  function disegnaSens() {
+    var f = fase();
+    $("sensazioni").hidden = !f;
+    if (!f) return;
+    $("sens-intro").textContent = f === "g7"
+      ? "Le stesse tre domande del giorno 1: le risposte vanno nel confronto, accanto ai numeri."
+      : "Le risposte restano su questo telefono: il giorno 7 le ritrovi accanto ai numeri.";
+    Array.prototype.forEach.call(document.querySelectorAll("#sensazioni [data-chiave]"), function (gr) {
+      var v = S.sens[f][gr.getAttribute("data-chiave")];
+      Array.prototype.forEach.call(gr.querySelectorAll("button"), function (b) { b.setAttribute("aria-pressed", v !== null && Number(b.getAttribute("data-v")) === v ? "true" : "false"); });
+    });
+  }
+
+  // ---- promemoria nel calendario: un file .ics creato qui, nessun dato inviato ----
+  function testoIcs(s) { return String(s).replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n"); }
+  // RFC 5545: righe di 75 byte al massimo; si va a capo con CRLF e uno spazio.
+  function piega(riga) {
+    var out = "", n = 0;
+    for (var i = 0; i < riga.length;) {
+      var cp = riga.codePointAt(i), ch = String.fromCodePoint(cp), len = cp < 0x80 ? 1 : cp < 0x800 ? 2 : cp < 0x10000 ? 3 : 4;
+      if (n + len > 75) { out += "\r\n "; n = 1; }
+      out += ch; n += len; i += ch.length;
+    }
+    return out;
+  }
+  function locale(d) { return d.getFullYear() + due(d.getMonth() + 1) + due(d.getDate()) + "T" + due(d.getHours()) + due(d.getMinutes()) + "00"; }
+  function utc(d) { return d.getUTCFullYear() + due(d.getUTCMonth() + 1) + due(d.getUTCDate()) + "T" + due(d.getUTCHours()) + due(d.getUTCMinutes()) + due(d.getUTCSeconds()) + "Z"; }
+  // Un evento al giorno all'ora scelta, per i giorni che restano (7 se la sfida comincia oggi):
+  // da oggi, se l'ora non è passata e la routine di oggi non è fatta, altrimenti da domani.
+  function calendario(ora) {
+    var st = stato(), resta = 7 - st.n, m = /^(\d{1,2}):(\d{2})/.exec(ora || "");
+    if (!m || resta <= 0) return null;
+    var d = new Date(); d.setHours(+m[1], +m[2], 0, 0);
+    if (st.fattoOggi || d.getTime() <= Date.now()) d.setDate(d.getDate() + 1);
+    var url = location.href.split("#")[0].split("?")[0];
+    var r = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Prima le Radici//Respiro al muro//IT", "CALSCALE:GREGORIAN", "METHOD:PUBLISH",
+      "BEGIN:VEVENT",
+      "UID:" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10) + "@primaleradici",
+      "DTSTAMP:" + utc(new Date()),
+      "DTSTART:" + locale(d),
+      "DURATION:PT5M",
+      "RRULE:FREQ=DAILY;COUNT=" + resta,
+      "SUMMARY:" + testoIcs("Respiro al muro: 3 minuti"),
+      "DESCRIPTION:" + testoIcs("La routine di oggi: un minuto di respiro di pancia e cinque respiri al muro. Apri la sfida: " + url),
+      "URL:" + url,
+      "TRANSP:TRANSPARENT",
+      "BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:" + testoIcs("Respiro al muro: 3 minuti"), "TRIGGER:PT0S", "END:VALARM",
+      "END:VEVENT", "END:VCALENDAR"];
+    return { testo: r.map(piega).join("\r\n") + "\r\n", quanti: resta, dal: d, ora: due(+m[1]) + ":" + m[2] };
+  }
+  function scaricaFile(blob, nome) {
+    var u = URL.createObjectURL(blob), a = document.createElement("a");
+    a.href = u; a.download = nome; a.rel = "noopener";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(u); }, 60000);
+  }
+  $("pm-b").addEventListener("click", function () {
+    var ora = $("pm-ora").value || "08:00", c = calendario(ora);
+    if (!c) return;
+    S.ora = c.ora; salva();
+    scaricaFile(new Blob([c.testo], { type: "text/calendar;charset=utf-8" }), "respiro-al-muro.ics");
+    $("pm-e").textContent = c.quanti + " promemoria alle " + c.ora + (c.dal.getDate() === new Date().getDate() ? ", da oggi" : ", da domani") +
+      ". Apri il file «respiro-al-muro.ics» e aggiungilo al calendario.";
+    disegnaPromemoria();
+  });
+  // Prima del primo file il riquadro è aperto; dopo, all'apertura della pagina, è una riga sola.
+  function disegnaPromemoria(iniziale) {
+    var pm = $("promemoria");
+    pm.hidden = stato().finita;
+    pm.classList.toggle("aggiunto", !!S.ora);
+    if (!S.ora) { pm.open = true; return; }
+    if (iniziale) pm.open = false;
+    $("pm-sum").textContent = "Promemoria nel calendario alle " + S.ora;
+    $("pm-ora").value = S.ora;
+    var t = $("pm-tit"), b = document.createElement("b");
+    b.textContent = "Promemoria alle " + S.ora;
+    t.textContent = "";
+    t.appendChild(b);
+    t.appendChild(document.createTextNode(". Se cambi ora, aggiungili di nuovo e togli quelli vecchi dal calendario."));
+  }
+
   // ---- «Fatto oggi» ----
   $("fatto").addEventListener("click", function () {
     var st = stato();
@@ -677,6 +908,7 @@ footer p { margin: 0; }
     var n = S.fatti.length;
     $("fatto-e").textContent = n >= 7 ? "Settimana completata." : "Segnato il giorno " + n + ". A domani.";
     disegna();
+    ordina(false);
     if (n >= 7) $(S.test.g7.bolt !== null || S.test.g7.resp !== null ? "fine" : "test").scrollIntoView({ block: "start" });
   });
 
@@ -703,6 +935,7 @@ footer p { margin: 0; }
     $("routine-occhiello").textContent = st.finita ? "La routine, se vuoi continuare" : "La routine di oggi";
     $("fatto").hidden = st.fattoOggi || st.finita;
     $("fatto-box").hidden = st.finita && !$("fatto-e").textContent;
+    disegnaPromemoria();
   }
   function disegnaTest() {
     var f = fase();
@@ -737,19 +970,159 @@ footer p { margin: 0; }
     }
     return h + "</div>";
   }
+  // le sensazioni accanto ai numeri, se almeno un giorno ha una risposta
+  function voceSens() {
+    var a = S.sens.g1, b = S.sens.g7;
+    function sn(v) { return v === 1 ? "sì" : v === 0 ? "non ancora" : "—"; }
+    function cs(v) { return v === null ? "—" : String(v); }
+    var righe = [["Come ti senti, da 1 a 5", cs(a.come), cs(b.come)], ["Pancia che sale, petto quasi fermo", sn(a.e1), sn(b.e1)], ["Al muro, l'addome che si indurisce", sn(a.e64), sn(b.e64)]];
+    var qualcosa = [a.e1, a.e64, a.come, b.e1, b.e64, b.come].some(function (v) { return v !== null; });
+    if (!qualcosa) return "";
+    return '<div class="conf conf-sens"><h3>Le sensazioni · giorno 1 → giorno 7</h3>' + righe.map(function (r) {
+      return '<p class="riga"><span>' + r[0] + "</span><b>" + r[1] + " → " + r[2] + "</b></p>";
+    }).join("") + "</div>";
+  }
+  // La frase del BOLT legge la fascia: quanti secondi mancano alla prossima.
+  function fraseBolt(a, b, finita) {
+    var chiusa = finita ? "Hai fatto 7 giorni su 7, ed era la parte difficile." : "Ti manca solo la routine di oggi per fare 7 giorni su 7.";
+    if (b > a) {
+      var t = "Da " + a + " a " + b + " secondi in 7 giorni.", fa = fascia(a), fb = fascia(b);
+      if (fb > fa) t += " Adesso sei in «" + FASCE[fb] + "».";
+      if (fb < 3) t += " Ti mancano " + (SOGLIE[fb] - b) + (SOGLIE[fb] - b === 1 ? " secondo" : " secondi") + " per «" + FASCE[fb + 1] + "».";
+      return t;
+    }
+    if (b === a) return "Il numero è fermo: il coach rifà i test ogni due settimane. " + chiusa;
+    return "Il numero è sceso di " + (a - b) + (a - b === 1 ? " secondo" : " secondi") + ": il coach rifà i test ogni due settimane, e in 7 giorni può succedere. " + chiusa;
+  }
+  function fraseResp(a, b) {
+    if (b < a) return "Respiri al minuto: da " + a + " a " + b + ", più lenti: è la direzione giusta.";
+    if (b === a) return "Respiri al minuto: " + b + ", come il giorno 1.";
+    return "Respiri al minuto: da " + a + " a " + b + ".";
+  }
   function disegnaFine() {
     var st = stato(), g1 = S.test.g1, g7 = S.test.g7;
     var mostra = st.giorno === 7 && (g7.bolt !== null || g7.resp !== null);
     $("fine").hidden = !mostra;
     if (!mostra) return;
-    $("confronto").innerHTML = voce("BOLT", " s", g1.bolt, g7.bolt, true) + voce("Respiri al minuto", "", g1.resp, g7.resp, false);
-    var confronto = (g1.bolt !== null && g7.bolt !== null) || (g1.resp !== null && g7.resp !== null);
-    var meglio = (g1.bolt !== null && g7.bolt !== null && g7.bolt > g1.bolt) || (g1.resp !== null && g7.resp !== null && g7.resp < g1.resp);
-    $("frase").textContent = !confronto
-      ? "Senza il test del giorno 1 non c'è un confronto: il numero di oggi è il tuo punto di partenza."
-      : meglio ? "Il tuo numero è cambiato in 7 giorni." : "Sette giorni sono pochi per alcuni: il piano parte proprio da qui.";
+    $("confronto").innerHTML = voce("BOLT", " s", g1.bolt, g7.bolt, true) + voce("Respiri al minuto", "", g1.resp, g7.resp, false) + voceSens();
+    var cBolt = g1.bolt !== null && g7.bolt !== null, cResp = g1.resp !== null && g7.resp !== null;
+    var fr = $("frase"), fr2 = $("frase-resp");
+    if (cBolt) { fr.textContent = fraseBolt(g1.bolt, g7.bolt, st.finita); fr2.textContent = cResp ? fraseResp(g1.resp, g7.resp) : ""; }
+    else if (cResp) { fr.textContent = fraseResp(g1.resp, g7.resp); fr2.textContent = ""; }
+    else { fr.textContent = "Senza il test del giorno 1 non c'è un confronto: il numero di oggi è il tuo punto di partenza."; fr2.textContent = ""; }
+    fr2.hidden = !fr2.textContent;
+    preparaCarta();
   }
-  function disegna() { disegnaGiorni(); disegnaTest(); disegnaFine(); }
+  function disegna() { disegnaGiorni(); disegnaTest(); disegnaFine(); disegnaSens(); }
+  // Dal giorno 2 la presentazione si chiude e la pagina parte da giorni e routine; a sfida finita il
+  // confronto sale in cima. All'apertura (iniziale) la presentazione si apre o si chiude da sola.
+  function ordina(iniziale) {
+    var st = stato(), primo = st.giorno === 1, main = $("pagina");
+    $("cima").classList.toggle("compatta", !primo);
+    if (iniziale || primo) $("presenta").open = primo;
+    main.insertBefore($("fine"), st.finita ? $("giorni") : $("routine"));
+  }
+
+  // ---- la carta del risultato: un'immagine fatta qui, coi colori del sito e senza nomi ----
+  var COL = { bg: "#F1F4F1", surface: "#FFFFFF", ink: "#16201C", muted: "#55625C", line: "#D3DBD6", breath: "#1B6B5C", soft: "#D5EBE4", ground: "#93550F" };
+  var DISP = '"Archivo", "Arial Narrow", sans-serif', MONO = '"JetBrains Mono", Consolas, monospace', BODY = '"Atkinson Hyperlegible", system-ui, sans-serif';
+  var carta = { chiave: "", blob: null, url: "", lavoro: null };
+  function caratteri() {
+    if (!document.fonts || !document.fonts.load) return Promise.resolve();
+    var l = [document.fonts.load("800 100px " + DISP, "RESPIRO AL MURO PRIMA LE RADICI"), document.fonts.load("700 100px " + MONO, "0123456789 sGIORNO BOLT"), document.fonts.load("700 34px " + BODY, "Prima le radici, poi il colpo.")];
+    return Promise.race([Promise.all(l), new Promise(function (ok) { setTimeout(ok, 2500); })]).catch(function () {});
+  }
+  function immagine(src) { return new Promise(function (ok) { var i = new Image(); i.onload = function () { ok(i); }; i.onerror = function () { ok(null); }; i.src = src; }); }
+  function tondo(x, X, Y, W, H, R) { x.beginPath(); x.moveTo(X + R, Y); x.arcTo(X + W, Y, X + W, Y + H, R); x.arcTo(X + W, Y + H, X, Y + H, R); x.arcTo(X, Y + H, X, Y, R); x.arcTo(X, Y, X + W, Y, R); x.closePath(); }
+  function adatta(x, t, peso, fam, max, larg) { var s = max; x.font = peso + " " + s + "px " + fam; while (s > 12 && x.measureText(t).width > larg) { s -= 2; x.font = peso + " " + s + "px " + fam; } }
+  function freccia(x, X, Y, L, col) { x.strokeStyle = col; x.lineWidth = 7; x.lineCap = "round"; x.lineJoin = "round"; x.beginPath(); x.moveTo(X, Y); x.lineTo(X + L, Y); x.moveTo(X + L - 20, Y - 18); x.lineTo(X + L, Y); x.lineTo(X + L - 20, Y + 18); x.stroke(); }
+  function voceCarta(x, X, Y, L, titolo, a, b, u, alto) {
+    tondo(x, X, Y, L, 300, 30); x.fillStyle = COL.surface; x.fill(); x.lineWidth = 3; x.strokeStyle = COL.line; x.stroke();
+    x.textAlign = "left"; x.fillStyle = COL.muted; x.font = "700 30px " + MONO; x.fillText(titolo, X + 44, Y + 68);
+    if (a !== null && b !== null) {
+      var d = b - a, meglio = alto ? d > 0 : d < 0;
+      x.textAlign = "right"; x.fillStyle = meglio ? COL.breath : COL.muted; x.font = "700 46px " + MONO;
+      x.fillText((d > 0 ? "+" : d < 0 ? "−" : "±") + Math.abs(d) + u, X + L - 44, Y + 72);
+    }
+    x.textAlign = "left"; x.fillStyle = COL.muted; x.font = "700 26px " + MONO;
+    x.fillText("GIORNO 1", X + 44, Y + 140); x.fillText("GIORNO 7", X + 500, Y + 140);
+    var wa = numeroCarta(x, a, u, X + 44, Y + 250, COL.ink);
+    numeroCarta(x, b, u, X + 500, Y + 250, COL.breath);
+    // la freccia nel mezzo, tra il primo numero e il secondo
+    var da = X + 44 + wa + 24, fino = X + 476, L = Math.min(110, fino - da);
+    if (L >= 50) freccia(x, da + (fino - da - L) / 2, Y + 212, L, COL.muted);
+  }
+  // il numero grande e, accanto, l'unità più piccola; restituisce la larghezza
+  function numeroCarta(x, v, u, X, Y, col) {
+    var t = v === null ? "—" : String(v), un = v === null ? "" : u.trim();
+    x.fillStyle = col; x.font = "700 112px " + MONO; x.fillText(t, X, Y);
+    var w = x.measureText(t).width;
+    if (un) { x.font = "700 54px " + MONO; x.fillText(un, X + w + 10, Y); w += 10 + x.measureText(un).width; }
+    return w;
+  }
+  function disegnaCarta() {
+    return Promise.all([caratteri(), immagine("icona-512.png")]).then(function (r) {
+      var icona = r[1], W = 1080, H = 1350, P = 84, c = document.createElement("canvas");
+      c.width = W; c.height = H;
+      var x = c.getContext("2d");
+      if (!x) throw new Error("canvas");
+      x.fillStyle = COL.bg; x.fillRect(0, 0, W, H);
+      // in alto il nome della sfida
+      if (icona) { x.save(); tondo(x, P, P, 92, 92, 22); x.clip(); x.drawImage(icona, P, P, 92, 92); x.restore(); }
+      x.fillStyle = COL.ink; x.textBaseline = "middle"; x.font = "800 46px " + DISP; x.fillText("PRIMA LE RADICI", P + (icona ? 120 : 0), P + 48);
+      x.textBaseline = "alphabetic";
+      x.fillStyle = COL.breath; x.font = "700 32px " + MONO; x.fillText("SFIDA GRATUITA · 7 GIORNI", P, 296);
+      x.fillStyle = COL.ink; adatta(x, "RESPIRO AL MURO", "800", DISP, 160, W - 2 * P); x.fillText("RESPIRO AL MURO", P, 432);
+      // i 7 giorni
+      var n = Math.min(7, S.fatti.length), g = 14, w = (W - 2 * P - 6 * g) / 7;
+      for (var i = 0; i < 7; i++) {
+        tondo(x, P + i * (w + g), 478, w, 28, 8);
+        x.fillStyle = i < n ? COL.breath : COL.surface; x.fill();
+        if (i >= n) { x.lineWidth = 3; x.strokeStyle = COL.breath; x.stroke(); }
+      }
+      // i due numeri
+      voceCarta(x, P, 568, W - 2 * P, "BOLT · SECONDI SENZA ARIA", S.test.g1.bolt, S.test.g7.bolt, " s", true);
+      voceCarta(x, P, 900, W - 2 * P, "RESPIRI AL MINUTO", S.test.g1.resp, S.test.g7.resp, "", false);
+      // in basso
+      x.textAlign = "left"; x.fillStyle = COL.muted; adatta(x, "Prima le radici, poi il colpo.", "700", BODY, 38, 560); x.fillText("Prima le radici, poi il colpo.", P, 1274);
+      var p = window.QGOfferta ? QGOfferta.profilo() : null;
+      if (p && p.nome.charAt(0) === "@") { x.textAlign = "right"; x.fillStyle = COL.breath; adatta(x, p.nome, "700", MONO, 34, 330); x.fillText(p.nome, W - P, 1274); }
+      return new Promise(function (ok, ko) { c.toBlob(function (b) { if (b) ok(b); else ko(new Error("toBlob")); }, "image/png"); });
+    });
+  }
+  function chiaveCarta() { return JSON.stringify([S.test, Math.min(7, S.fatti.length)]); }
+  // L'immagine si prepara appena il confronto si vede: al tocco su «Condividi» è già pronta, e
+  // la condivisione parte subito dal gesto (alcuni telefoni lo chiedono).
+  function preparaCarta() {
+    var k = chiaveCarta();
+    if (carta.chiave === k && carta.lavoro) return carta.lavoro;
+    carta.chiave = k; carta.blob = null;
+    var lavoro = carta.lavoro = disegnaCarta().then(function (b) {
+      if (carta.lavoro !== lavoro) return b;
+      carta.blob = b;
+      if (carta.url) URL.revokeObjectURL(carta.url);
+      carta.url = URL.createObjectURL(b);
+      $("carta-img").src = carta.url; $("carta-img").hidden = false;
+      return b;
+    });
+    lavoro.catch(function () { if (carta.lavoro === lavoro) { carta.lavoro = null; carta.chiave = ""; } });
+    return lavoro;
+  }
+  function condividi(blob) {
+    var e = $("carta-e"), nome = "respiro-al-muro.png", file = null;
+    function salvaFile() { scaricaFile(blob, nome); e.textContent = "Immagine salvata: la trovi tra i download."; }
+    try { file = new File([blob], nome, { type: "image/png" }); } catch (x) { file = null; }
+    var puo = false;
+    try { puo = !!(file && navigator.share && navigator.canShare && navigator.canShare({ files: [file] })); } catch (x) { puo = false; }
+    if (!puo) return salvaFile();
+    e.textContent = "";
+    navigator.share({ files: [file], title: "Respiro al muro" }).catch(function (err) { if (!err || err.name !== "AbortError") salvaFile(); });
+  }
+  $("carta-b").addEventListener("click", function () {
+    if (carta.blob && carta.chiave === chiaveCarta()) return condividi(carta.blob);
+    $("carta-e").textContent = "Preparo l'immagine…";
+    preparaCarta().then(condividi, function () { $("carta-e").textContent = "Non riesco a preparare l'immagine su questo browser."; });
+  });
 
   // ---- ricomincia, con conferma dentro la pagina ----
   $("ricomincia").addEventListener("click", function () { $("conferma").hidden = false; $("conferma-no").focus(); });
@@ -759,9 +1132,11 @@ footer p { margin: 0; }
     fermaP1(); fermaP2(); sveglio(false);
     P1 = { stato: "pronto", resta: 60000, t: 0, ultimo: 0, raf: 0 }; P2 = { n: 0, stato: "pronto", t0: 0, raf: 0 };
     $("p1-fine").hidden = true; $("p1-avanti").hidden = true; $("tab-1").classList.remove("fatto"); $("tab-2").classList.remove("fatto");
-    $("bolt-e").textContent = ""; $("resp-e").textContent = ""; $("fatto-e").textContent = "";
+    $("bolt-e").textContent = ""; $("resp-e").textContent = ""; $("fatto-e").textContent = ""; $("sens-e").textContent = ""; $("pm-e").textContent = "";
+    $("pm-tit").innerHTML = "<b>Un promemoria al giorno</b>, all'ora che scegli. Il file del calendario si crea su questo telefono: non parte nessun dato.";
+    disegnaPromemoria(true);
     $("conferma").hidden = true;
-    passo(1); disegnaP1(); disegnaP2(); disegna();
+    passo(1); disegnaP1(); disegnaP2(); disegna(); ordina(true);
     window.scrollTo(0, 0);
   });
 
@@ -773,7 +1148,7 @@ footer p { margin: 0; }
     var one = QGOfferta.oneToOne(); if (one) $("one-testo").textContent = one;
   }
   $("memoria").hidden = memoria;
-  disegnaP1(); disegnaP2(); disegna();
+  disegnaP1(); disegnaP2(); disegna(); ordina(true); disegnaPromemoria(true);
 })();
 </script>
 </body>
