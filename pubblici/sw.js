@@ -5,10 +5,16 @@
 // guida. Cambiare VERSIONE a ogni pubblicazione fa ripartire la memoria con i file nuovi.
 // guida.json (i dati cifrati della guida) e il PDF cifrato stanno in memoria: senza internet la porta
 // li prende da qui, e sono sempre della stessa pubblicazione.
+// Due modi: la guida registra «sw.js» e mette in memoria tutto; le pagine pubbliche nuove (pillole e
+// percorsi) registrano «sw.js?solo=pubblici», che salta la guida cifrata: chi non ha il codice non la
+// scarica. Quando poi si entra col codice, la guida registra «sw.js» e la memoria si completa.
 const VERSIONE = "qg-__VERSIONE__";
 const FONT = "qg-font";
 const FILE = ["./", "index.html", "guida.json", "sfida.html", "figure.js", "offerta.js", "manifest.webmanifest", "icona.svg", "icona-180.png", "icona-192.png", "icona-512.png",
-  "dentro-programma.webp", "dentro-player.webp", "dentro-scheda.webp", "quaderno-del-respiro.pdf.enc"];
+  "dentro-programma.webp", "dentro-player.webp", "dentro-scheda.webp", "quaderno-del-respiro.pdf.enc",
+  "pillole.html", "percorso-benessere.html", "percorso-corsa.html", "percorso-combattimento.html", "percorso-forza.html", "pillole.js", "sito.js", "sito.css"];
+const GUIDA = ["guida.json", "quaderno-del-respiro.pdf.enc"];
+const SOLO_PUBBLICI = new URL(self.location.href).searchParams.get("solo") === "pubblici";
 const RADICE = new URL("index.html", self.location).href;
 
 // L'indirizzo con cui si salva una pagina: senza ?… e #…, e «cartella/» diventa «cartella/index.html».
@@ -17,7 +23,8 @@ function pagina(u) {
 }
 
 self.addEventListener("install", (e) => {
-  e.waitUntil(caches.open(VERSIONE).then((c) => c.addAll(FILE)).then(() => self.skipWaiting()));
+  const lista = SOLO_PUBBLICI ? FILE.filter((f) => GUIDA.indexOf(f) === -1) : FILE;
+  e.waitUntil(caches.open(VERSIONE).then((c) => c.addAll(lista)).then(() => self.skipWaiting()));
 });
 
 self.addEventListener("activate", (e) => {

@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Corsa e fiato · Prima le Radici</title>
+<meta name="description" content="Per chi corre o fa sport di resistenza. Una sessione tipo da 15 minuti, gratis, e come si adatta a te nel Quaderno.">
+<!-- Fuori dai motori di ricerca finché profilo e nome non sono definitivi. -->
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="it_IT">
+<meta property="og:site_name" content="Prima le Radici">
+<meta property="og:title" content="Corsa e fiato · Prima le Radici">
+<meta property="og:description" content="Per chi corre o fa sport di resistenza. Una sessione tipo da 15 minuti, gratis, e come si adatta a te nel Quaderno.">
+<meta property="og:image" content="icona-512.png">
+<meta property="og:image:width" content="512">
+<meta property="og:image:height" content="512">
+<meta property="og:image:alt" content="L'icona di Prima le Radici">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#F1F4F1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1412" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icona.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icona-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="sito.css">
+</head>
+<body data-pagina="percorso" data-percorso="corsa-e-fiato">
+<header class="testata">
+  <div class="wrap riga1">
+    <a class="marchio" href="./"><img src="icona-180.png" alt="">Prima le Radici</a>
+    <a class="ho-pw" href="./#accesso" id="vai-accesso">Ho il codice</a>
+  </div>
+  <nav class="wrap riga2" aria-label="Le pagine del sito">
+    <a href="./">Inizio</a>
+    <a href="pillole.html">Pillole</a>
+    <a href="./#percorsi" aria-current="page">Percorsi</a>
+    <a href="sfida.html">Sfida</a>
+  </nav>
+</header>
+
+<main id="pagina">
+<section class="apertura" id="inizio">
+  <div class="wrap">
+    <ul class="selettore" aria-label="I quattro percorsi">
+      <li><a href="percorso-benessere.html">Benessere</a></li>
+      <li><a href="percorso-corsa.html" aria-current="page">Corsa e fiato</a></li>
+      <li><a href="percorso-combattimento.html">Combattimento</a></li>
+      <li><a href="percorso-forza.html">Forza e scatti</a></li>
+    </ul>
+    <p class="eyebrow" style="margin-top:18px">Percorso</p>
+    <h1>Corsa e fiato</h1>
+    <p class="lede">Per chi corre o fa sport di resistenza.</p>
+    <p id="tuo-percorso" hidden><span class="etichetta">Il tuo percorso, dalle tue risposte</span></p>
+  </div>
+</section>
+
+<section id="cambia">
+  <div class="wrap">
+    <h2>Che cosa cambia</h2>
+    <p>La base è la stessa per tutti: respiro, piedi, mobilità e tronco. Qui pesano di più:</p>
+    <ul class="pesano">
+      <li><a href="pillole.html#piede-che-tiene">Piede che tiene</a></li>
+      <li><a href="pillole.html#respiro-basso">Respiro basso</a></li>
+      <li><a href="pillole.html#tronco-e-glutei">Tronco e glutei</a></li>
+    </ul>
+    <p>Nel tuo piano, rispetto alla base:</p>
+    <ul class="elenco">
+      <li>Più lavoro su piede ed equilibrio.</li>
+      <li>Il respiro col naso mentre cammini e corri, dalla settimana 5, fuori dalla stagione di gare.</li>
+      <li>I polpacci ogni settimana, dal secondo blocco.</li>
+    </ul>
+    <p>È la base accanto al tuo allenamento: il tuo sport resta tuo.</p>
+  </div>
+</section>
+
+<section id="sessione">
+  <div class="wrap">
+    <h2>Una sessione tipo · 15 minuti</h2>
+    <p class="intro">Fatta solo di pillole gratuite. È un esempio: nel Quaderno le sessioni seguono le 12 settimane e il tuo livello.</p>
+    <div id="sessione-blocco">
+      <ol class="sessione" id="sessione-elenco"></ol>
+      <p class="totale" id="sessione-totale"></p>
+      <button class="btn primary grande" type="button" data-sessione="corsa-e-fiato">Avvia la sessione</button>
+      <p class="piccolo" style="margin-top:10px">Prima leggi le pillole: ogni avviso vale anche qui.</p>
+    </div>
+    <div class="errore-dati" id="errore-dati" hidden>
+      <p>Non riesco a caricare la sessione: controlla la connessione e ricarica la pagina.</p>
+      <button class="btn primary" type="button" id="ricarica">Ricarica</button>
+    </div>
+  </div>
+</section>
+
+<section id="adatta">
+  <div class="wrap">
+    <h2>Come si adatta a te</h2>
+    <ul class="adatta">
+      <li><b>Il percorso</b> lo sceglie il tuo obiettivo: qui, la corsa o uno sport di resistenza.</li>
+      <li><b>Il livello</b> (Inizio, Medio, Avanzato) dipende da quanto ti alleni oggi e da quello che riesci a fare nei test.</li>
+      <li><b>Il tempo</b> (Breve, Base, Pieno) lo scegli tu: circa 50, 90 o 125 minuti a settimana.</li>
+      <li><b>L'accento</b> è un tema solo alla volta, su cui si aggiungono pochi minuti. Lo indicano i test, in quest'ordine: Piede, Caviglia, Anca, Respiro.</li>
+      <li><b>Gli esercizi da togliere</b> dipendono da quello che oggi riesci a fare, mai da una diagnosi.</li>
+    </ul>
+    <p class="piccolo">I test non scelgono il programma e non trovano problemi: regolano dose e accento. Queste regole sono una prima versione: le rivediamo dopo i primi percorsi.</p>
+  </div>
+</section>
+
+<section id="sblocchi">
+  <div class="wrap">
+    <h2>Che cosa sblocchi col codice</h2>
+    <div class="sblocchi">
+      <div>
+        <ul>
+          <li>Il programma di 12 settimane, in ordine; l'accento di questo percorso lo fissiamo insieme in videochiamata</li>
+          <li>Quanto fare e quando salire, settimana per settimana, con le prove di fine blocco</li>
+          <li>Il player, con tutte le sessioni</li>
+          <li>Tutte le schede, con «Di più»: perché, dose, parole del coach</li>
+          <li>Tutti i test, il diario e il «prima e dopo»</li>
+          <li>Una persona: videochiamata di avvio, un controllo video a fine blocco, la chat</li>
+        </ul>
+        <p>Il codice te lo do in videochiamata.</p>
+        <p id="cta-piano"><a class="btn primary grande" href="./#piano">Come funziona il piano</a></p>
+        <div class="non-attivo" id="non-attivo" hidden>
+          <p>Questo percorso apre più avanti: nei primi mesi ne seguo al massimo due. Se ti interessa, scrivimi e ti avviso quando parte.</p>
+          <p><a class="link-riga" id="avvisami" href="./" hidden>Avvisami quando parte</a></p>
+        </div>
+      </div>
+      <figure class="schermata">
+        <span class="cornice"><img src="dentro-player.webp" width="390" height="640" loading="lazy" decoding="async" alt="Il player: l'esercizio «Respiro di pancia, supino» con cosa fare, cosa sentire e cosa evitare, il cerchio del ritmo e il pulsante Avvia."></span>
+        <figcaption>Il player del Quaderno: un esercizio alla volta.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section id="altri">
+  <div class="wrap">
+    <h2>Gli altri percorsi</h2>
+    <ul class="altri">
+      <li><a href="percorso-benessere.html">Benessere ›</a></li>
+      <li><a href="percorso-combattimento.html">Combattimento ›</a></li>
+      <li><a href="percorso-forza.html">Forza e scatti ›</a></li>
+    </ul>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="marchio" href="./"><img src="icona-180.png" alt="">Prima le Radici</a>
+    <div class="piede-contatti" data-se="contatto" hidden>
+      <p>Scrivimi per un appuntamento, o per sapere quando esce la prossima sfida.</p>
+      <div class="cta-azioni" data-contatto="piano avvisi"></div>
+    </div>
+    <ul class="piede-link" aria-label="Le pagine del sito">
+      <li><a href="./">Inizio</a></li><li><a href="pillole.html">Pillole</a></li><li><a href="./#percorsi">Percorsi</a></li><li><a href="sfida.html">Sfida</a></li>
+    </ul>
+    <p data-se="ig|vuoto"><span class="btn" data-ig data-ig-testo="Segui il Quaderno su Instagram">Segui il Quaderno su Instagram</span></p>
+    <p class="privacy">Privacy: le risposte di «Da dove parto?», i test e la sfida restano su questo dispositivo. Non li riceve nessuno.</p>
+  </div>
+</footer>
+<noscript><p style="padding:24px">Per aprire le pillole, i test e il player serve un browser con JavaScript attivo.</p></noscript>
+<script src="pillole.js"></script>
+<script src="offerta.js"></script>
+<script src="sito.js"></script>
+</body>
+</html>

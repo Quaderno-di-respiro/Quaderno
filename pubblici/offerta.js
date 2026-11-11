@@ -1,11 +1,11 @@
 /* Prima le Radici: il contatto, il profilo Instagram e l'offerta del piano su misura.
-   Lo leggono la pagina d'ingresso (index.html) e la sfida (sfida.html).
+   Lo leggono la pagina d'ingresso (index.html), la sfida (sfida.html), le pillole e i percorsi.
    Si cambiano solo i valori qui sotto, fino alla riga «Da qui in giù non serve toccare niente».
    Il README, sezione «La facciata e le sfide», spiega ogni voce. */
 
 // Il contatto del progetto. Finché è tutto vuoto, al posto dei pulsanti resta l'invito a Instagram.
 // - modulo: l'indirizzo intero di un modulo esterno, per esempio "https://…". Se c'è, i pulsanti
-//   «Voglio il piano» e «Avvisami della prossima sfida» aprono il modulo.
+//   «Richiedi un appuntamento» e «Avvisami della prossima sfida» aprono il modulo.
 // - email: l'indirizzo email del progetto. Se c'è solo l'email, le pagine la mostrano da copiare,
 //   con il pulsante «Copia» e un link che apre l'app della posta.
 var CONTATTO = { email: "radicidelmovimento@gmail.com", modulo: "" };
@@ -32,9 +32,9 @@ var OFFERTA = {
   pacchetti: [
     {
       nome: "1 anno", mesi: 12, prezzo: null, prezzoLancio: null, rate: null, consigliato: false,
-      breve: "Tutto il 6 mesi per 12 mesi: fino a quattro cicli rifatti sui tuoi test, prezzo bloccato ai rinnovi, le sfide una settimana prima.",
+      breve: "Tutto il 6 mesi per 12 mesi: fino a quattro cicli impostati sui tuoi test, prezzo bloccato ai rinnovi, le sfide una settimana prima.",
       vantaggi: [
-        "Tutto il 6 mesi, per 12 mesi: fino a quattro cicli di 12 settimane, ognuno rifatto sui tuoi test, con gli esercizi del Quaderno",
+        "Tutto il 6 mesi, per 12 mesi: fino a quattro cicli di 12 settimane, ognuno impostato in videochiamata sui tuoi test, con gli esercizi del Quaderno",
         "La videochiamata a fine ciclo, a ogni ciclo",
         "Prezzo bloccato ai rinnovi",
         "Le sfide del mese una settimana prima degli altri",
@@ -44,11 +44,11 @@ var OFFERTA = {
     },
     {
       nome: "6 mesi", mesi: 6, prezzo: null, prezzoLancio: null, rate: null, consigliato: true,
-      breve: "Tutto il 3 mesi, una videochiamata a fine ciclo e un secondo ciclo di 12 settimane rifatto sui tuoi test.",
+      breve: "Tutto il 3 mesi, una videochiamata a fine ciclo e un secondo ciclo di 12 settimane impostato sui tuoi test.",
       vantaggi: [
         "Tutto il 3 mesi",
         "Una videochiamata a fine ciclo: rivediamo insieme i test e impostiamo il ciclo dopo",
-        "Un secondo ciclo di 12 settimane, rifatto sui tuoi test: nuovo accento e dosi aggiornate, con gli esercizi del Quaderno"
+        "Un secondo ciclo di 12 settimane, impostato in videochiamata sui tuoi test, con gli esercizi del Quaderno"
       ]
     },
     {
@@ -57,7 +57,7 @@ var OFFERTA = {
       vantaggi: [
         "Questionario e videochiamata di avvio: i tuoi test, il tuo obiettivo, il tuo tempo",
         "Il tuo percorso, adattato da un elenco chiaro: percorso, dosi, esercizi da togliere",
-        "Il Quaderno con la tua password: 12 settimane in 3 blocchi, player guidato, 69 schede con figure animate, test e diario. Funziona anche senza internet",
+        "Il Quaderno con il tuo codice: 12 settimane in 3 blocchi, player guidato, 69 schede con figure animate, test e diario. Funziona anche senza internet",
         "3 controlli video, uno a fine blocco: mi mandi il video della prova e ti rispondo con le correzioni",
         "Chat: risposta entro 48 ore nei giorni feriali"
       ]
@@ -71,6 +71,11 @@ var OFFERTA = {
     durataAccesso: ""    // «Per quanto tempo posso usare il Quaderno?»
   }
 };
+
+// I percorsi che si possono già chiedere: "benessere", "corsa-e-fiato", "combattimento", "forza-e-scatti".
+// Vuoto = tutti e quattro. Gli altri mostrano «Questo percorso apre più avanti». Esempio con due percorsi:
+// var PERCORSI_ATTIVI = ["benessere", "corsa-e-fiato"];
+var PERCORSI_ATTIVI = [];
 
 // ---- Da qui in giù non serve toccare niente ----
 (function (W) {
@@ -152,7 +157,7 @@ var OFFERTA = {
     var c = contatto(), h = '<p class="pac-presto">I prezzi escono presto.';
     var link = c.modulo ? '<a href="' + esc(c.modulo) + '" target="_blank" rel="noopener">'
       : c.email ? '<a href="' + esc(mailto(c.email, "Avvisami dei prezzi")) + '">' : "";
-    if (link) h += " " + link + "Lascia l'email</a>: te li mando per primo, col prezzo di lancio.";
+    if (link) h += " " + link + "Scrivimi</a>: te li mando appena ci sono.";
     return h + "</p>";
   }
   // I pacchetti dentro el. opz.breve: una riga per pacchetto (per il riepilogo della sfida).
@@ -273,9 +278,20 @@ var OFFERTA = {
       el.appendChild(x);
     });
   }
+  // ---- i percorsi attivi ----
+  // Un id scritto male vale come non scritto; se non resta nessun id valido, sono attivi tutti e quattro.
+  var PERCORSI = ["benessere", "corsa-e-fiato", "combattimento", "forza-e-scatti"];
+  function percorsiAttivi() {
+    var l = Array.isArray(W.PERCORSI_ATTIVI) ? W.PERCORSI_ATTIVI : [];
+    l = l.map(function (x) { return testo(x).toLowerCase(); }).filter(function (x) { return PERCORSI.indexOf(x) !== -1; });
+    return l.length ? l : PERCORSI.slice();
+  }
+  function percorsoAttivo(id) { return percorsiAttivi().indexOf(id) !== -1; }
+
   W.QGOfferta = {
     pacchetti: pacchetti, contatti: contatti, domande: domande, profilo: profilo, contatto: contatto,
     haContatto: haContatto, prezzoDi: prezzoDi, lancioAttivo: lancioAttivo, haPrezzi: haPrezzi,
-    oneToOne: function () { return testo(conf().oneToOne); }
+    oneToOne: function () { return testo(conf().oneToOne); },
+    percorsiAttivi: percorsiAttivi, percorsoAttivo: percorsoAttivo
   };
 })(window);

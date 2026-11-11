@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Prima le Radici</title>
-<meta name="description" content="Una base di respiro, piedi e mobilità accanto al tuo allenamento. Sfida gratuita di 7 giorni, 3 minuti al giorno, con un test del respiro il primo e l'ultimo giorno.">
+<meta name="description" content="Esercizi brevi di respiro, piedi e mobilità, gratis: pillole, routine da 5 minuti, test e una sfida di 7 giorni. Il programma adattato a te parte da una videochiamata.">
 <!-- Fuori dai motori di ricerca finché profilo e nome non sono definitivi. -->
 <meta name="robots" content="noindex, nofollow">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="it_IT">
 <meta property="og:site_name" content="Prima le Radici">
-<meta property="og:title" content="Prima le Radici · respiro, piedi e mobilità, poi il colpo">
-<meta property="og:description" content="Una base di respiro, piedi e mobilità accanto al tuo allenamento. Sfida gratuita di 7 giorni, 3 minuti al giorno.">
+<meta property="og:title" content="Prima le Radici · respiro, piedi e mobilità">
+<meta property="og:description" content="Esercizi brevi di respiro, piedi e mobilità, gratis: pillole, routine da 5 minuti, test e una sfida di 7 giorni. Il programma adattato a te parte da una videochiamata.">
 <meta property="og:image" content="icona-512.png">
 <meta property="og:image:width" content="512">
 <meta property="og:image:height" content="512">
@@ -38,7 +38,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@500;700&display=swap">
 <style>
-/* La facciata: gli stessi colori e caratteri della guida, pensata prima per il telefono. */
+/* La pagina d'ingresso: gli stessi colori e caratteri della guida, pensata prima per il telefono. */
 :root {
   --bg: #F1F4F1; --surface: #FFFFFF; --surface-2: #E5ECE8; --ink: #16201C; --muted: #55625C;
   --line: #D3DBD6; --line-strong: #A9B6AF; --breath: #1B6B5C; --breath-soft: #D5EBE4; --on-breath: #FFFFFF;
@@ -48,7 +48,7 @@
   --display: "Archivo", "Arial Narrow", system-ui, sans-serif;
   --body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
-  --testata: 54px;
+  --testata: 98px;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
@@ -63,7 +63,7 @@
   --line: #27332F; --line-strong: #43534D; --breath: #5DC3AD; --breath-soft: #183B34; --on-breath: #0E1412;
   --ground: #E3A75B; --ground-soft: #3A2A16; --stop: #E8907F; --stop-soft: #3E1F1A; --err: #F08A72; --bordo: #667870; color-scheme: dark;
 }
-/* Con la password ricordata la facciata non si vede; se la guida tarda ad arrivare, dopo un attimo
+/* Con il codice ricordato la pagina non si vede; se la guida tarda ad arrivare, dopo un attimo
    compare una riga sola. */
 html.qg-attesa body > * { display: none !important; }
 html.qg-attesa body::before { content: "Apro il quaderno…"; display: block; padding: 38vh 16px 0; text-align: center; color: var(--muted); font: 700 1rem/1.4 var(--body); opacity: 0; animation: qg-compari 0s 1.2s forwards; }
@@ -72,7 +72,7 @@ html.qg-attesa body::before { content: "Apro il quaderno…"; display: block; pa
 * { box-sizing: border-box; }
 html { background: var(--bg); scroll-behavior: smooth; scroll-padding-top: calc(var(--testata) + env(safe-area-inset-top, 0px) + 10px); -webkit-text-size-adjust: 100%; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-body { margin: 0; background: var(--bg); color: var(--ink); font: 400 1.0625rem/1.55 var(--body); overflow-x: hidden;
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 1.0625rem/1.5 var(--body); overflow-x: hidden;
   padding-top: calc(var(--testata) + env(safe-area-inset-top, 0px)); }
 .wrap { max-width: 1040px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 p { margin: 0 0 .8em; }
@@ -82,28 +82,37 @@ img, svg { max-width: 100%; }
 button { font: inherit; color: inherit; }
 a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--ground); outline-offset: 2px; }
 q { quotes: "«" "»"; }
+.sr { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
-/* testata fissa */
-.testata { position: fixed; top: 0; left: 0; right: 0; z-index: 10; background: var(--bg); border-bottom: 1px solid var(--line); padding-top: env(safe-area-inset-top, 0px); }
-.testata .wrap { height: var(--testata); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+/* testata fissa, due righe: il marchio e il codice; i quattro link */
+.testata { position: fixed; top: 0; left: 0; right: 0; z-index: 10; background: var(--bg); box-shadow: 0 1px 0 var(--line); padding-top: env(safe-area-inset-top, 0px); }
+.testata .riga1 { height: 54px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .marchio { display: inline-flex; align-items: center; gap: 9px; min-width: 0; min-height: 44px; color: var(--ink); text-decoration: none;
   font: 800 1.05rem/1 var(--display); font-stretch: 78%; text-transform: uppercase; letter-spacing: .02em; white-space: nowrap; }
 .marchio img { width: 28px; height: 28px; border-radius: 7px; flex: none; }
-/* «Ho la password»: per chi ha già il Quaderno, un link semplice */
+/* «Ho il codice»: per chi ha già il Quaderno, un link semplice */
 .ho-pw { flex: none; display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px; color: var(--breath); font: 700 .95rem/1 var(--body);
   text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
 .ho-pw:hover { text-decoration-thickness: 2px; }
+.riga2 { height: 44px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.riga2 a { display: flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 2px; color: var(--muted); text-decoration: none;
+  font: 700 .95rem/1 var(--body); border-bottom: 3px solid transparent; white-space: nowrap; }
+.riga2 a:hover { color: var(--ink); }
+.riga2 a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--breath); }
 
 /* testi */
 .eyebrow { font: 700 .76rem/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--breath); margin: 0 0 .4em; }
 h1 { font-family: var(--display); font-weight: 800; font-stretch: 72%; font-size: clamp(3rem, 12.5vw, 6rem); line-height: .9; letter-spacing: -.005em;
   text-transform: uppercase; margin: .12em 0 .32em; text-wrap: balance; }
 h1 em { font-style: normal; color: var(--ground); }
-h2 { font-family: var(--display); font-weight: 800; font-stretch: 78%; text-transform: uppercase; font-size: clamp(1.85rem, 7.4vw, 2.6rem); line-height: 1;
-  letter-spacing: .005em; margin: .1em 0 .45em; text-wrap: balance; }
+h2 { font-family: var(--display); font-weight: 800; font-stretch: 78%; text-transform: uppercase; font-size: clamp(1.6rem, 6.6vw, 2.6rem); line-height: 1;
+  letter-spacing: .005em; margin: .1em 0 .35em; text-wrap: balance; }
 h3 { font-family: var(--display); font-weight: 700; font-stretch: 88%; font-size: 1.22rem; line-height: 1.2; margin: 0 0 .3em; text-wrap: balance; }
-.intro { max-width: 62ch; color: var(--muted); margin-bottom: 18px; }
+.intro { max-width: 62ch; color: var(--muted); margin-bottom: 10px; }
 .piccolo { font-size: .9rem; color: var(--muted); }
+.link-riga { display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; }
+.etichetta { display: inline-block; font: 700 .68rem/1 var(--mono); text-transform: uppercase; letter-spacing: .05em; padding: 5px 8px; border-radius: 999px;
+  background: var(--breath); color: var(--on-breath); white-space: nowrap; }
 
 /* pulsanti */
 .btn { display: inline-flex; align-items: center; justify-content: center; text-align: center; gap: 8px; min-height: 48px; padding: 12px 18px;
@@ -116,40 +125,74 @@ h3 { font-family: var(--display); font-weight: 700; font-stretch: 88%; font-size
 .btn:disabled { opacity: .5; cursor: default; }
 /* il profilo Instagram non c'è ancora: niente aria da pulsante */
 .btn.ig-attesa, .btn.primary.ig-attesa { background: transparent; border: 1px dashed var(--line-strong); color: var(--muted); cursor: default; filter: none; }
-.fig-fb { min-height: 120px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 6px; padding: 18px 10px; color: var(--muted); font-size: .95rem; }
-.fig-fb b { font: 700 1rem var(--display); font-stretch: 85%; text-transform: uppercase; color: var(--ink); }
+.avviso { border-left: 4px solid var(--stop); background: var(--stop-soft); border-radius: 0 10px 10px 0; padding: 10px 14px; font-size: .95rem; }
+.avviso p { margin: 0; }
+.avviso b { color: var(--stop); }
 
 /* sezioni */
-main > section { padding-block: 32px 34px; border-top: 1px solid var(--line); }
-main > section.apertura { border-top: 0; padding-block: 26px 34px; }
+main > section { padding-block: 18px 20px; border-top: 1px solid var(--line); }
+main > section.apertura { border-top: 0; padding-block: 18px 24px; }
 
 /* apertura */
-.lede { font-size: 1.2rem; line-height: 1.5; color: var(--muted); max-width: 38ch; margin-bottom: 0; }
+.lede { font-size: 1.18rem; line-height: 1.5; color: var(--muted); max-width: 40ch; margin-bottom: 0; }
 .lede b { color: var(--ink); font-weight: 700; }
-.azioni { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.azioni { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
 .azioni .btn { flex: 1 1 15rem; }
-.senza { margin: 12px 0 0; font-size: .92rem; color: var(--muted); }
-.fatti { list-style: none; margin: 20px 0 0; padding: 14px 0 0; border-top: 1px dashed var(--line-strong); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-.fatti li { font: 500 .78rem/1.35 var(--mono); color: var(--muted); }
-.fatti b { display: block; font: 800 1.7rem/1 var(--display); font-stretch: 80%; color: var(--ink); margin-bottom: 4px; }
+.al-piano { margin: 6px 0 0; font-size: .9rem; }
+.senza { margin: 4px 0 0; font-size: .92rem; color: var(--muted); }
 .apertura-player { display: none; }
 
-/* così è dentro: tre schermate vere; sul telefono si scorrono di lato */
-.schermate { list-style: none; margin: 0 -16px; padding: 4px 16px 10px; display: grid; grid-auto-flow: column; grid-auto-columns: min(66%, 270px); gap: 14px;
+/* da dove parto? */
+.parto { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: grid; gap: 8px; max-width: 640px; }
+.parto p { margin: 0; }
+.parto-n { font: 700 .74rem/1.4 var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.parto h3 { font-size: 1.4rem; margin: 0; }
+.parto h3:focus { outline: none; }
+.parto-sotto { color: var(--muted); font-size: .92rem; margin-top: -4px !important; }
+.risposte { display: grid; gap: 8px; }
+.risp { width: 100%; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 1px; min-height: 52px; padding: 7px 14px; text-align: left;
+  border-radius: 10px; border: 1px solid var(--bordo); background: var(--bg); color: var(--ink); font: 700 1rem/1.25 var(--body); cursor: pointer; }
+.risp:hover { border-color: var(--breath); }
+.risp small { font-weight: 400; font-size: .86rem; color: var(--muted); }
+.risp.scelta { border: 2px solid var(--breath); background: var(--breath-soft); }
+.indietro { justify-self: start; background: none; border: 0; min-height: 44px; padding: 0 2px; color: var(--breath); font-weight: 700; text-decoration: underline;
+  text-underline-offset: 3px; cursor: pointer; }
+.blocco { border-top: 1px dashed var(--line-strong); padding-top: 12px; display: grid; gap: 6px; justify-items: start; }
+.blocco .btn { width: 100%; max-width: 360px; }
+.blocco.q { border-top: 0; background: var(--surface-2); border-radius: 12px; padding: 12px 14px; }
+.ris-fondo { display: flex; flex-wrap: wrap; gap: 0 18px; }
+
+/* le strutture e i percorsi: riquadri che sono link interi */
+.griglia { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.griglia li { display: flex; min-width: 0; }
+.carta { width: 100%; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 8px 10px 10px; border-radius: 12px; border: 1px solid var(--line);
+  background: var(--surface); color: var(--ink); text-decoration: none; min-height: 44px; }
+.carta:hover { border-color: var(--breath); }
+.carta h3 { font-size: 1.08rem; margin: 0; }
+.carta .riga { font-size: .84rem; line-height: 1.25; color: var(--muted); }
+.carta .foto { width: 100%; height: 56px; display: flex; align-items: center; justify-content: center; color: var(--ink); margin-bottom: 2px; }
+.carta .foto svg { width: 100%; height: 100%; }
+.carta .foto svg text { display: none; }
+.sotto-link { margin: 2px 0 0; }
+.regola { margin: 0; padding: 0; list-style: none; counter-reset: r; display: grid; gap: 6px; max-width: 70ch; font-size: .98rem; line-height: 1.45; }
+.regola li { counter-increment: r; display: grid; grid-template-columns: 1.8rem minmax(0, 1fr); gap: 10px; align-items: start; }
+.regola li::before { content: counter(r); font: 700 .85rem/1.8rem var(--mono); text-align: center; width: 1.8rem; height: 1.8rem; border-radius: 50%; background: var(--breath-soft); color: var(--breath); }
+.h-regola { margin: 14px 0 6px; }
+
+/* il Quaderno: tre schermate vere; sul telefono si scorrono di lato */
+.schermate { list-style: none; margin: 0 -16px; padding: 4px 16px 10px; display: grid; grid-auto-flow: column; grid-auto-columns: min(50%, 200px); gap: 14px;
   overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 16px; overscroll-behavior-x: contain; }
 .schermate li { scroll-snap-align: start; min-width: 0; }
 .schermata { margin: 0; }
 .schermata .cornice { display: block; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: #FFFFFF; box-shadow: 0 1px 2px rgba(0,0,0,.05), 0 6px 18px rgba(22,32,28,.07); }
 .schermata img { display: block; width: 100%; height: auto; }
-.schermata figcaption { margin-top: 10px; font-size: .95rem; line-height: 1.4; color: var(--muted); }
+.schermata figcaption { margin-top: 8px; font-size: .9rem; line-height: 1.4; color: var(--muted); }
 .schermata figcaption b { color: var(--ink); }
-.sport { margin: 16px 0 0; max-width: 62ch; padding: 12px 14px; border-left: 4px solid var(--ground); background: var(--ground-soft); border-radius: 0 10px 10px 0; }
+.persona { margin: 8px 0 0; max-width: 62ch; padding: 10px 14px; font-size: .92rem; line-height: 1.45; border-left: 4px solid var(--ground); background: var(--ground-soft); border-radius: 0 10px 10px 0; }
+.persona b { color: var(--ink); }
 
-/* figure (le animazioni le monta figure.js) */
+/* figure ferme (i fotogrammi delle strutture) */
 figure { margin: 0; }
-.fig { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px; color: var(--ink); min-width: 0; }
-.fig svg { display: block; width: 100%; height: auto; }
-.fig .qg-play { min-height: 44px; border-color: var(--bordo); }
 figcaption { font-size: .86rem; line-height: 1.45; color: var(--muted); margin-top: 8px; }
 svg .b { stroke: currentColor; fill: none; stroke-linecap: round; stroke-linejoin: round; }
 svg .bf { fill: var(--surface-2); stroke: currentColor; stroke-width: 3; stroke-linejoin: round; }
@@ -166,68 +209,47 @@ svg .t { fill: var(--muted); font: 400 12px var(--body); }
 svg .tk { fill: var(--ink); font: 700 12.5px var(--body); }
 svg .tn { fill: var(--surface); font: 700 11px var(--mono); text-anchor: middle; dominant-baseline: central; }
 
-/* il metodo */
-.metodo { display: grid; gap: 18px; }
-.albero { padding: 10px 10px 12px; }
-/* sul telefono le etichette del disegno sarebbero di 7 px: bastano i quattro riquadri */
-@media (max-width: 719px) { .albero svg text { display: none; } }
-.quattro { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 4px; }
-.pezzo { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-.pezzo .mini { height: 60px; display: flex; align-items: center; justify-content: center; color: var(--ink); margin-bottom: 4px; }
-.pezzo .mini:empty { display: none; }
-.pezzo .mini svg { width: 100%; height: 100%; }
-.pezzo .mini svg text { display: none; }
-.pezzo h3 { margin: 0; font-size: 1.15rem; }
-.pezzo .chi { font: 700 .72rem/1.3 var(--mono); text-transform: uppercase; letter-spacing: .05em; color: var(--breath); margin: 0; }
-.pezzo.carico .chi { color: var(--ground); }
-.pezzo p:last-child { margin: 2px 0 0; font-size: .92rem; line-height: 1.4; color: var(--muted); }
-
 /* il test */
-.test { display: grid; gap: 18px; align-items: start; }
-.passi { margin: 0; padding: 0; list-style: none; counter-reset: p; display: grid; gap: 10px; }
+.test { display: grid; gap: 12px; align-items: start; }
+.come-si-fa { margin: 0 0 4px; border-radius: 10px; background: var(--surface-2); }
+.come-si-fa > summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; padding: 8px 12px; font-weight: 700; }
+.come-si-fa .passi { padding: 0 12px 12px; }
+.passi { margin: 0; padding: 0; list-style: none; counter-reset: p; display: grid; gap: 8px; }
 .passi li { counter-increment: p; display: grid; grid-template-columns: 2rem minmax(0, 1fr); gap: 10px; align-items: start; }
 .passi li::before { content: counter(p); font: 700 .9rem/2rem var(--mono); text-align: center; width: 2rem; height: 2rem; border-radius: 50%; background: var(--breath-soft); color: var(--breath); }
-.perche { color: var(--ink); }
+.test .avviso { margin-top: 12px; }
 .tool .esito:empty, .storico:empty { display: none; }
-.tool { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px 16px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
-.tool .big { font: 700 3.2rem/1 var(--mono); font-variant-numeric: tabular-nums; margin: 4px 0 0; text-align: center; }
+.tool { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.tool .big { font: 700 2.6rem/1 var(--mono); font-variant-numeric: tabular-nums; margin: 2px 0 0; text-align: center; }
 .tool .esito { font-weight: 700; min-height: 1.5em; margin: 0; text-align: center; }
-.soglie { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 3px; font-size: .92rem; }
-.soglie li { display: flex; justify-content: space-between; gap: 10px; padding: 5px 10px; border-radius: 6px; }
-.soglie li.attivo { background: var(--breath-soft); font-weight: 700; }
-.soglie b { font: 600 .82rem/1.6 var(--mono); font-variant-numeric: tabular-nums; }
 .storico { font: 500 .8rem/1.5 var(--mono); color: var(--muted); margin: 0; min-height: 1.2em; text-align: center; }
 .dopo { border-top: 1px dashed var(--line-strong); padding-top: 14px; display: grid; gap: 10px; text-align: center; }
 .dopo p { margin: 0; }
 
-/* esercizio di prova */
-.prova { display: grid; gap: 16px; align-items: start; }
-.prova .fig svg { max-height: 210px; }
-@media (min-width: 720px) { .prova .fig svg { max-height: 280px; } }
-.tre-passi { margin: 0; padding: 0; list-style: none; counter-reset: q; display: grid; gap: 10px; }
-.tre-passi li { counter-increment: q; display: grid; grid-template-columns: 2rem minmax(0, 1fr); gap: 10px; align-items: start; }
-.tre-passi li::before { content: counter(q); font: 700 .9rem/2rem var(--mono); text-align: center; width: 2rem; height: 2rem; border-radius: 50%; background: var(--breath-soft); color: var(--breath); }
-.avviso { margin-top: 14px; border-left: 4px solid var(--stop); background: var(--stop-soft); border-radius: 0 10px 10px 0; padding: 10px 14px; font-size: .95rem; }
-.avviso p { margin: 0; }
-.avviso b { color: var(--stop); }
-.prova .btn { margin-top: 14px; width: 100%; max-width: 360px; }
-
-/* sfida e offerta */
-.sfida-card { background: var(--breath-soft); border: 1px solid var(--breath); border-radius: 14px; padding: 18px 16px; display: grid; gap: 14px; }
+/* sfida */
+.sfida-card { background: var(--breath-soft); border: 1px solid var(--breath); border-radius: 14px; padding: 14px; display: grid; gap: 10px; }
 .sfida-card p { margin: 0; }
 .sfida-card .giorni { display: flex; gap: 5px; }
 .sfida-card .giorni span { flex: 1; height: 10px; border-radius: 3px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--breath); }
 .sfida-card .giorni span:first-child, .sfida-card .giorni span:last-child { background: var(--breath); }
-.sfida-card .leg { font: 600 .74rem/1.4 var(--mono); color: var(--breath); display: flex; justify-content: space-between; gap: 8px; margin-top: -8px; }
-.avvisi-riga { margin-top: 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.sfida-card .leg { font: 600 .74rem/1.4 var(--mono); color: var(--breath); display: flex; justify-content: space-between; gap: 8px; margin-top: -6px; }
+.avvisi-riga { margin-top: 10px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; }
 .avvisi-riga p { margin: 0; color: var(--muted); }
 .avvisi-riga .cta-azioni { width: auto; justify-items: start; }
 .avvisi-riga .ce { justify-items: start; }
 .avvisi-riga .ce-riga { justify-content: flex-start; }
 .avvisi-riga .cta-azioni .btn { width: auto; }
-.h-piano { font-family: var(--display); font-weight: 800; font-stretch: 80%; text-transform: uppercase; font-size: clamp(1.5rem, 6vw, 2rem); line-height: 1; margin: 34px 0 .45em; }
+
+/* il piano: i pacchetti di offerta.js */
+.scegli { margin: 0 0 10px; }
+.scegli-t { font: 700 .74rem/1.4 var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 6px; }
+.scegli-b { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; align-items: start; }
+.scegli-b > div { display: grid; gap: 4px; justify-items: center; }
+.scegli-b button { width: 100%; min-height: 44px; border-radius: 10px; border: 1px solid var(--bordo); background: var(--surface); color: var(--ink); font: 700 1rem/1.1 var(--body); cursor: pointer; }
+.scegli-b button[aria-pressed="true"] { border: 2px solid var(--breath); background: var(--breath-soft); }
+.scegli-b small { font: 700 .66rem/1 var(--mono); text-transform: uppercase; letter-spacing: .04em; color: var(--breath); }
 .pac-griglia { display: grid; gap: 10px; }
-.pac { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.pac { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .pac-consigliato { border: 2px solid var(--breath); }
 .pac-testa { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; }
 .pac-testa h3 { margin: 0; font-size: 1.35rem; }
@@ -244,61 +266,55 @@ svg .tn { fill: var(--surface); font: 700 11px var(--mono); text-anchor: middle;
 .pac-breve { margin: 0; font-size: .95rem; color: var(--muted); }
 .pac-cosa { margin: 4px 0 0; font: 700 .72rem/1.2 var(--mono); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
 .pac .pac-cta { margin-top: auto; width: 100%; }
-.pac-presto { margin: 0 0 12px; font-weight: 700; }
+.pac-dentro { margin-top: 6px; }
+.pac-dentro summary { cursor: pointer; color: var(--breath); font-weight: 600; min-height: 44px; display: flex; align-items: center; }
+.pac-dentro ul { margin-top: 4px; }
+@media (min-width: 720px) { .pac-dentro { display: none; } }
+.pac-presto { margin: 0 0 8px; font-weight: 700; font-size: .95rem; line-height: 1.4; }
 .pac-nota { font-size: .82rem; color: var(--muted); margin: 10px 0 0; }
 .pac-garanzia { margin: 12px 0 0; padding: 12px 14px; border-radius: 10px; background: var(--surface-2); }
-.altro { display: grid; gap: 12px; margin-top: 12px; }
-.one, .dopo-passi { border-radius: 14px; padding: 14px 16px; min-width: 0; }
+.altro { display: grid; gap: 8px; margin-top: 8px; }
+.one, .dopo-passi { border-radius: 14px; padding: 10px 14px; min-width: 0; }
 .one { border: 1px dashed var(--line-strong); }
-.one h3, .dopo-passi h3 { margin-bottom: 4px; }
 .one p { margin: 0; color: var(--muted); }
 .one b { color: var(--ink); }
 .dopo-passi { background: var(--surface-2); }
-.dopo-passi ol { margin: 0; padding-left: 1.3em; display: grid; gap: 2px; }
+.dopo-passi h3 { margin-bottom: 4px; }
+.dopo-passi ol { margin: 0; padding-left: 1.3em; display: grid; gap: 3px; font-size: .92rem; line-height: 1.42; }
 .dopo-passi li::marker { font: 700 .9rem var(--mono); color: var(--breath); }
-.cta { margin-top: 20px; padding: 20px 16px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); text-align: center; display: grid; gap: 12px; justify-items: center; }
-.cta p { margin: 0; font-size: 1.12rem; max-width: 36ch; }
-.cta p.piccolo { font-size: .92rem; }
-.cta .btn, .cta-azioni .btn { width: 100%; max-width: 360px; }
 .cta-azioni { display: grid; gap: 10px; justify-items: center; width: 100%; }
+.cta-azioni .btn { width: 100%; max-width: 360px; }
 /* contatto con la sola email: l'indirizzo da copiare e il link che apre la posta */
-.ce { display: grid; gap: 8px; justify-items: center; width: 100%; }
+.ce { display: grid; gap: 4px; justify-items: center; width: 100%; }
 .ce p { margin: 0; font-size: 1rem; }
 .ce-riga { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 10px; }
-.ce-ind { font: 700 1.05rem/1.3 var(--mono); color: var(--ink); user-select: all; -webkit-user-select: all; overflow-wrap: anywhere; }
-.cta .ce-copia, .ce-copia { width: auto; min-height: 44px; padding: 8px 16px; }
+.ce-ind { font: 700 .9rem/1.3 var(--mono); color: var(--ink); user-select: all; -webkit-user-select: all; overflow-wrap: anywhere; }
+.ce-copia { width: auto; min-height: 44px; padding: 8px 16px; }
 .ce-link a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; }
 .ce-esito { min-height: 1.3em; font-size: .9rem !important; color: var(--muted); }
 .ce-esito:empty { min-height: 0; }
 .cta-azioni .ce-copia { width: auto; }
 
-/* per chi è */
-.chi-griglia { display: grid; gap: 12px; }
-.lista { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; min-width: 0; }
-.lista ul { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; }
-.lista.no h3 { color: var(--ground); }
-.sicurezza { margin-top: 12px; border-left: 4px solid var(--stop); background: var(--stop-soft); border-radius: 0 14px 14px 0; padding: 14px 16px; }
-.sicurezza p { margin: 0 0 6px; }
-.sicurezza p:last-child { margin: 0; }
-.sicurezza b { color: var(--stop); }
-
 /* domande */
-.faq { display: grid; gap: 8px; max-width: 760px; }
+.sicurezza { margin: 0 0 14px; border-left: 4px solid var(--stop); background: var(--stop-soft); border-radius: 0 14px 14px 0; padding: 10px 14px; font-size: .9rem; line-height: 1.45; }
+.sicurezza p { margin: 0; }
+.sicurezza b { color: var(--stop); }
+.faq { display: grid; gap: 6px; max-width: 760px; }
 .faq details { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
-.faq summary { cursor: pointer; list-style: none; padding: 14px 44px 14px 16px; font-weight: 700; position: relative; min-height: 48px; }
+.faq summary { cursor: pointer; list-style: none; padding: 11px 44px 11px 14px; font-weight: 700; position: relative; min-height: 46px; line-height: 1.35; }
 .faq summary::-webkit-details-marker { display: none; }
 .faq summary::after { content: "+"; position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font: 700 1.3rem/1 var(--mono); color: var(--breath); }
 .faq details[open] summary::after { content: "–"; }
 .faq details p { padding: 0 16px 14px; margin: 0; color: var(--muted); }
 
-/* accesso: il riquadro della password */
+/* accesso: il riquadro del codice */
 .accesso { display: grid; justify-items: center; }
-#porta { width: 100%; max-width: 420px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 24px 20px; display: grid; gap: 14px; }
+#porta { width: 100%; max-width: 420px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px; display: grid; gap: 10px; }
 #porta .marca { display: flex; align-items: center; gap: 12px; }
-#porta .marca img { width: 52px; height: 52px; border-radius: 12px; flex: none; }
+#porta .marca img { width: 48px; height: 48px; border-radius: 12px; flex: none; }
 #porta h2 { margin: 0; font-size: clamp(1.6rem, 6.4vw, 2rem); }
 #porta p { margin: 0; color: var(--muted); }
-#porta form { display: grid; gap: 14px; }
+#porta form { display: grid; gap: 8px; }
 #porta label { font-weight: 700; display: grid; gap: 6px; }
 #porta input[type=password] { font: inherit; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--bordo); background: var(--bg); color: var(--ink); width: 100%; min-height: 50px; }
 #porta .ricorda { display: flex; gap: 10px; align-items: center; font-weight: 400; color: var(--muted); min-height: 44px; }
@@ -307,34 +323,38 @@ svg .tn { fill: var(--surface); font: 700 11px var(--mono); text-anchor: middle;
 #porta button[disabled] { opacity: .6; cursor: wait; }
 #esito { min-height: 1.5em; font-weight: 700; color: var(--err); }
 #esito.ok { color: var(--muted); font-weight: 400; }
+#porta details { border-top: 1px dashed var(--line-strong); padding-top: 4px; }
+#porta summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; font-weight: 700; color: var(--ink); }
+#porta details ol { margin: 4px 0 0; padding-left: 1.3em; display: grid; gap: 6px; color: var(--muted); font-size: .95rem; }
 
 /* piede */
-footer { border-top: 1px solid var(--line); padding-block: 26px calc(30px + env(safe-area-inset-bottom, 0px)); }
-footer .wrap { display: grid; gap: 12px; }
+footer { border-top: 1px solid var(--line); padding-block: 18px calc(22px + env(safe-area-inset-bottom, 0px)); }
+footer .wrap { display: grid; gap: 6px; }
 footer p { margin: 0; }
 footer .privacy { font-size: .9rem; color: var(--muted); max-width: 60ch; }
 footer .marchio { font-size: .95rem; }
-.piede-contatti { display: grid; gap: 10px; }
+.piede-contatti { display: grid; gap: 4px; }
 .piede-contatti .cta-azioni { justify-items: start; }
 .piede-contatti .ce { justify-items: start; }
 .piede-contatti .ce-riga { justify-content: flex-start; }
+.piede-link { display: flex; flex-wrap: wrap; gap: 0 18px; margin: 0; padding: 0; list-style: none; }
+.piede-link a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; }
 
 @media (min-width: 720px) {
   main > section { padding-block: 44px 46px; }
   main > section.apertura { padding-block: 34px 44px; }
-  .azioni, .fatti { max-width: 660px; }
+  .riga2 { grid-template-columns: repeat(4, auto); justify-content: start; gap: 30px; }
+  .azioni { max-width: 660px; }
+  .griglia { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .griglia.quattro { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .schermate { margin: 0; padding: 4px 0 0; grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; gap: 22px; }
-  .schermata { max-width: 300px; }
-  .quattro { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .schermata { max-width: 260px; }
   .test { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; }
-  .prova { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 28px; }
-  .chi-griglia, .altro { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .altro { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .pac-griglia { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .metodo { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); align-items: start; gap: 28px; }
-  .metodo .quattro { grid-column: 1 / -1; }
+  .scegli { display: none; }
   .sfida-card { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
   .sfida-card .giorni, .sfida-card .leg { grid-column: 1 / -1; }
-  .pezzo .mini { height: 84px; }
 }
 /* le schermate sono del tema chiaro: col tema scuro si abbassano un poco */
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .cornice img { filter: brightness(.9); } }
@@ -351,10 +371,16 @@ footer .marchio { font-size: .95rem; }
 </head>
 <body>
 <header class="testata">
-  <div class="wrap">
+  <div class="wrap riga1">
     <a class="marchio" href="#inizio"><img src="icona-180.png" alt="">Prima le Radici</a>
-    <a class="ho-pw" href="#accesso" id="vai-accesso">Ho la password</a>
+    <a class="ho-pw" href="#accesso" id="vai-accesso">Ho il codice</a>
   </div>
+  <nav class="wrap riga2" aria-label="Le pagine del sito">
+    <a href="#inizio" aria-current="page">Inizio</a>
+    <a href="pillole.html">Pillole</a>
+    <a href="#percorsi">Percorsi</a>
+    <a href="sfida.html">Sfida</a>
+  </nav>
 </header>
 
 <main id="facciata">
@@ -363,106 +389,106 @@ footer .marchio { font-size: .95rem; }
   <div class="wrap">
     <div>
       <p class="eyebrow">Respiro · piedi · mobilità</p>
+      <!-- Il titolo della home: si cambia solo qui (la scelta del titolare è ancora aperta). -->
       <h1>Prima le <em>radici</em>, poi il colpo</h1>
-      <p class="lede">Una base di <b>respiro, piedi e mobilità</b> accanto al tuo allenamento. Comincia con 3 minuti al giorno per 7 giorni e misura il tuo respiro il primo e l'ultimo giorno.</p>
+      <p class="lede">Esercizi brevi di <b>respiro, piedi e mobilità</b>, accanto al tuo sport o alla tua giornata. Qui li provi gratis.</p>
       <div class="azioni">
-        <a class="btn primary grande" href="sfida.html">Inizia gratis: 7 giorni, 3 minuti</a>
-        <a class="btn grande" href="#test">Prima misura il tuo respiro · 1 min</a>
+        <a class="btn primary grande" href="#parto">Da dove parto? · 3 domande</a>
+        <a class="btn grande" href="pillole.html">Vedi le pillole</a>
       </div>
-      <p class="senza">Senza registrazione. I numeri restano su questo telefono, in questo browser.</p>
-      <ul class="fatti">
-        <li><b>7</b>giorni</li>
-        <li><b>3</b>minuti al giorno</li>
-        <li><b>2</b>test</li>
-      </ul>
+      <p class="al-piano"><a class="link-riga" href="#piano"><span>Vuoi un programma seguito? <b>Come funziona il piano</b></span></a></p>
+      <p class="senza">Senza registrazione. Quello che scegli e misuri resta su questo telefono, in questo browser.</p>
+      <p class="senza solo-ig" hidden>Sei nel browser di Instagram: quello che salvi resta qui. Per ritrovarlo, apri la pagina in Safari o Chrome (menu ••• › Apri nel browser).</p>
     </div>
     <figure class="apertura-player">
       <span class="cornice"><img src="dentro-player.webp" width="390" height="640" loading="lazy" decoding="async" alt="Il player del Quaderno pronto a partire: «Respiro di pancia, supino», con le indicazioni, il cerchio del ritmo e i pulsanti Indietro, Avvia e Salta."></span>
-      <figcaption>Il player del Quaderno, una sessione al giorno.</figcaption>
+      <figcaption>Il player del Quaderno: si apre col codice.</figcaption>
     </figure>
   </div>
 </section>
 
-<!-- 2. così è dentro: tre schermate vere del Quaderno -->
-<section id="dentro">
+<!-- 2. da dove parto? Tre domande, una alla volta; le risposte restano sul telefono (qg-parto) -->
+<section id="parto">
   <div class="wrap">
-    <p class="eyebrow">Il Quaderno del Respiro</p>
-    <h2>Così è dentro</h2>
-    <ul class="schermate" tabindex="0" aria-label="Tre schermate del Quaderno">
-      <li><figure class="schermata">
-        <span class="cornice"><img src="dentro-programma.webp" width="358" height="560" loading="lazy" decoding="async" alt="Il programma: blocco 1, settimana 1 di 4, le 12 settimane in tre blocchi e la sessione Radici di circa 13 minuti col pulsante Inizia."></span>
-        <figcaption><b>Il programma.</b> 12 settimane in 3 blocchi: sai sempre cosa fare oggi.</figcaption>
-      </figure></li>
-      <li><figure class="schermata">
-        <span class="cornice"><img src="dentro-player.webp" width="390" height="640" loading="lazy" decoding="async" alt="Il player: l'esercizio «Respiro di pancia, supino» con cosa fare, cosa sentire e cosa evitare, il cerchio del ritmo e il pulsante Avvia."></span>
-        <figcaption><b>Il player.</b> Ti guida un esercizio alla volta, col ritmo del respiro.</figcaption>
-      </figure></li>
-      <li><figure class="schermata">
-        <span class="cornice"><img src="dentro-scheda.webp" width="370" height="580" loading="lazy" decoding="async" alt="Una scheda aperta: «Respiro di pancia, supino», con a cosa ti serve, come si fa, cosa senti e cosa evitare."></span>
-        <figcaption><b>Le schede.</b> 69 esercizi: come si fa, cosa senti, cosa evitare.</figcaption>
-      </figure></li>
-    </ul>
-    <p class="sport">Nel piano su misura scegliamo il percorso in base al tuo sport, da un elenco chiaro di adattamenti.</p>
+    <p class="eyebrow">Da dove parto? · 3 domande</p>
+    <h2>Il tuo punto di partenza</h2>
+    <p class="intro">Tre domande, nessuna sulla salute. Le risposte restano su questo telefono.</p>
+    <div class="parto" id="parto-box">
+      <p class="parto-n">Domanda 1 di 3</p>
+      <h3 id="parto-q" tabindex="-1">Per che cosa ti alleni?</h3>
+      <div class="risposte" role="group" aria-labelledby="parto-q">
+        <button type="button" class="risp" data-v="scrivania">Per stare bene alla scrivania<small>Lavoro seduto, non faccio sport</small></button>
+        <button type="button" class="risp" data-v="calma">Per un momento di calma<small>La sera, o prima di allenarmi</small></button>
+        <button type="button" class="risp" data-v="corsa">Per la corsa o uno sport di resistenza</button>
+        <button type="button" class="risp" data-v="combattimento">Per arti marziali, colpi o lotta</button>
+        <button type="button" class="risp" data-v="forza">Per palestra, calisthenics o sport di squadra</button>
+      </div>
+    </div>
+    <p class="sr" id="parto-voce" aria-live="polite"></p>
   </div>
 </section>
 
-<!-- 3. il test del respiro -->
+<!-- 3. le pillole: sei strutture -->
+<section id="pillole">
+  <div class="wrap">
+    <p class="eyebrow">Le pillole · gratis</p>
+    <h2>Sei strutture, per quello che cerchi</h2>
+    <p class="intro">In ognuna 4 esercizi, una routine da 5 minuti e, dove c'è, un test.</p>
+    <ul class="griglia">
+      <li><a class="carta" href="pillole.html#respiro-basso" data-str="respiro-basso"><span class="foto" aria-hidden="true"></span><h3>Respiro basso</h3><span class="riga">Calma, prima di dormire o di allenarti</span><span class="etichetta" hidden>Parti da qui</span></a></li>
+      <li><a class="carta" href="pillole.html#piede-che-tiene" data-str="piede-che-tiene"><span class="foto" aria-hidden="true"></span><h3>Piede che tiene</h3><span class="riga">Corsa, molte ore in piedi, equilibrio</span><span class="etichetta" hidden>Parti da qui</span></a></li>
+      <li><a class="carta" href="pillole.html#anche-libere" data-str="anche-libere"><span class="foto" aria-hidden="true"></span><h3>Anche libere</h3><span class="riga">Seduti a lungo, calci, squat</span><span class="etichetta" hidden>Parti da qui</span></a></li>
+      <li><a class="carta" href="pillole.html#collo-e-spalle" data-str="collo-e-spalle"><span class="foto" aria-hidden="true"></span><h3>Collo e spalle</h3><span class="riga">Scrivania, guardia alta</span><span class="etichetta" hidden>Parti da qui</span></a></li>
+      <li><a class="carta" href="pillole.html#polsi-e-mani" data-str="polsi-e-mani"><span class="foto" aria-hidden="true"></span><h3>Polsi e mani</h3><span class="riga">Presa, pugni, calisthenics</span><span class="etichetta" hidden>Parti da qui</span></a></li>
+      <li><a class="carta" href="pillole.html#tronco-e-glutei" data-str="tronco-e-glutei"><span class="foto" aria-hidden="true"></span><h3>Tronco e glutei</h3><span class="riga">La base per correre e sollevare</span><span class="etichetta" hidden>Parti da qui</span></a></li>
+    </ul>
+    <p class="sotto-link"><a class="link-riga" href="pillole.html">Tutte le pillole ›</a></p>
+  </div>
+</section>
+
+<!-- 4. il test del respiro -->
 <section id="test">
   <div class="wrap">
-    <p class="eyebrow">Il test del respiro · gratis</p>
+    <p class="eyebrow">Il test del respiro · 1 minuto</p>
     <h2>Quanti secondi reggi senza aria?</h2>
     <div class="test">
       <div>
-        <p class="intro">Si chiama BOLT ed è il primo test del Quaderno: dura meno di un minuto e il numero resta solo su questo telefono, in questo browser. <b class="perche">Perché conta:</b> misura quanto a lungo il respiro resta calmo prima del primo segnale. Non è un giudizio: è il punto da cui guardi la strada fatta.</p>
-        <ol class="passi">
+        <p class="intro">Dopo un'espirazione normale conti i secondi fino al primo segnale. È un punto di partenza, non un giudizio: il numero resta su questo telefono.</p>
+        <details class="come-si-fa">
+          <summary>Come si fa</summary>
+          <ol class="passi">
           <li>Siediti tranquillo e fai qualche respiro normale dal naso.</li>
           <li>Dopo un'espirazione normale, non forzata, tappa il naso e tocca «Avvia apnea».</li>
           <li>Tocca «Stop» al primo segnale: voglia di deglutire, primo spasmo, prima fame d'aria. Se alla ripresa boccheggi, rifallo più tardi e fermati prima.</li>
-        </ol>
-        <p class="piccolo">Saltalo se sei in gravidanza, hai problemi di cuore o pressione non controllata, epilessia o attacchi di panico: chiedi prima al medico. Mai in acqua o alla guida.</p>
+          </ol>
+        </details>
+        <div class="avviso"><p><b>Saltalo</b> se sei in gravidanza, hai problemi di cuore o pressione non controllata, se ti capita di svenire, se hai epilessia o attacchi di panico: chiedi prima al medico. Mai in acqua o alla guida.</p></div>
       </div>
-      <div class="tool" id="t-bolt">
-        <p class="big" id="bolt-t" aria-live="off">0,0 s</p>
-        <button class="btn primary grande" type="button" id="bolt-b">Avvia apnea</button>
-        <p class="esito" id="bolt-e" aria-live="polite"></p>
-        <p class="storico" id="bolt-h"></p>
-        <div class="dopo" id="bolt-dopo" hidden>
-          <p><b>Segnati questo numero: è il tuo punto di partenza. Al giorno 7 della sfida lo rifai nelle stesse condizioni.</b></p>
-          <a class="btn primary" href="sfida.html">Inizia gratis: 7 giorni, 3 minuti</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 4. un esercizio di prova: E64, in breve -->
-<section id="prova">
-  <div class="wrap">
-    <p class="eyebrow">Un esercizio di prova</p>
-    <h2>Al muro: cinque respiri, non di più</h2>
-    <div class="prova">
-      <figure class="fig" id="fig-e64" data-anim="E64"><div class="fig-fb"><b>Al muro</b><span>Schiena al muro, gomiti avanti: inspira col cilindro, poi a bocca aperta fuori tutta l'aria.</span></div></figure>
       <div>
-        <ol class="tre-passi">
-          <li>Schiena al muro, piedi un passo avanti, ginocchia piegate: sotto la lombare passa la mano, non di più.</li>
-          <li>Mani nella piega dell'anca, gomiti avanti: un bel respiro gonfiando i fianchi.</li>
-          <li>Apri la bocca e butta fuori tutta l'aria, fino in fondo. Riprendi aria con la pancia: cinque respiri così.</li>
-        </ol>
-        <div class="avviso"><p><b>Prima chiedi</b> se hai la pressione alta, sei in gravidanza o hai problemi del pavimento pelvico.</p></div>
-        <a class="btn primary" href="sfida.html">Fallo guidato nella sfida</a>
+        <div class="tool" id="t-bolt">
+          <p class="big" id="bolt-t" aria-live="off">0,0 s</p>
+          <button class="btn primary grande" type="button" id="bolt-b">Avvia apnea</button>
+          <p class="esito" id="bolt-e" aria-live="polite"></p>
+          <p class="storico" id="bolt-h"></p>
+          <div class="dopo" id="bolt-dopo" hidden>
+            <p><b>Segnati questo numero: è il tuo punto di partenza. Al giorno 7 della sfida lo rifai nelle stesse condizioni.</b></p>
+            <a class="btn primary" href="sfida.html">Inizia la sfida</a>
+          </div>
+        </div>
+        <p class="sotto-link"><a class="link-riga" href="pillole.html#test">Altri test gratuiti, nelle pillole ›</a></p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 5. la sfida del mese e l'offerta -->
-<section id="offerta">
+<!-- 5. la sfida del mese -->
+<section id="sfida">
   <div class="wrap">
     <p class="eyebrow">La sfida del mese · gratis</p>
     <h2>Respiro al muro, 7 giorni</h2>
     <div class="sfida-card">
       <p>Due esercizi, 3 minuti al giorno, per una settimana: un minuto di respiro di pancia e cinque respiri al muro. Il giorno 1 e il giorno 7 fai il test, nelle stesse condizioni, e confronti i due numeri.</p>
-      <a class="btn primary grande" href="sfida.html">Inizia gratis: 7 giorni, 3 minuti</a>
+      <a class="btn primary grande" href="sfida.html" id="sfida-b">Inizia gratis: 7 giorni, 3 minuti</a>
       <div class="giorni" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
       <p class="leg" aria-hidden="true"><span>giorno 1: test</span><span>giorno 7: test</span></p>
     </div>
@@ -470,12 +496,65 @@ footer .marchio { font-size: .95rem; }
       <p>Già fatta? Ti avviso quando esce la prossima.</p>
       <div class="cta-azioni" data-contatto="avvisi"></div>
     </div>
+  </div>
+</section>
 
-    <h3 class="h-piano" id="piano">Il piano su misura</h3>
-    <p class="intro">Le 12 settimane del Quaderno, adattate a te e seguite. Parti da un questionario, dai tuoi test e da una videochiamata privata; scegliamo percorso, dosi ed esercizi da togliere. A ogni fine blocco mi mandi un video e ti rispondo con le correzioni.</p>
+<!-- 6. i percorsi e la regola pubblica -->
+<section id="percorsi">
+  <div class="wrap">
+    <p class="eyebrow">I percorsi</p>
+    <h2>Quattro percorsi, la stessa base</h2>
+    <p class="intro">Cambia l'accento, non le radici.</p>
+    <ul class="griglia quattro">
+      <li><a class="carta" href="percorso-benessere.html" data-perc="benessere"><h3>Benessere</h3><span class="riga">Lavori seduto e non fai sport</span><span class="etichetta" hidden>Il tuo percorso</span></a></li>
+      <li><a class="carta" href="percorso-corsa.html" data-perc="corsa-e-fiato"><h3>Corsa e fiato</h3><span class="riga">Corri o fai sport di resistenza</span><span class="etichetta" hidden>Il tuo percorso</span></a></li>
+      <li><a class="carta" href="percorso-combattimento.html" data-perc="combattimento"><h3>Combattimento</h3><span class="riga">Arti marziali, colpi, lotta</span><span class="etichetta" hidden>Il tuo percorso</span></a></li>
+      <li><a class="carta" href="percorso-forza.html" data-perc="forza-e-scatti"><h3>Forza e scatti</h3><span class="riga">Palestra, calisthenics, sport di squadra</span><span class="etichetta" hidden>Il tuo percorso</span></a></li>
+    </ul>
+    <h3 class="h-regola">Come si sceglie, in chiaro</h3>
+    <ol class="regola">
+      <li><span><b>L'obiettivo sceglie il percorso.</b> Quello che fai, o vuoi fare, decide dove va l'accento.</span></li>
+      <li><span><b>I test regolano dose e accento.</b> Non scelgono il programma e non dicono qual è il tuo problema: dicono da dove parti.</span></li>
+      <li><span><b>In videochiamata si decide il resto:</b> livello, tempo a settimana, esercizi da togliere se oggi non riesci a farli.</span></li>
+    </ol>
+    <p class="piccolo" style="margin:12px 0 0">Ogni percorso ha una sessione tipo da 15 minuti, gratis.</p>
+  </div>
+</section>
+
+<!-- 7. il Quaderno: tre schermate vere -->
+<section id="quaderno">
+  <div class="wrap">
+    <p class="eyebrow">Il Quaderno del Respiro</p>
+    <h2>Il quanto, il quando, il per te</h2>
+    <p class="intro">Qui provi gratis il cosa: gli esercizi, le routine, i test. Con il codice si apre il Quaderno: quanto fare e quando salire. In videochiamata lo adattiamo a te, e dietro c'è una persona.</p>
+    <ul class="schermate" id="dentro" tabindex="0" aria-label="Tre schermate del Quaderno">
+      <li><figure class="schermata">
+        <span class="cornice"><img src="dentro-programma.webp" width="358" height="560" loading="lazy" decoding="async" alt="Il programma: blocco 1, settimana 1 di 4, le 12 settimane in tre blocchi e la sessione Radici di circa 13 minuti col pulsante Inizia."></span>
+        <figcaption><b>Il quando.</b></figcaption>
+      </figure></li>
+      <li><figure class="schermata">
+        <span class="cornice"><img src="dentro-player.webp" width="390" height="640" loading="lazy" decoding="async" alt="Il player: l'esercizio «Respiro di pancia, supino» con cosa fare, cosa sentire e cosa evitare, il cerchio del ritmo e il pulsante Avvia."></span>
+        <figcaption><b>Il quanto.</b></figcaption>
+      </figure></li>
+      <li><figure class="schermata">
+        <span class="cornice"><img src="dentro-scheda.webp" width="370" height="580" loading="lazy" decoding="async" alt="Una scheda aperta: «Respiro di pancia, supino», con a cosa ti serve, come si fa, cosa senti e cosa evitare."></span>
+        <figcaption><b>Tutte le schede.</b></figcaption>
+      </figure></li>
+    </ul>
+    <p class="persona"><b>Dietro c'è una persona.</b> Il codice arriva dopo una videochiamata privata, in cui scegliamo insieme percorso, livello, tempo e accento. Poi un controllo video a ogni fine blocco e una chat con risposta entro 48 ore nei giorni feriali.</p>
+  </div>
+</section>
+
+<!-- 8. il piano su misura: i pacchetti di offerta.js -->
+<section id="offerta">
+  <div class="wrap">
+    <p class="eyebrow">Il piano · in videochiamata</p>
+    <h2 id="piano">Il piano su misura</h2>
+    <p class="intro">Adattiamo le 12 settimane del Quaderno al tuo obiettivo, al tuo tempo e a quello che oggi riesci a fare. Su questo sito non si compra niente: si parte da una videochiamata privata.</p>
     <div id="pacchetti">
       <p class="pac-presto">Tre durate: 1 anno, 6 mesi, 3 mesi. I prezzi escono presto.</p>
     </div>
+    <p class="piccolo solo-ig" hidden style="margin:10px 0 0">Se la mail non si apre, l'indirizzo è nel piede della pagina, da copiare.</p>
     <div class="altro">
       <div class="one">
         <p><b>One to one</b> · <span id="one-testo">Correzioni dal vivo, online o in presenza. Pochi posti: si entra dopo una chiamata di 15 minuti.</span></p>
@@ -483,177 +562,82 @@ footer .marchio { font-size: .95rem; }
       <div class="dopo-passi">
         <h3>Cosa succede dopo</h3>
         <ol>
-          <li>Richiedi un appuntamento dal pacchetto che ti interessa.</li>
-          <li>Ricevi il questionario, mai in DM, e fissiamo la videochiamata.</li>
-          <li>Paghi e ricevi la password.</li>
-          <li>Parti dalla settimana 1.</li>
+          <li>Tocchi «Richiedi un appuntamento» sul pacchetto che ti interessa: si apre una mail già scritta.</li>
+          <li>Ti rispondo col questionario, in un modulo, mai in DM, e fissiamo la videochiamata.</li>
+          <li>In videochiamata guardiamo insieme obiettivo, tempo e test, e scegliamo percorso, livello e accento.</li>
+          <li>Se decidi di partire, paghi e ricevi il tuo codice: apre il tuo Quaderno su questo telefono.</li>
         </ol>
       </div>
     </div>
-    <div class="cta">
-      <p data-se="modulo" hidden>Vuoi il piano? Richiedi un appuntamento dal pacchetto che ti interessa, o lascia qui nome ed email.</p>
-      <p data-se="email" hidden>Vuoi il piano? Richiedi un appuntamento dal pacchetto che ti interessa, o scrivimi a questo indirizzo.</p>
-      <p data-se="vuoto">Scrivi PIANO su Instagram: ti mando cosa contiene e quanto costa.</p>
-      <div class="cta-azioni cta-forte" data-contatto="piano">
-        <span class="btn primary grande" data-ig data-ig-testo="Scrivi PIANO su Instagram">Scrivi PIANO su Instagram</span>
-      </div>
-      <p class="piccolo" data-se="contatto ig" hidden>Oppure <span data-ig data-ig-testo="scrivi PIANO su Instagram">scrivi PIANO su Instagram</span>.</p>
-    </div>
   </div>
 </section>
 
-<!-- 6. il metodo in un'immagine: per chi vuole capire prima di scegliere -->
-<section id="metodo">
-  <div class="wrap">
-    <p class="eyebrow">Il metodo in un'immagine</p>
-    <h2>Un albero nel fiume</h2>
-    <div class="metodo">
-      <div>
-        <p class="intro" style="margin-bottom:0">Il coach spiega il metodo con un'immagine. Per tirare fuori qualcuno dal fiume ti tieni a un ramo: se il ramo è marcio, cadi anche tu. Il ramo sono le anche e le spalle, il tronco è il respiro, le radici sono i piedi.</p>
-      </div>
-      <figure class="fig albero">
-        <svg viewBox="0 0 560 300" role="img" aria-label="Albero sulla riva di un fiume: il ramo regge una persona da 100 kg, il ramo sono spalle e anche, il tronco è diaframma più pelvico, le radici sono il piede">
-          <defs>
-            <marker id="m-alb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="fgr"/></marker>
-          </defs>
-          <path class="water" d="M14 240 q20 -8 40 0 t40 0 t40 0 t40 0 t40 0"/>
-          <path class="water" d="M14 262 q20 -8 40 0 t40 0 t40 0 t40 0 t40 0"/>
-          <path class="water" d="M14 284 q20 -8 40 0 t40 0 t40 0 t40 0 t40 0"/>
-          <text class="t" x="16" y="222">fiume</text>
-          <line class="g" x1="200" y1="214" x2="548" y2="214"/>
-          <circle class="ghost" cx="392" cy="62" r="44"/>
-          <rect class="bf" x="372" y="84" width="40" height="130" rx="8"/>
-          <line class="b" x1="374" y1="120" x2="238" y2="158" stroke-width="12"/>
-          <line class="b" x1="240" y1="160" x2="240" y2="232" stroke-width="2"/>
-          <circle class="bf" cx="240" cy="244" r="11"/>
-          <line class="gr" x1="266" y1="196" x2="266" y2="238" marker-end="url(#m-alb)"/>
-          <text class="tk" x="274" y="226">100 kg</text>
-          <g class="b" stroke-width="5">
-            <path d="M384 214 C372 236 352 246 330 258"/>
-            <path d="M392 214 L392 274"/>
-            <path d="M400 214 C412 236 432 246 456 258"/>
-          </g>
-          <text class="tk" x="290" y="104" text-anchor="middle">ramo</text>
-          <text class="t" x="290" y="120" text-anchor="middle">spalle, anche</text>
-          <text class="tk" x="424" y="122">tronco</text>
-          <text class="t" x="424" y="138">diaframma + pelvico</text>
-          <text class="t" x="424" y="154">si espande tutto</text>
-          <text class="tk" x="466" y="252">radici</text>
-          <text class="t" x="466" y="268">piede, tre punti</text>
-        </svg>
-        <figcaption>Ramo debole: si spezza. Tronco senza radici: viene giù tutto l'albero. Qui si allena quello che regge la forza: si parte a terra e si sale quando il gradino sotto è automatico.</figcaption>
-      </figure>
-      <div class="quattro">
-        <article class="pezzo">
-          <div class="mini" data-fig="E15" data-t="2.8" aria-hidden="true"></div>
-          <h3>Radici</h3><p class="chi">i piedi</p>
-          <p>Tre punti a terra e dita lunghe: se le radici non tengono, il resto compensa.</p>
-        </article>
-        <article class="pezzo">
-          <div class="mini" data-fig="E4" data-t="3.3" aria-hidden="true"></div>
-          <h3>Tronco</h3><p class="chi">respiro e postura</p>
-          <p>Il diaframma che scende e parla col pavimento pelvico, in un tronco che resta dritto.</p>
-        </article>
-        <article class="pezzo">
-          <div class="mini" data-fig="E57" data-t="5.1" aria-hidden="true"></div>
-          <h3>Rami</h3><p class="chi">anche, spalle, collo</p>
-          <p>Dove stanno le tensioni: prima mobili e stabili, poi ci appendi un peso.</p>
-        </article>
-        <article class="pezzo carico">
-          <div class="mini" data-fig="E28" data-t="3.0" aria-hidden="true"></div>
-          <h3>Il carico</h3><p class="chi">la forza, per ultima</p>
-          <p>Arriva quando ogni pezzo regge: stabilità prima della forza.</p>
-        </article>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 7. per chi è, per chi no, sicurezza -->
-<section id="per-chi">
-  <div class="wrap">
-    <p class="eyebrow">Prima di iniziare</p>
-    <h2>Per chi è, per chi no</h2>
-    <div class="chi-griglia">
-      <div class="lista">
-        <h3>Per chi è</h3>
-        <ul>
-          <li>Chi si allena, in qualsiasi sport, e vuole basi più solide.</li>
-          <li>Chi si sente rigido e vuole muoversi meglio ogni giorno.</li>
-          <li>Chi ha 15–25 minuti tre volte a settimana e vuole un metodo da praticare.</li>
-        </ul>
-      </div>
-      <div class="lista no">
-        <h3>Per chi no</h3>
-        <ul>
-          <li>Chi cerca una cura: non sostituisce un medico né un fisioterapista.</li>
-          <li>Chi ha un dolore acuto o un infortunio in corso: prima il medico.</li>
-          <li>Chi vuole la forza subito: qui arriva per ultima.</li>
-        </ul>
-      </div>
-    </div>
-    <div class="sicurezza">
-      <p><b>Sicurezza.</b> Il Quaderno non sostituisce un medico. Con un dolore che peggiora ti fermi e chiedi.</p>
-      <p>Se ti gira la testa, torna a un respiro lento e normale. Con pressione alta, in gravidanza o con problemi del pavimento pelvico, chiedi prima di fare il respiro al muro.</p>
-    </div>
-  </div>
-</section>
-
-<!-- 8. domande frequenti -->
+<!-- 9. domande frequenti, con la sicurezza in cima -->
 <section id="domande">
   <div class="wrap">
+    <div class="sicurezza"><p><b>Prima di iniziare.</b> Questi esercizi sono pensati per adulti e non sostituiscono un medico. Con dolore ti fermi. Se ti gira la testa, torni a un respiro lento e normale. In gravidanza, con cuore o pressione non controllati, epilessia o attacchi di panico, leggi gli avvisi e salta gli esercizi segnati. Se hai il diabete e i piedi poco sensibili, non fare esercizi scalzo.</p></div>
     <p class="eyebrow">Domande frequenti</p>
     <h2>Le risposte brevi</h2>
     <div class="faq" id="faq">
       <details>
-        <summary>Quanto tempo serve al giorno?</summary>
-        <p>Per la sfida, 3 minuti al giorno per 7 giorni. Il Quaderno chiede tre sessioni a settimana da 15–25 minuti, più cinque respiri al muro ogni giorno.</p>
+        <summary>Che cosa è gratis e che cosa no?</summary>
+        <p>Gratis: le pillole, le routine da 5 minuti, i test, una sessione tipo per ogni percorso e la sfida di 7 giorni. Con il codice si apre il Quaderno: il programma di 12 settimane, quanto fare e quando salire, adattato a te in videochiamata, con una persona che ti segue.</p>
       </details>
       <details>
-        <summary>Serve attrezzatura?</summary>
-        <p>No. Un tappetino o un tappeto, un muro libero e una sedia. Per qualche esercizio una bottiglietta d'acqua o un bastone.</p>
+        <summary>Quanto tempo serve?</summary>
+        <p>Una routine dura 5 minuti, una sessione tipo 15. La sfida chiede 3 minuti al giorno per 7 giorni. Nel Quaderno il tempo a settimana lo scegliamo insieme in videochiamata: Breve, Base o Pieno, circa 50, 90 o 125 minuti.</p>
       </details>
       <details>
-        <summary>Funziona offline? Si installa sul telefono?</summary>
-        <p>Sì. Il Quaderno si apre dal link, si aggiunge alla schermata Home come un'app e, dopo la prima apertura, funziona anche senza internet. Test e diario restano sul telefono.</p>
+        <summary>Funziona senza internet? Si installa sul telefono?</summary>
+        <p>Sì. Il Quaderno si apre dal link, si aggiunge alla schermata Home come un'app e, dopo la prima apertura col codice, funziona anche senza internet. Test e diario restano sul telefono.</p>
       </details>
       <details>
-        <summary>Va bene se non faccio nessuno sport?</summary>
-        <p>Sì. Il metodo parte da terra, dal respiro e dai piedi: serve a chi si prepara per il suo sport e a chi vuole solo muoversi meglio.</p>
+        <summary>È per me?</summary>
+        <p>È per chi si allena, in qualsiasi sport, e per chi vuole solo muoversi meglio ogni giorno. Non sostituisce un medico né un fisioterapista: con un dolore acuto o un infortunio in corso, prima il medico.</p>
       </details>
       <details>
         <summary>Quanto costa?</summary>
-        <p id="faq-costo">Le sfide sono gratis. I prezzi del piano escono presto.</p>
+        <p id="faq-costo">Le pillole, i test e le sfide sono gratis. I prezzi del piano escono presto.</p>
       </details>
       <details>
-        <summary>Cosa succede dopo che ti scrivo?</summary>
-        <p>Ti mando il questionario, che si compila in un modulo, mai in DM, e fissiamo la videochiamata. Poi paghi, ricevi la tua password e parti dalla settimana 1.</p>
+        <summary>Come funziona il codice?</summary>
+        <p>Il codice è personale: te lo do in videochiamata. Lo scrivi in «Ho il codice», in alto, e si apre il tuo Quaderno su questo telefono. Se spunti «Ricordalo», la volta dopo si apre da solo.</p>
       </details>
       <details>
         <summary>Dove finiscono i miei dati?</summary>
-        <p>La sfida e i test restano su questo telefono, in questo browser: non li riceve nessuno. Se chiedi il piano, il questionario si compila in un modulo, con il tuo consenso, mai in DM.</p>
+        <p>Le risposte di «Da dove parto?», i test e la sfida restano su questo telefono, in questo browser: non li riceve nessuno. Se chiedi un appuntamento, il questionario arriva dopo, in un modulo, con il tuo consenso, mai in DM.</p>
       </details>
     </div>
   </div>
 </section>
 
-<!-- 9. hai già la password? -->
+<!-- 10. hai il codice? La porta della guida cifrata: stessi id e stessa logica di prima -->
 <section id="accesso">
   <div class="wrap accesso">
     <div id="porta">
       <div class="marca">
         <img src="icona-180.png" alt="">
-        <h2>Hai già la password?</h2>
+        <h2>Hai il codice?</h2>
       </div>
-      <p>Inserisci la password che ti è stata data: si apre il tuo Quaderno.</p>
+      <p>Il codice te lo do in videochiamata. Apre il tuo Quaderno su questo telefono.</p>
       <form id="entra" method="post" autocomplete="on">
-        <label for="pw">Password
+        <label for="pw">Codice
           <input type="password" id="pw" name="password" autocomplete="current-password" required>
         </label>
-        <label class="ricorda" for="ricorda"><input type="checkbox" id="ricorda" checked> Ricordala su questo dispositivo</label>
+        <label class="ricorda" for="ricorda"><input type="checkbox" id="ricorda" checked> Ricordalo su questo telefono</label>
         <p id="esito" role="status" aria-live="polite"></p>
         <button type="submit" id="vai">Entra</button>
       </form>
+      <p class="piccolo solo-ig" hidden>Sei nel browser di Instagram: il Quaderno aperto qui non si ritrova in Safari o Chrome. Aprilo lì: menu ••• › Apri nel browser.</p>
+      <details>
+        <summary>Che cosa succede dopo la videochiamata</summary>
+        <ol>
+          <li>In videochiamata ti do il tuo codice: è solo tuo. Di solito il codice funziona pochi minuti dopo la videochiamata.</li>
+          <li>Apri questa pagina in Safari (iPhone) o Chrome (Android) e scrivi il codice qui sopra, con «Ricordalo» spuntato.</li>
+          <li>Aggiungi il Quaderno alla schermata Home: su iPhone Condividi › Aggiungi alla schermata Home; su Android menu ⋮ › Aggiungi a schermata Home. Così lo apri come un'app, anche senza internet. Dall'icona sulla Home il tuo diario resta sul telefono; nel solo Safari, dopo 7 giorni senza aprirlo, può sparire.</li>
+          <li>Parti dalla settimana 1. Se cambi telefono, riscrivi il codice sul nuovo. Se il codice non funziona più, scrivimi.</li>
+        </ol>
+      </details>
     </div>
   </div>
 </section>
@@ -663,25 +647,32 @@ footer .marchio { font-size: .95rem; }
   <div class="wrap">
     <a class="marchio" href="#inizio"><img src="icona-180.png" alt="">Prima le Radici</a>
     <div class="piede-contatti" data-se="contatto" hidden>
-      <p>Scrivimi per il piano, o per sapere quando esce la prossima sfida.</p>
+      <p>Scrivimi per un appuntamento, o per sapere quando esce la prossima sfida.</p>
       <div class="cta-azioni" data-contatto="piano avvisi"></div>
     </div>
+    <ul class="piede-link" aria-label="Le pagine del sito">
+      <li><a href="#inizio">Inizio</a></li><li><a href="pillole.html">Pillole</a></li><li><a href="#percorsi">Percorsi</a></li><li><a href="sfida.html">Sfida</a></li>
+    </ul>
     <p data-se="ig|vuoto"><span class="btn" data-ig data-ig-testo="Segui il Quaderno su Instagram">Segui il Quaderno su Instagram</span></p>
-    <p class="privacy">Privacy: il test, la sfida e il diario restano su questo dispositivo. Non li riceve nessuno.</p>
+    <p class="privacy">Privacy: le risposte di «Da dove parto?», i test e la sfida restano su questo dispositivo. Non li riceve nessuno.</p>
   </div>
 </footer>
 <noscript><p style="padding:24px">Per aprire il quaderno e usare il test serve un browser con JavaScript attivo.</p></noscript>
 
 <script>
-// La facciata: il test del respiro, le figure e l'offerta. Si avvia solo quando la facciata si vede,
-// cioè quando la guida non si apre da sola con la password ricordata.
+// La pagina d'ingresso: «Da dove parto?», il test del respiro, i fotogrammi delle strutture e l'offerta.
+// Si avvia solo quando la pagina si vede, cioè quando la guida non si apre da sola col codice ricordato.
 (function () {
   "use strict";
   var avviata = false, boltT0 = 0, boltRaf = 0;
-  var BOLT = "qg-bolt";
+  var BOLT = "qg-bolt", PARTO = "qg-parto";
+  var IG = /Instagram/.test(navigator.userAgent || "");
   function $(id) { return document.getElementById(id); }
+  function ogni(sel, fn) { Array.prototype.forEach.call(document.querySelectorAll(sel), fn); }
+  function ha(o, k) { return typeof k === "string" && Object.prototype.hasOwnProperty.call(o, k); }
   function leggiJSON(k) { try { return JSON.parse(localStorage.getItem(k) || "null"); } catch (e) { return null; } }
   function scriviJSON(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }
+  function fuoco(el) { if (!el) return; try { el.focus({ preventScroll: true }); } catch (e) { el.focus(); } }
   function carica(src, fatto) {
     var s = document.createElement("script");
     s.src = src;
@@ -690,9 +681,9 @@ footer .marchio { font-size: .95rem; }
     document.body.appendChild(s);
   }
 
-  // «Ho la password» in testata (e la porta, se la password ricordata non vale più): scorre al
-  // riquadro e mette il fuoco sul campo. Figure, offerta e caratteri arrivano dopo e allungano la
-  // pagina sopra il riquadro: finché chi legge non scorre da sé, la pagina resta ferma sul riquadro.
+  // «Ho il codice» in testata (e la porta, se il codice ricordato non vale più): scorre al riquadro
+  // e mette il fuoco sul campo. Figure, offerta e caratteri arrivano dopo e allungano la pagina sopra
+  // il riquadro: finché chi legge non scorre da sé, la pagina resta ferma sul riquadro.
   var tieni = false;
   function tieniSu() { if (tieni) { try { $("accesso").scrollIntoView({ block: "start", behavior: "instant" }); } catch (x) { $("accesso").scrollIntoView(true); } } }
   function molla() { tieni = false; }
@@ -709,10 +700,6 @@ footer .marchio { font-size: .95rem; }
   // il test BOLT, senza fasce di giudizio: le soglie non hanno studi alle spalle. Il numero si arrotonda
   // al secondo una volta sola: quello grande e la frase dicono lo stesso numero, e quello si salva.
   function secondi(ms) { return (ms / 1000).toFixed(1).replace(".", ",") + " s"; }
-  function evidenzia(ul, v) {
-    if (!ul) return;
-    Array.prototype.forEach.call(ul.querySelectorAll("li"), function (li) { li.classList.toggle("attivo", v >= Number(li.dataset.min) && v < Number(li.dataset.max)); });
-  }
   function quando(iso) { var d = new Date(iso); return isNaN(d.getTime()) ? "" : d.getDate() + "/" + (d.getMonth() + 1); }
   function storico() {
     var l = leggiJSON(BOLT);
@@ -726,7 +713,6 @@ footer .marchio { font-size: .95rem; }
       boltT0 = performance.now();
       b.textContent = "Stop: voglia di respirare";
       $("bolt-e").textContent = "";
-      evidenzia($("bolt-s"), -1);
       gira();
       return;
     }
@@ -734,7 +720,6 @@ footer .marchio { font-size: .95rem; }
     var s = Math.round((performance.now() - boltT0) / 1000); boltT0 = 0;
     $("bolt-t").textContent = s + " s";
     b.textContent = "Rifai";
-    evidenzia($("bolt-s"), s);
     var l = leggiJSON(BOLT); l = Array.isArray(l) ? l : [];
     l.push({ data: new Date().toISOString(), valore: s });
     var ok = scriviJSON(BOLT, l.slice(-10));
@@ -743,24 +728,193 @@ footer .marchio { font-size: .95rem; }
     storico();
   }
 
-  // le figure: quelle ferme nei quattro riquadri, quella animata dell'esercizio di prova
-  function figure() {
-    if (!window.QGFig) return tieniSu();
-    Array.prototype.forEach.call(document.querySelectorAll(".mini[data-fig]"), function (el) {
-      try { el.innerHTML = QGFig.frame(el.getAttribute("data-fig"), Number(el.getAttribute("data-t")) || 0); } catch (e) {}
+  // ---- «Da dove parto?» (02-esperienza.md, sezione 3) ----
+  var DOMANDE = [
+    { k: "obiettivo", t: "Per che cosa ti alleni?", sotto: "", r: [
+      ["scrivania", "Per stare bene alla scrivania", "Lavoro seduto, non faccio sport"],
+      ["calma", "Per un momento di calma", "La sera, o prima di allenarmi"],
+      ["corsa", "Per la corsa o uno sport di resistenza", ""],
+      ["combattimento", "Per arti marziali, colpi o lotta", ""],
+      ["forza", "Per palestra, calisthenics o sport di squadra", ""]] },
+    { k: "tempo", t: "Quanto tempo hai a settimana per questo lavoro?", sotto: "Oltre al tuo sport, se ne fai uno.", r: [
+      ["breve", "Meno di un'ora e mezza", "Per esempio 3 volte da 20 minuti"],
+      ["base", "Da un'ora e mezza a due ore", "Per esempio 3 volte da 35 minuti"],
+      ["pieno", "Più di due ore", "Per esempio 4 volte da 35 minuti"]] },
+    { k: "allenamento", t: "Quanto ti alleni oggi?", sotto: "Negli ultimi 3 mesi, qualsiasi allenamento.", r: [
+      ["inizio", "Meno di 2 volte a settimana", ""],
+      ["medio", "2 o 3 volte a settimana", "O di più, ma da meno di 6 mesi"],
+      ["avanzato", "4 volte o più a settimana", "Da almeno 6 mesi"]] }
+  ];
+  // L'obiettivo sceglie percorso e struttura; quanto ti alleni decide l'ordine dei consigli e il livello;
+  // il tempo dà il tempo del Quaderno (Pieno al livello Inizio diventa Base).
+  var OBIETTIVI = {
+    scrivania: { percorso: "benessere", struttura: "collo-e-spalle", breve: "stare bene alla scrivania" },
+    calma: { percorso: "benessere", struttura: "respiro-basso", breve: "un momento di calma" },
+    corsa: { percorso: "corsa-e-fiato", struttura: "piede-che-tiene", breve: "la corsa o uno sport di resistenza" },
+    combattimento: { percorso: "combattimento", struttura: "anche-libere", breve: "arti marziali, colpi o lotta" },
+    forza: { percorso: "forza-e-scatti", struttura: "tronco-e-glutei", breve: "palestra, calisthenics o sport di squadra" }
+  };
+  var PERCORSI = { "benessere": ["Benessere", "percorso-benessere.html"], "corsa-e-fiato": ["Corsa e fiato", "percorso-corsa.html"],
+    "combattimento": ["Combattimento", "percorso-combattimento.html"], "forza-e-scatti": ["Forza e scatti", "percorso-forza.html"] };
+  var STRUTTURE = { "respiro-basso": "Respiro basso", "piede-che-tiene": "Piede che tiene", "anche-libere": "Anche libere",
+    "collo-e-spalle": "Collo e spalle", "polsi-e-mani": "Polsi e mani", "tronco-e-glutei": "Tronco e glutei" };
+  var LIVELLI = { inizio: "Inizio", medio: "Medio", avanzato: "Avanzato" };
+  var TEMPI = { breve: ["Breve", 50], base: ["Base", 90], pieno: ["Pieno", 125] };
+  function risultato(r) {
+    var o = OBIETTIVI[r.obiettivo], eccezione = r.tempo === "pieno" && r.allenamento === "inizio", t = TEMPI[eccezione ? "base" : r.tempo];
+    return { percorso: o.percorso, struttura: o.struttura, breve: o.breve, primo: r.allenamento === "inizio" ? "sfida" : "struttura",
+      livello: LIVELLI[r.allenamento], tempo: t[0], minuti: t[1], eccezione: eccezione };
+  }
+  function valido(v) { return !!(v && typeof v === "object" && v.v === 1 && ha(OBIETTIVI, v.obiettivo) && ha(TEMPI, v.tempo) && ha(LIVELLI, v.allenamento)); }
+  function oggi() { var d = new Date(); return d.getFullYear() + "-" + (d.getMonth() < 9 ? "0" : "") + (d.getMonth() + 1) + "-" + (d.getDate() < 10 ? "0" : "") + d.getDate(); }
+  function sfidaIniziata() { try { return localStorage.getItem("qg-sfida-respiro") !== null; } catch (e) { return false; } }
+  var risposte = {}, passo = 0, memoriaOk = true;
+
+  function domanda(i, annuncia) {
+    passo = i;
+    var d = DOMANDE[i];
+    $("parto-box").innerHTML = '<p class="parto-n">Domanda ' + (i + 1) + ' di 3</p><h3 id="parto-q" tabindex="-1">' + d.t + "</h3>" +
+      (d.sotto ? '<p class="parto-sotto">' + d.sotto + "</p>" : "") +
+      '<div class="risposte" role="group" aria-labelledby="parto-q">' + d.r.map(function (x) {
+        var sc = risposte[d.k] === x[0];
+        return '<button type="button" class="risp' + (sc ? " scelta" : "") + '" data-v="' + x[0] + '">' + x[1] + (x[2] ? "<small>" + x[2] + "</small>" : "") +
+          (sc ? '<span class="sr"> · la tua risposta</span>' : "") + "</button>";
+      }).join("") + "</div>" +
+      (i > 0 ? '<button type="button" class="indietro" id="parto-indietro">‹ Indietro</button>' : "");
+    if (annuncia) { $("parto-voce").textContent = "Domanda " + (i + 1) + " di 3"; fuoco($("parto-q")); }
+  }
+  function blocco(primo, titolo, testo, bottone, href) {
+    return '<div class="blocco"><p><b>' + titolo + "</b></p><p>" + testo + '</p><a class="btn' + (primo ? " primary" : "") + '" href="' + href + '">' + bottone + "</a></div>";
+  }
+  function mostraRisultato(v, annuncia) {
+    var r = risultato(v), pc = PERCORSI[r.percorso], sn = STRUTTURE[r.struttura], strPrima = r.primo === "struttura";
+    var bStr = blocco(strPrima, (strPrima ? "Parti da " : "Poi: ") + sn, "4 esercizi e una routine da 5 minuti.", "Apri " + sn, "pillole.html#" + r.struttura);
+    var bSfida = blocco(!strPrima, strPrima ? "E se vuoi, la sfida di 7 giorni" : "Comincia dalla sfida di 7 giorni",
+      "Respiro al muro: 3 minuti al giorno, con un test il primo e l'ultimo giorno.", sfidaIniziata() ? "Continua la sfida" : "Inizia la sfida", "sfida.html");
+    $("parto-box").innerHTML = '<p class="parto-n">Il tuo punto di partenza</p><h3 id="parto-q" tabindex="-1">Somigli al percorso ' + pc[0] + "</h3>" +
+      "<p>Perché hai scelto «" + r.breve + "»: è l'obiettivo che sceglie il percorso.</p>" +
+      '<p><a class="link-riga" href="' + pc[1] + '">Vedi il percorso ›</a></p>' +
+      (strPrima ? bStr + bSfida : bSfida + bStr) +
+      '<div class="blocco q"><p><b>Nel Quaderno, una prima idea</b></p><p>Livello ' + r.livello + ", tempo " + r.tempo + ": circa " + r.minuti +
+      " minuti a settimana. L'accento lo indicano i test. In videochiamata confermiamo o cambiamo tutto.</p>" +
+      (r.eccezione ? "<p>Al livello Inizio si parte al massimo da Base.</p>" : "") +
+      '<p><a class="link-riga" href="#piano">Come funziona il piano ›</a></p></div>' +
+      '<div class="ris-fondo"><button type="button" class="indietro" id="parto-rifai">Rifai le domande</button><button type="button" class="indietro" id="parto-cancella">Cancella le risposte</button></div>' +
+      '<p class="piccolo">' + (memoriaOk ? "Le risposte restano su questo telefono, in questo browser." : "Questo browser non salva le risposte: restano finché non chiudi la pagina.") + "</p>";
+    if (annuncia) { $("parto-voce").textContent = "Il tuo punto di partenza: somigli al percorso " + pc[0]; fuoco($("parto-q")); }
+  }
+  // «Parti da qui» sulla struttura, «Il tuo percorso» sul percorso
+  function etichette(v) {
+    var r = v ? risultato(v) : null;
+    ogni("[data-str]", function (a) { var e = a.querySelector(".etichetta"); if (e) e.hidden = !(r && r.struttura === a.getAttribute("data-str")); });
+    ogni("[data-perc]", function (a) { var e = a.querySelector(".etichetta"); if (e) e.hidden = !(r && r.percorso === a.getAttribute("data-perc")); });
+  }
+  function parto() {
+    var v = leggiJSON(PARTO);
+    if (valido(v)) { risposte = { obiettivo: v.obiettivo, tempo: v.tempo, allenamento: v.allenamento }; mostraRisultato(v, false); etichette(v); }
+    else domanda(0, false);
+    $("parto-box").addEventListener("click", function (e) {
+      var b = e.target && e.target.closest ? e.target.closest("button") : null;
+      if (!b) return;
+      if (b.classList.contains("risp")) {
+        risposte[DOMANDE[passo].k] = b.getAttribute("data-v");
+        if (passo < DOMANDE.length - 1) { domanda(passo + 1, true); return; }
+        var nuovo = { v: 1, obiettivo: risposte.obiettivo, tempo: risposte.tempo, allenamento: risposte.allenamento, data: oggi() };
+        memoriaOk = scriviJSON(PARTO, nuovo);
+        mostraRisultato(nuovo, true);
+        etichette(nuovo);
+      } else if (b.id === "parto-indietro") domanda(Math.max(0, passo - 1), true);
+      else if (b.id === "parto-rifai") domanda(0, true);
+      else if (b.id === "parto-cancella") {
+        try { localStorage.removeItem(PARTO); } catch (x) {}
+        risposte = {};
+        etichette(null);
+        domanda(0, true);
+      }
     });
-    try { QGFig.mount($("fig-e64")); } catch (e) {}
+  }
+
+  // ---- i fotogrammi delle strutture (pillole.js e figure.js) e il numero di pillole ----
+  var pillolePronte = false, figurePronte = false;
+  function numeri() {
+    var P = window.QGPillole;
+    if (!pillolePronte || !P || !P.strutture) return;
+    var n = P.strutture.reduce(function (t, s) { return t + (s.pillole || []).length; }, 0);
+    ogni('[data-calc="pillole"]', function (x) { x.textContent = n; });
+  }
+  function fotogrammi() {
+    var P = window.QGPillole, Q = window.QGFig;
+    if (!pillolePronte || !figurePronte || !P || !P.strutture || !Q) return tieniSu();
+    P.strutture.forEach(function (s) {
+      var el = document.querySelector('[data-str="' + s.id + '"] .foto'), cod = s.pillole && s.pillole[0] && s.pillole[0].cod;
+      if (!el || !cod) return;
+      try {
+        var f = Q.info(cod).fasi, t = f.length > 1 ? f[0].d + f[1].d / 2 : f[0].d / 2;
+        el.innerHTML = Q.frame(cod, t);
+        var svg = el.querySelector("svg");
+        if (svg) { svg.setAttribute("aria-hidden", "true"); svg.removeAttribute("role"); svg.removeAttribute("aria-label"); }
+      } catch (e) {}
+    });
     tieniSu();
+  }
+
+  // ---- il selettore dei pacchetti sul telefono: uno alla volta, il consigliato già scelto ----
+  function selettore() {
+    var box = $("pacchetti"), griglia = box.querySelector(".pac-griglia");
+    var art = box.querySelectorAll("article.pac");
+    if (!griglia || art.length < 2) return;
+    var mq = window.matchMedia ? window.matchMedia("(min-width: 720px)") : null, scelto = 0;
+    Array.prototype.forEach.call(art, function (a, i) { if (a.classList.contains("pac-consigliato")) scelto = i; });
+    var g = document.createElement("div");
+    g.className = "scegli";
+    g.setAttribute("role", "group");
+    g.setAttribute("aria-labelledby", "scegli-t");
+    g.innerHTML = '<p class="scegli-t" id="scegli-t">Scegli la durata</p><div class="scegli-b">' + Array.prototype.map.call(art, function (a, i) {
+      var h = a.querySelector("h3");
+      return '<div><button type="button" data-i="' + i + '">' + (h ? h.textContent : "Pacchetto " + (i + 1)) + "</button>" +
+        (a.classList.contains("pac-consigliato") ? "<small>Consigliato</small>" : "") + "</div>";
+    }).join("") + "</div>";
+    griglia.parentNode.insertBefore(g, griglia);
+    // Sul telefono si vede un pacchetto alla volta: «Tutto il 3 mesi» si apre e mostra che cosa contiene.
+    // Dal più corto al più lungo, così il 1 anno contiene il 6 mesi, che contiene il 3 mesi.
+    Array.prototype.slice.call(art).reverse().forEach(function (a) {
+      var li = a.querySelector("ul li"), m = li ? /^Tutto il ([^,:]+)/.exec(li.textContent) : null;
+      if (!m) return;
+      var nome = m[1].trim(), altro = Array.prototype.filter.call(art, function (b) { var h = b.querySelector("h3"); return h && h.textContent.trim() === nome; })[0];
+      var ul = altro ? altro.querySelector("ul") : null;
+      if (!ul) return;
+      var dd = document.createElement("details");
+      dd.className = "pac-dentro";
+      dd.innerHTML = "<summary>Che cosa c'è nel " + nome + "</summary>";
+      dd.appendChild(ul.cloneNode(true));
+      li.appendChild(dd);
+    });
+    var bottoni = g.querySelectorAll("button");
+    function mostra() {
+      var telefono = !mq || !mq.matches;
+      g.hidden = !telefono;
+      Array.prototype.forEach.call(art, function (a, i) { a.hidden = telefono && i !== scelto; });
+      Array.prototype.forEach.call(bottoni, function (b, i) { b.setAttribute("aria-pressed", i === scelto ? "true" : "false"); });
+    }
+    g.addEventListener("click", function (e) {
+      var b = e.target && e.target.closest ? e.target.closest("button") : null;
+      if (!b) return;
+      scelto = Number(b.getAttribute("data-i")) || 0;
+      mostra();
+    });
+    if (mq) { if (mq.addEventListener) mq.addEventListener("change", mostra); else if (mq.addListener) mq.addListener(mostra); }
+    mostra();
   }
 
   // l'offerta, il contatto e il profilo Instagram, da offerta.js
   function offerta() {
     if (window.QGOfferta) {
       QGOfferta.pacchetti($("pacchetti"));
+      try { selettore(); } catch (e) {}
       QGOfferta.contatti(document);
       QGOfferta.domande($("faq"));
       var one = QGOfferta.oneToOne(); if (one) $("one-testo").textContent = one;
-      if (QGOfferta.haPrezzi()) $("faq-costo").textContent = "Le sfide sono gratis. I prezzi del piano sono nell'offerta qui sopra.";
+      if (QGOfferta.haPrezzi()) $("faq-costo").textContent = "Le pillole, i test e le sfide sono gratis. I prezzi del piano sono nei pacchetti qui sopra.";
     }
     tieniSu();
   }
@@ -771,20 +925,30 @@ footer .marchio { font-size: .95rem; }
     $("vai-accesso").addEventListener("click", vaiAccesso);
     $("bolt-b").addEventListener("click", bolt);
     storico();
+    parto();
+    if (sfidaIniziata()) $("sfida-b").textContent = "Continua la sfida";
+    if (IG) ogni(".solo-ig", function (el) { el.hidden = false; });
     carica("offerta.js", offerta);
-    carica("figure.js", figure);
+    carica("pillole.js", function (ok) { pillolePronte = ok; numeri(); fotogrammi(); });
+    carica("figure.js", function (ok) { figurePronte = ok; fotogrammi(); });
     try { document.fonts.ready.then(tieniSu); } catch (e) {}
     window.addEventListener("load", tieniSu);
+    // arrivati da un'altra pagina con «Ho il codice» (./#accesso): il riquadro e il fuoco sul campo.
+    // Chrome toglie il fuoco quando, a pagina caricata, scorre all'ancora: lo si rimette dopo «load».
+    if (location.hash === "#accesso") {
+      alRiquadro();
+      window.addEventListener("load", function () { setTimeout(function () { if (tieni && document.activeElement !== $("pw")) alRiquadro(); }, 60); });
+    }
   }
-  // Prima di aprire la guida: si fermano cronometro e animazioni della facciata.
+  // Prima di aprire la guida: si ferma il cronometro della pagina.
   function ferma() {
     if (boltRaf) cancelAnimationFrame(boltRaf);
     boltT0 = 0;
     Array.prototype.forEach.call(document.querySelectorAll("figure[data-anim]"), function (f) { if (f._qg) f._qg.play = false; });
   }
-  window.QGFacciata = { avvia: avvia, ferma: ferma, alRiquadro: alRiquadro };
+  window.QGFacciata = { avvia: avvia, ferma: ferma, alRiquadro: alRiquadro, _risultato: risultato };
 
-  // Protezione: il modulo non deve mai partire da solo (finirebbe la password nell'indirizzo). Di
+  // Protezione: il modulo non deve mai partire da solo (finirebbe il codice nell'indirizzo). Di
   // solito lo ferma già la porta qui sotto; se la porta non è partita (per esempio un browser che
   // vieta del tutto la memoria del sito), lo si dice invece di non fare niente.
   $("entra").addEventListener("submit", function (e) {
@@ -895,7 +1059,7 @@ footer .marchio { font-size: .95rem; }
     if (salvata) {
       esito.textContent = fatto === "rete"
         ? "Non riesco a scaricare il quaderno: controlla la connessione e ricarica la pagina."
-        : "La password è cambiata o non vale più: inserisci quella che ti è stata data.";
+        : "Il codice è cambiato o non vale più: scrivi quello che ti ho dato.";
       if (window.QGFacciata) window.QGFacciata.alRiquadro();
       else { porta.scrollIntoView(); document.getElementById("pw").focus(); }
     }
@@ -927,7 +1091,7 @@ footer .marchio { font-size: .95rem; }
         vai.disabled = false;
         esito.className = "";
         if (err && err.rete) { esito.textContent = "Non riesco a scaricare il quaderno: controlla la connessione e riprova."; return; }
-        esito.textContent = "Password sbagliata. Riprova.";
+        esito.textContent = "Codice sbagliato. Riprova.";
         document.getElementById("pw").select();
       });
   });
