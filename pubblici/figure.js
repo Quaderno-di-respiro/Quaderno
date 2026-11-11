@@ -292,10 +292,11 @@
       var out = [], J = body(P);
       c.J = J;
       if (A.pre) A.pre(P, c, out, J);
-      if (J.far.length) out.push(G({ opacity: 0.4 }, J.far));
-      out.push(G({ 'class': 'b' }, J.tor.concat(J.head)));
+      // qg-corpo segna il manichino: la «pelle» di Quiver lo nasconde e lascia oggetti, frecce e scritte
+      if (J.far.length) out.push(G({ opacity: 0.4, 'class': 'qg-corpo' }, J.far));
+      out.push(G({ 'class': 'b qg-corpo' }, J.tor.concat(J.head)));
       if (A.mid) A.mid(P, c, out, J);
-      out.push(G({}, J.near));
+      out.push(G({ 'class': 'qg-corpo' }, J.near));
       if (P.sf != null && J[A.sfLeg || 'ln']) archMark(J[A.sfLeg || 'ln'].ft, P.sf, out);
       if (P.pv != null) pelvicMark(J, P.pv, out);
       if (A.arrows) breathArrows(J, P, A.arrows, out);
@@ -2137,7 +2138,7 @@
       var w = add(s, u, dl), h = P.kn > 0.5 ? blob([w[0] + 1, GQ - 7], 10, 13) : P.fi > 0.5 ? blob([w[0] + 5.5, GQ - 6.5], 13, 11) : // pugni appoggiati a terra
         PL([w, add(w, [6 * c + 0.5 * tp, 3 * tp]), [w[0] + 11 * c - tp + 0.1, GQ - 3]], WHA);
       o.push(L(mid(s, e, 0.45), e, WUA + 5, 'b', HS), L(e, w, WFA + 5, 'b', HS), L(s, e, WUA), L(e, w, WFA), h);
-      J.E = e;
+      J.E = e; J.W = w; J.Wt = [w[0] + 11 * c - tp + 0.1, GQ - 3]; // polso e punta della mano, per la pelle di Quiver
     }
     function hand(p, a, s, P, z) { // mano dall'alto: polso in p, dita verso a (gradi), s 1 la destra (in basso), -1 la sinistra
       var k = [], up = P.pu > 0.5, tp = P.tp, i;
@@ -2172,7 +2173,7 @@
     function qdef(A, pre) { // quadrupedia: ogni posa passa dal rig; il braccio vicino va fra tronco e gamba vicina
       var side;
       A.q = 1; A.base = shallow(LB, A.base); A.pre = A.pre || flr;
-      A.mid = function (P, c, o, J) { arm(P, J, o); };
+      A.mid = function (P, c, o, J) { var g = []; arm(P, J, g); o.push(G({ 'class': 'qg-corpo' }, g)); };
       side = sideFig(A);
       A.draw = function (P, c) { return side(rig(pre ? pre(P, c) : P), c); };
       def(A);
@@ -2775,6 +2776,493 @@
   })();
   /* ======================= FINE BLOCCO D ======================= */
 
+  /* ======================= LEZIONE 7 — BLOCCO A: spalla a terra, supini a ginocchia piegate (E67–E71) ======================= */
+  (function () {
+    // E67–E71 (L7, spalla e scapola). Profilo per E67 ed E70 (come E25); dall'alto per E68, E69 ed E71 (aiuto top7, testa in alto),
+    // con una lente di lato sull'avambraccio in E68 ed E69. Nessun numero di gradi nelle scritte.
+    var DX = 26, V7 = [320, 134, 14], SP7 = poseOf(SUP, {
+      x: SUP.x + DX, pb: 0, pc: 0, pp: 0, th: 0,
+      ln: { p: [SUP.ln.p[0] + DX, SUP.ln.p[1]], b: -1, f: -6 }, lf: { p: [SUP.lf.p[0] + DX, SUP.lf.p[1]], b: -1, f: -6 }
+    });
+    function floorBr(J, P, o) { if (P.pb > 0.02) breathArrows(J, P, ['pb'], o); } // solo quando si respira: la schiena è sul pavimento
+
+    // E67 (N5) — braccio teso oltre la testa, pollice a terra. Il pollice è segnato solo dove il braccio è a terra
+    function A67(a, fr) { return { a: a + (fr ? 1.6 : 0), r: 82, b: 1 }; } // r oltre la lunghezza: l'IK lo tiene teso
+    var DN67 = A67(3.4), UP67 = A67(-90), OV67 = A67(-183.4), DN67f = A67(3.4, 1), OV67f = A67(-183.4, 1);
+    def({
+      id: 'E67', q: 1, v: V7, aria: 'Figura supina a ginocchia piegate, di profilo: il braccio teso parte lungo il fianco col pollice verso il pavimento, sale verso il soffitto e passa oltre la testa fino a terra, oltre l\'orecchio, e il pollice torna a toccare il pavimento; poi scende. Prima un braccio, poi l\'altro, poi tutti e due insieme inspirando; lassù si resta 3–5 respiri e le spalle scendono un po\' di più',
+      base: poseOf(SP7, { an: DN67, af: DN67f, th: 1 }),
+      keys: [
+        { d: 2, s: 'Braccio teso, pollice verso il pavimento', ss: 'Pollice verso il pavimento', p: {}, k: 'no' },
+        { d: 2.5, s: 'Sali col braccio teso', ss: 'Sali teso', p: { an: UP67, th: 0 }, k: 'gr' },
+        { d: 2.5, s: 'Oltre la testa, fino a terra', ss: 'Oltre la testa, a terra', p: { an: OV67 }, k: 'gr' },
+        { d: 1.5, s: 'Gira il pollice a terra', p: { th: 1 }, k: 'gr' },
+        { d: 2.5, s: 'Torna giù. Poi fai l\'altro braccio', ss: 'Giù, poi l\'altro braccio', p: { an: DN67 }, k: 'gr' },
+        { d: 4, s: 'Inspira e porta su tutte e due le braccia', ss: 'Inspira, due braccia su', n: 1, p: { an: OV67, af: OV67f, pb: 0.8, pc: 0.5, th: 0 } },
+        { d: 1.5, s: 'Gira i pollici a terra', ss: 'Pollici a terra', p: { th: 1 }, k: 'gr', air: 0 },
+        { d: 3, s: 'Espira: le spalle scendono un po\' di più', ss: 'Espira, spalle giù', n: 1, p: { pb: 0, pc: 0 } },
+        { d: 3, s: 'Inspira: cilindro e petto', ss: 'Inspira', n: 1, p: { pb: 0.8, pc: 0.5, pp: 0.5 } },
+        { d: 3, s: 'Espira e torna giù', ss: 'Espira, giù', p: { an: DN67, af: DN67f, pb: 0, pc: 0, pp: 0 } }
+      ],
+      nose: 1, main: 3, strip: [1, 3, 5, 7], pre: supFloor,
+      post: function (P, c, o, J) {
+        var tp = mid(J.an.Wr, J.an.tip), th = P.th * cl((tp[1] - (GF - 30)) / 18, 0, 1);
+        if (th > 0.01) o.push(L([tp[0], tp[1] + 1], [tp[0], GF - 1], 3.5, 'gr', op(th)), CI([tp[0], GF - 1], 3.2, 'fgr', op(th)),
+          TX([Math.max(tp[0] - 10, 8), GF + 16], 'pollice a terra', 'tk', 'start', op(th)));
+        floorBr(J, P, o);
+        o.push(TX([232, 32], 'braccio sempre teso', 't', 'middle'));
+        o.push(TX([8, 90], 'oltre l\'orecchio', 't', 'start', op(cl((-P.an.a - 160) / 20, 0, 1))));
+        o.push(TX([232, 48], '3–5 respiri', 't', 'middle', op(cl((-P.af.a - 160) / 20, 0, 1))));
+      }
+    });
+
+    // E70 (N9) — braccia su: spalle giù, poi spingi. Tronco fermo a terra: si muove solo la radice del braccio (sh verso i fianchi, li dal pavimento)
+    function arm70(J, P, o, dx) {
+      var s = add(J.sa, [dx, -P.li]), e = add(s, [0, -UA]), w = add(e, [0, -FA]), t = add(w, [0, -HA]);
+      o.push(L(s, e, WUA), L(e, w, WFA), L(w, t, WHA));
+      return { s: s, w: w, t: t };
+    }
+    def({
+      id: 'E70', q: 1, v: V7, aria: 'Figura supina a ginocchia piegate, di profilo, braccia tese verso il soffitto: prima le spalle scivolano verso i fianchi, lontano dalle orecchie, e il braccio resta perpendicolare al pavimento; poi, con le spalle basse, le mani salgono di poco verso il soffitto e la scapola si stacca un poco da terra. In tutte e due le posizioni si resta e si respira col diaframma, col cilindro e col petto',
+      base: poseOf(SP7, { an: null, af: null, sh: 0, li: 0 }),
+      keys: [
+        { d: 2, s: 'Braccia tese al soffitto, dita lunghe', ss: 'Braccia su', p: {}, k: 'no' },
+        { d: 2.5, s: 'Spalle giù, verso i fianchi: il braccio resta fermo', ss: 'Spalle giù', p: { sh: -8 }, k: 'gr' },
+        { d: 3, s: 'Resta: inspira con diaframma, cilindro e petto', ss: 'Inspira', n: 1, p: { pb: 0.8, pc: 0.5, pp: 0.5 } },
+        { d: 3, s: 'Espira', n: 1, p: { pb: 0, pc: 0, pp: 0 } },
+        { d: 2.5, s: 'Spalle basse: spingi le mani al soffitto', ss: 'Spingi al soffitto', p: { li: 7 }, k: 'gr' },
+        { d: 3, s: 'Tieni e inspira: le scapole si allontanano', ss: 'Tieni, inspira', n: 1, p: { pb: 0.8, pc: 0.5, pp: 0.5 } },
+        { d: 3, s: 'Espira', n: 1, p: { pb: 0, pc: 0, pp: 0 } },
+        { d: 2.5, s: 'Molla, torna alla partenza', ss: 'Molla', p: { sh: 0, li: 0 }, k: 'no' }
+      ],
+      nose: 1, main: 4, strip: [0, 1, 4],
+      pre: function (P, c, o, J) { var f = []; supFloor(P, c, o); arm70(J, P, f, 3); o.push(G({ opacity: 0.4 }, f)); },
+      mid: function (P, c, o, J) { c.hand = arm70(J, P, o, 0); },
+      post: function (P, c, o, J) {
+        var h = c.hand, S0 = J.to.B(0.93), v1 = cl(-P.sh / 8, 0, 1), v2 = cl(P.li / 7, 0, 1), sx = h.s[0];
+        o.push(CI(S0, 5, 'ghost', op(v1)), CI(h.s, 4.5, 'fgr'));
+        o.push(AR([sx + 9, 104], [sx + 38, 104], 'gr', v1), TX([sx + 12, 76], 'spalle giù', 'tk', 'start', op(v1 * (1 - v2))));
+        var d = qd([sx - 13, GF - 1], [sx, GF - 1 - 9 * v2], [sx + 13, GF - 1]);
+        o.push(G(op(v2), [PA(d, 'b', { 'stroke-width': 7, style: 'stroke:var(--surface)' }), PA(d, 'gr', { 'stroke-width': 3 })]));
+        o.push(AR([sx + 16, 48], [sx + 16, 24], 'gr', v2), TX([sx + 26, 38], 'spingi al soffitto', 'tk', 'start', op(v2)));
+        o.push(TX([sx, GF + 16], 'la scapola si stacca un poco', 't', 'start', op(v2)));
+        o.push(TX([sx + 12, 58], 'braccio dritto', 't', 'start', op(1 - v2)));
+        floorBr(J, P, o);
+      }
+    });
+
+    // Supino visto dall'alto (E68, E69, E71): testa in alto, ginocchia piegate verso chi guarda (si vedono di scorcio).
+    var SW = 25;
+    function top7(P, o, cx, Ys, x0, x1, y0) {
+      var Yp = Ys + LT, wb = 4 * (P.pc || 0), B = [];
+      o.push(E('rect', { x: x0, y: y0, width: x1 - x0, height: Ys + LT + 72 - y0, rx: 12, 'class': 'mat' }));
+      [-1, 1].forEach(function (s) {
+        var h = [cx + s * 10, Yp + 2], kn = [cx + s * 13, Yp + 26], an = [cx + s * 15, Yp + 50], tp = [cx + s * 16, Yp + 64];
+        B.push(L(h, kn, WTH), L(kn, an, WSH), L(an, tp, WFT));
+        o.push(G({ 'class': 'b' }, B)); B = [];
+        o.push(CI(kn, 7.5, 'bf'));
+      });
+      var T = [[-24, -9], [-27 - wb, 10], [-25 - wb, 52], [-21, LT + 4], [0, LT + 9], [21, LT + 4], [25 + wb, 52], [27 + wb, 10], [24, -9], [0, -12]]
+        .map(function (p) { return [cx + p[0], Ys + p[1]]; });
+      o.push(PA(smooth(T, true), 'bf'));
+      o.push(L([cx, Ys - 6], [cx, Ys - 20], 10), CI([cx, Ys - 34], HR + 1, 'b', { 'stroke-width': 5 }));
+      return { S: function (s) { return [cx + s * SW, Ys + 2]; }, wb: wb };
+    }
+    function ribs(P, o, cx, Ys, wb, rg) { // il respiro visto dall'alto: frecce ai fianchi e (rg) cerchi tratteggiati su petto e pancia
+      var v = P.pc || 0, y = Ys + 52;
+      [-1, 1].forEach(function (s) { o.push(AR([cx + s * (26 + wb), y], [cx + s * (39 + wb + 3 * v), y], 'br', v)); });
+      if (rg) o.push(CI([cx, Ys + 22], 8 + 6 * v, 'br dash', op(v)), CI([cx, Ys + 60], 8 + 8 * v, 'br dash', op(v)));
+    }
+    // lente di lato sull'avambraccio di E68 ed E69: sagoma grigia di torace e testa, gomito sul pavimento, avambraccio che ruota
+    function lens7(P, o, ar) {
+      var Lc = [246, 106], El = [Lc[0], Lc[1] + 26], fy = El[1] + 5, ch = 54, u = dir(-90 - P.rf * 90), Wr = add(El, u, FA), T = add(Wr, u, HA);
+      o.push(CI(Lc, 60, 'b', { 'stroke-width': 2, style: 'stroke:var(--line-strong)' }));
+      o.push(L([El[0] + 6, fy - 8], [El[0] + 46, fy - 8], 0, 'g', { style: 'stroke-width:14;stroke-linecap:round;opacity:.45' }), CI([El[0] - 23, fy - 17], 13, 'g', { style: 'fill:none;stroke-width:3' }));
+      o.push(L([Lc[0] - ch, fy], [Lc[0] + ch, fy], 0, 'g'));
+      o.push(CAR(El, 53, 53, ar[0], ar[1], 'gr', ar[2]));
+      o.push(L(El, Wr, WFA), L(Wr, T, WHA), CI(El, 7, 'bf'));
+      o.push(TX([Lc[0], Lc[1] - 42], 'di lato', 't', 'middle'));
+      return { Wr: Wr, T: T, El: El, fy: fy };
+    }
+    function panca(c7) {
+      return function (P) {
+        var o = [], cx = 90, Ys = 92, B = top7(P, o, cx, Ys, 8, 174, 32), sn = Math.sin(P.rf * 90 * R), mv = 1 - Math.abs(sn);
+        [-1, 1].forEach(function (s) {
+          var S = B.S(s), El = add(S, [s * UA, 0]), Wr = add(El, [0, -FA * sn]), T = add(El, [0, -(FA + HA) * sn]);
+          o.push(L(S, El, WUA), CI(El, 8, 'b', { 'stroke-width': 2, opacity: f1(mv) }), L(El, Wr, WFA), L(Wr, T, WHA));
+          o.push(CI(S, 8, 'gr'));
+          o.push(AR(add(El, [-s * 13, c7.sg * 6]), add(El, [-s * 13, c7.sg * 34]), 'gr', mv));
+        });
+        ribs(P, o, cx, Ys, B.wb, 1);
+        o.push(TX([166, Ys + 152], 'dall\'alto', 't', 'end'));
+        var h = lens7(P, o, c7.arc), on = c7.on(P);
+        o.push(TX([246, h.fy + 16], c7.lab, 'tk', 'middle', op(on)));
+        c7.txt.forEach(function (t, i) { o.push(TX([246, 188 + i * 16], t, i ? 't' : 'tk', 'middle')); });
+        return o;
+      };
+    }
+
+    // E68 (N7) — panca a terra: l'avambraccio va indietro, verso la testa, il dorso della mano a terra
+    def({
+      id: 'E68', q: 1, v: [320, 230, 28], aria: 'Figura supina a ginocchia piegate vista dall\'alto, con una lente di lato sull\'avambraccio: braccia larghe all\'altezza delle spalle, gomiti piegati e avambracci in verticale come alla panca; l\'avambraccio ruota indietro verso la testa fino a portare il dorso della mano a terra, il braccio resta fermo e la spalla non si stacca. Si resta 3–5 respiri gonfiando diaframma e petto, lasciando rilassare, poi si torna con i palmi verso l\'alto',
+      base: { rf: 0, pc: 0 },
+      keys: [
+        { d: 2, s: 'Come alla panca: gomiti all\'altezza delle spalle', ss: 'Posizione di panca', p: {}, k: 'no' },
+        { d: 3, s: 'Dorsi delle mani verso terra, indietro: fin dove arrivi', ss: 'Dorsi verso terra', p: { rf: 0.86 }, k: 'gr' },
+        { d: 3.5, s: 'Resta: inspira, gonfia diaframma e petto', ss: 'Inspira, diaframma e petto', n: 1, p: { pc: 1 } },
+        { d: 3.5, s: 'Espira, rilassa: il dorso scende un poco', ss: 'Espira, scende un poco', n: 1, p: { pc: 0, rf: 1 } },
+        { d: 3, s: 'Torna alla panca, palmi verso l\'alto', ss: 'Torna', p: { rf: 0 }, k: 'no' }
+      ],
+      main: 1, strip: [0, 1, 3],
+      draw: panca({ sg: -1, arc: [-92, -168, 1], lab: 'dorso a terra', on: function (P) { return cl((P.rf - 0.7) / 0.15, 0, 1); }, txt: ['spalla ferma a terra', 'lontana dalle orecchie', '3–5 respiri'] })
+    });
+
+    // E69 (N8) — panca a terra: l'avambraccio va in avanti, verso i fianchi, il palmo verso il pavimento. Non deve per forza toccare terra
+    def({
+      id: 'E69', q: 1, v: [320, 230, 28], aria: 'Figura supina a ginocchia piegate vista dall\'alto, con una lente di lato sull\'avambraccio: dalla posizione di panca, l\'avambraccio ruota in avanti verso i fianchi e il palmo va verso il pavimento; le spalle restano ferme a terra e si scende dove si arriva, senza dover per forza toccare il pavimento. Si resta lì respirando dal naso, con il viso rilassato',
+      base: { rf: 0, pc: 0 },
+      keys: [
+        { d: 2, s: 'Come alla panca: avambracci in su', ss: 'Posizione di panca', p: {}, k: 'no' },
+        { d: 3, s: 'Avambracci in avanti, palmi verso il pavimento', ss: 'Palmi verso il pavimento', p: { rf: -0.68 }, k: 'gr' },
+        { d: 3.5, s: 'Spalla a terra: resta e inspira dal naso', ss: 'Inspira dal naso', n: 1, p: { pc: 0.8 } },
+        { d: 3.5, s: 'Espira: rilassa, non per forza fino a terra', ss: 'Espira, scendi dove arrivi', n: 1, p: { pc: 0, rf: -0.76 } },
+        { d: 3, s: 'Torna su, avambracci in verticale', ss: 'Torna', p: { rf: 0 }, k: 'no' }
+      ],
+      main: 1, strip: [0, 1, 3],
+      draw: panca({ sg: 1, arc: [-88, -26, 1], lab: 'palmo giù', on: function (P) { return cl((-P.rf - 0.5) / 0.15, 0, 1); }, txt: ['spalla ferma a terra', 'scendi dove arrivi', 'viso rilassato'] })
+    });
+
+    // E71 (N10) — scivolate a terra, come un angelo: braccia nel piano del pavimento, gomiti e dorsi sempre giù
+    var S71 = [{ ha: -38, fa: 76 }, { ha: -12, fa: 78 }, { ha: 48, fa: 72 }]; // W stretta, W, Y
+    function hand71(cx, Ys, ha, fa, s) {
+      var S = [cx + s * SW, Ys + 2], El = add(S, [s * UA * Math.cos(ha * R), -UA * Math.sin(ha * R)]), u = [s * Math.cos(fa * R), -Math.sin(fa * R)];
+      return { S: S, El: El, Wr: add(El, u, FA), T: add(El, u, FA + HA) };
+    }
+    def({
+      id: 'E71', q: 1, v: [320, 250, 12], aria: 'Figura supina a ginocchia piegate vista dall\'alto, come un angelo sul pavimento: gomiti e dorsi delle mani sempre a terra. Le braccia a W scivolano verso l\'alto fino alla Y, poi scendono con i gomiti verso i fianchi finché il polso resta a terra; scendendo le scapole si avvicinano. Al limite si resta 3–5 respiri gonfiando i fianchi e si prova a scendere di poco, poi si risale',
+      base: { ha: -12, fa: 78, pc: 0 },
+      keys: [
+        { d: 2, s: 'Braccia a W: gomiti e dorsi delle mani a terra', ss: 'W: gomiti e dorsi a terra', p: {}, k: 'no' },
+        { d: 2.5, s: 'Scivola su, senza staccare', ss: 'Scivola su, a Y', p: { ha: 48, fa: 72 }, k: 'gr' },
+        { d: 2.5, s: 'Scivola giù, gomiti verso i fianchi', ss: 'Scivola giù', p: { ha: -38, fa: 76 }, k: 'gr' },
+        { d: 2.5, s: 'Scivola su, senza staccare', ss: 'Scivola su', p: { ha: 48, fa: 72 }, k: 'gr' },
+        { d: 3, s: 'Giù finché il polso resta a terra', ss: 'Giù, polso a terra', p: { ha: -38, fa: 76 }, k: 'gr' },
+        { d: 3.5, s: 'Fermati lì, petto aperto: inspira nei fianchi', ss: 'Inspira nei fianchi', n: 1, p: { pc: 1 } },
+        { d: 3.5, s: 'Espira: prova a scendere di poco', ss: 'Espira, scendi di poco', n: 1, p: { pc: 0, ha: -42 } },
+        { d: 3, s: 'Risali e recupera', ss: 'Recupera', p: { ha: -12, fa: 78 }, k: 'no' }
+      ],
+      main: 4, strip: [0, 1, 4, 5],
+      draw: function (P) {
+        var o = [], cx = 160, Ys = 100, B = top7(P, o, cx, Ys, 14, 306, 16), i, j, low = cl((-P.ha - 14) / 24, 0, 1);
+        [-1, 1].forEach(function (s) {
+          var tr = [];
+          for (i = 0; i < 2; i++) for (j = 0; j < (i ? 5 : 4); j++) {
+            var a = S71[i], b = S71[i + 1], t = j / 4;
+            tr.push(hand71(cx, Ys, a.ha + (b.ha - a.ha) * t, a.fa + (b.fa - a.fa) * t, s).Wr);
+          }
+          o.push(PA(smooth(tr), 'ghost'));
+        });
+        // scapole: si avvicinano scendendo (ventaglio)
+        [-1, 1].forEach(function (s) {
+          var x = cx + s * (18 - 8 * low), y = Ys + 12;
+          o.push(PA(pth([[x - s * 7, y], [x + s * 6, y + 3], [x - s * 2, y + 28]], true), 'gr', { 'stroke-width': 2, 'stroke-linejoin': 'round' }));
+        });
+        [-1, 1].forEach(function (s) {
+          var h = hand71(cx, Ys, P.ha, P.fa, s);
+          o.push(L(h.S, h.El, WUA), L(h.El, h.Wr, WFA), L(h.Wr, h.T, WHA));
+          o.push(CI(h.Wr, 8, 'gr', op(low)));
+        });
+        ribs(P, o, cx, Ys, B.wb, 0);
+        o.push(TX([26, Ys + 92], 'gomiti e dorsi', 't'), TX([26, Ys + 107], 'sempre a terra', 't'));
+        o.push(TX([294, Ys + 92], 'le scapole', 't', 'end', op(low)), TX([294, Ys + 107], 'si avvicinano', 't', 'end', op(low)), TX([294, Ys + 148], '3–5 respiri', 't', 'end', op(low)));
+        var w = hand71(cx, Ys, P.ha, P.fa, 1).Wr;
+        o.push(TX([w[0] + 12, w[1] - 2], 'polso', 'tk', 'start', op(low)), TX([w[0] + 12, w[1] + 12], 'a terra', 'tk', 'start', op(low)));
+        o.push(TX([26, Ys + 148], 'dall\'alto', 't'));
+        return o;
+      }
+    });
+  })();
+  /* ======================= FINE BLOCCO A ======================= */
+
+  /* ======================= LEZIONE 7 — BLOCCO B: prove in piedi, occhi nel buio, muro, quadrupedia, push-up ======================= */
+  (function () {
+    // T15, T16, E65, E66, E72, E73 (L7, spalla e scapola). Nessun numero di gradi nelle indicazioni. Respiro: verde dove lo dà
+    // il coach (E65, E66, E72); altrove fasi di movimento ocra e riposo grigio con «respira libero dal naso».
+    var FREE = 'respira libero dal naso', THIN = { style: 'stroke-width:2' }, SOLID = { style: 'fill:currentColor', 'stroke-width': 0 };
+
+    // ---------- T15 (N1) — prova: il braccio teso sale fin dove arriva da solo ----------
+    // L'errore è una sagoma tratteggiata accanto alla figura: sovrapposta al corpo non si leggerebbe (come nota E34).
+    function arm15(a) { return { a: a, r: 84, b: 1 }; } // r oltre la lunghezza: l'IK lo tiene teso
+    var G15 = [], J15 = ghostBody(poseOf(STD, { x: 232, y: GS - 120, t: -100, cu: 16, nk: 16, ln: { p: [218, GS - 6], b: -1, f: 0 }, an: arm15(-101) }), G15);
+    [10, 4, 7, 5].forEach(function (w, i) { G15[i].a.style = 'stroke-width:' + w; });
+    G15.push(cross(J15.to.pt(0.24, 18, -1), 6), AR(add(J15.to.P, [12, 4]), add(J15.to.P, [32, 4]), 'gr'), TX([216, GS + 15], 'non così', 'tk', 'middle'));
+    def({
+      id: 'T15', q: 1, v: [300, 322, -30],
+      aria: 'Prova di profilo, in piedi: il braccio teso lungo il fianco sale in avanti e poi in alto, fin dove arriva da solo, con la bassa schiena ferma. Accanto, una sagoma tratteggiata con la croce mostra l\'errore: il bacino avanza e la bassa schiena si inarca. Poi il braccio scende e si rifà con l\'altro',
+      base: poseOf(STD, { an: arm15(84), li: 0 }),
+      keys: [
+        { d: 2, s: 'Di profilo, braccio teso lungo il fianco', ss: 'Braccio lungo il fianco', p: {}, k: 'no' },
+        { d: 2.5, s: 'Sali teso, in avanti', ss: 'Sali teso', p: { an: arm15(2) }, k: 'gr', vis: 'io', a0: 62, a1: 12 },
+        { d: 2.5, s: 'Su: fermati dove non sale più da solo', ss: 'Su, fin dove sale da solo', p: { an: arm15(-85), li: 1 }, k: 'gr', vis: 'io', a0: -14, a1: -74 },
+        { d: 3, s: 'Non così: il bacino avanza, la schiena si inarca', ss: 'Non così: la schiena si inarca', p: {}, k: 'no', vis: 'io', er: 1 },
+        { d: 2.5, s: 'Giù, poi l\'altro braccio: ' + FREE, ss: 'Giù, poi l\'altro braccio', p: { an: arm15(84), li: 0 }, k: 'no' }
+      ],
+      main: 2, strip: [0, 1, 2, 3],
+      pre: function (P, c, o) { floor(300, GS, o); o.push(G(op(c.k.er ? vis(c) : 0), G15)); },
+      post: function (P, c, o, J) {
+        var lo = J.to.pt(0.24, 0, -1);
+        o.push(CI(lo, 5, 'fbr'), TX([lo[0] - 10, lo[1] + 1], 'bassa schiena', 'tk', 'end'), TX([lo[0] - 10, lo[1] + 15], 'ferma', 't', 'end'));
+        if (c.k.a0) o.push(CAR(J.sa, 100, 100, c.k.a0, c.k.a1, 'gr', vis(c)));
+        o.push(TX([90, -14], 'fin dove', 'tk', 'end', op(P.li)), TX([90, 1], 'sale da solo', 'tk', 'end', op(P.li)));
+      }
+    });
+
+    // ---------- T16 (N2) — prova prima e dopo: giù alle punte, piedi uniti ----------
+    var UB16 = { x: STD.x, y: STD.y, t: -90, cu: 0, t2: -90, cu2: 0, nk: STD.nk, an: STD.an, af: STD.af }, UP16 = poseOf(STD, shallow(UB16, { pm: 0, dm: 0 }));
+    function dn16(x, t, t2, a) { return { x: x, y: GS - 120, t: t, cu: -3, t2: t2, cu2: -7, nk: 30, an: { a: a, r: 81, b: 1 }, af: { a: a - 2, r: 81, b: 1 } }; }
+    var D1 = dn16(92, -28, 30, 104), D2 = dn16(87, -17, 45, 108);
+    var Y1 = body(resolve(shallow(UP16, D1))).an.tip[1], Y2 = body(resolve(shallow(UP16, D2))).an.tip[1];
+    def({
+      id: 'T16', q: 1, v: [300, 290],
+      aria: 'Prova di profilo, in piedi a piedi uniti: si scende fluidi in avanti verso le punte dei piedi fin dove si arriva e si prende nota di dove arrivano le dita. Si torna su, si fa l\'esercizio da provare e poi si rifà la stessa discesa: due tacche, prima e dopo, mostrano se è cambiato qualcosa. Meglio o peggio, conta che cambi',
+      base: UP16,
+      keys: [
+        { d: 1.5, s: 'Prima: in piedi, piedi uniti', ss: 'Prima: piedi uniti', p: {}, k: 'no', tl: 'prima' },
+        { d: 3, s: 'Scendi fluido, arriva dove arrivi', ss: 'Scendi fluido', p: D1, k: 'gr', tl: 'prima' },
+        { d: 2, s: 'Prendi punto: dove arrivano le dita?', ss: 'Prendi punto', p: { pm: 1 }, k: 'gr', tl: 'prima' },
+        { d: 2.5, s: 'Torna su', p: UB16, k: 'gr', tl: 'prima' },
+        { d: 2.5, s: 'Ora fai l\'esercizio da provare', ss: 'L\'esercizio da provare', p: {}, k: 'no', tl: 'ora', vis: 'io' },
+        { d: 3, s: 'Dopo: rifai la stessa discesa', ss: 'Dopo: stessa discesa', p: D2, k: 'gr', tl: 'dopo' },
+        { d: 2.5, s: 'È cambiato? Meglio o peggio, conta che cambi', ss: 'È cambiato qualcosa?', p: { dm: 1 }, k: 'gr', tl: 'dopo' },
+        { d: 2.5, s: 'Torna su, ' + FREE, ss: 'Torna su', p: shallow(UB16, { pm: 0, dm: 0 }), k: 'no', tl: 'dopo' }
+      ],
+      main: 2, strip: [0, 2, 4, 6],
+      pre: function (P, c, o) { floor(300, GS, o); },
+      post: function (P, c, o, J) {
+        var x0 = 124, x1 = 204;
+        o.push(L([x0, Y1], [x1, Y1], 0, 'gr dash', op(P.pm)), TX([x1 + 5, Y1 - 2], 'prima', 'tk', null, op(P.pm)));
+        o.push(L([x0, Y2], [x1, Y2], 0, 'gr dash', op(P.dm)), TX([x1 + 5, Y2 + 12], 'dopo', 'tk', null, op(P.dm)));
+        o.push(TX([292, 26], c.k.tl === 'ora' ? 'esercizio' : c.k.tl, 'tk', 'end'));
+        if (c.k.tl === 'ora') o.push(TX([292, 44], 'per esempio', 't', 'end', op(vis(c))), TX([292, 59], 'occhi nel buio', 't', 'end', op(vis(c))));
+        o.push(TX([292, 44], 'meglio o peggio:', 't', 'end', op(P.dm)), TX([292, 59], 'conta che cambi', 't', 'end', op(P.dm)));
+      }
+    });
+
+    // ---------- E65 (N3) — occhi aperti nel buio delle mani: testa e mani di fronte, ingrandite ----------
+    var EY65 = 78, CX65 = 160;
+    function eye65(x, a) { // occhio aperto; sopra le mani è una trasparenza: gli occhi restano aperti sotto
+      return G(op(a), [PA('M' + M([x - 11, EY65]) + 'Q' + M([x, EY65 - 10]) + ' ' + M([x + 11, EY65]) + 'Q' + M([x, EY65 + 10]) + ' ' + M([x - 11, EY65]) + 'Z', 'b', { 'stroke-width': 2, style: 'fill:var(--surface)' }), CI([x, EY65], 3.4, 'b', SOLID)]);
+    }
+    function hand65(s, hu, o) { // s -1 a sinistra di chi guarda; hu 0 giù, fuori dal riquadro, 1 sugli occhi. Pollice verso la tempia
+      if (hu < 0.02) return;
+      var W = mix([CX65 + s * 104, 268], [CX65 + s * 33, 108], hu), a = mix(-90 + s * 22, -90 - s * 11, hu), u = dir(a), n = rot(u, 90 * s), El = mix([CX65 + s * 128, 340], [CX65 + s * 84, 300], hu);
+      var v = sub(El, W), T = W[1] < 234 ? add(W, v, (234 - W[1]) / v[1]) : W, p = rot(unit(v), 90);
+      if (W[1] < 234) o.push(PA(pth([add(W, p, -10), add(T, p, -13), add(T, p, 13), add(W, p, 10)]), 'bf'));
+      var t0 = add(add(W, u, 12), n, 19), ta = a + s * 26;
+      o.push(rrect(add(t0, dir(ta), 13), 30, 12, ta, 'bf', 6), rrect(add(W, u, 24), 50, 46, a, 'bf', 13));
+      [[-16, 22], [-5.5, 28], [5.5, 30], [16, 26]].forEach(function (f) { o.push(rrect(add(add(W, u, 46 + f[1] / 2), n, f[0]), f[1] + 6, 11, a, 'bf', 5.5)); });
+    }
+    function nose65(c, o) { // tratteggi al naso: scorrono verso il naso inspirando e verso fuori espirando
+      if (!c.air) return;
+      [-1, 1].forEach(function (s) {
+        o.push(L([CX65 + s * 5, 134], [CX65 + s * 9, 116], 2, 'br', { 'stroke-dasharray': '3 4', 'stroke-dashoffset': f1((c.time || 0) * 12 * c.air), opacity: 0.9 }));
+      });
+    }
+    def({
+      id: 'E65', q: 1, v: [320, 236],
+      aria: 'Testa e mani di fronte, ingrandite. Senza occhiali, a occhi aperti, si coprono bene gli occhi con le mani a coppa e si tengono gli occhi aperti dietro le mani, guardando il buio per 10–15 secondi, respirando lentamente dal naso. Poi le mani scendono',
+      base: { hu: 0 },
+      keys: [
+        { d: 2, s: 'Togli gli occhiali, occhi aperti', ss: 'Senza occhiali, occhi aperti', p: {}, k: 'no' },
+        { d: 2.5, s: 'Copri bene gli occhi con le mani', ss: 'Copri gli occhi', p: { hu: 1 }, k: 'gr' },
+        { d: 3, s: 'Occhi aperti, guarda il buio: inspira', ss: 'Occhi aperti, guarda il buio', g: 'buio', n: 1, p: {}, air: 1 },
+        { d: 3, s: 'Guarda il buio: espira', g: 'buio', n: 1, p: {}, air: -1 },
+        { d: 3, s: 'Guarda il buio: inspira', g: 'buio', n: 1, p: {}, air: 1 },
+        { d: 3, s: 'Guarda il buio: espira', g: 'buio', n: 1, p: {}, air: -1 },
+        { d: 2.5, s: 'Giù le mani, piano', ss: 'Giù le mani', p: { hu: 0 }, k: 'gr' }
+      ],
+      main: 2, strip: [0, 1, 2],
+      draw: function (P, c) {
+        var o = [], on = cl((P.hu - 0.7) / 0.3, 0, 1), W4 = { style: 'stroke-width:4' };
+        o.push(PA(smooth([[46, 236], [50, 200], [76, 176], [126, 164], [194, 164], [244, 176], [270, 200], [274, 236]]), 'bf'));
+        o.push(PA(pth([[136, 124], [134, 170], [186, 170], [184, 124]]), 'bf'));
+        o.push(E('ellipse', { cx: CX65, cy: 84, rx: 47, ry: 58, 'class': 'bf', style: 'stroke-width:4' }));
+        o.push(eye65(CX65 - 21, 1), eye65(CX65 + 21, 1));
+        o.push(PL([[CX65, 86], [CX65 - 3, 106], [CX65 + 3, 108]], 2.5));
+        hand65(-1, P.hu, o); hand65(1, P.hu, o);
+        o.push(eye65(CX65 - 21, on), eye65(CX65 + 21, on));
+        nose65(c, o);
+        o.push(L([CX65 + 32, 76], [CX65 + 72, 62], 0, 'ghost', op(on)), TX([CX65 + 76, 60], 'occhi aperti', 'tk', null, op(on)), TX([CX65 + 76, 75], 'guarda il buio', 't', null, op(on)));
+        o.push(TX([10, 22], '10–15 secondi', 'tk'), TX([10, 38], 'non chiudere', 't'), TX([10, 52], 'gli occhi', 't'));
+        return o;
+      }
+    });
+
+    // ---------- E66 (N4, codici-L7) — al muro: apri tutto e prova a respirare ----------
+    // Tronco in due tratti (E64). Il bacino si sposta finché la schiena tocca il muro; le ginocchia restano piegate.
+    var WX66 = 62, A66 = [WX66 + 56, GS - 6];
+    function fit66(P) {
+      var q = shallow(P, { x: 100, pb: 0 }), to = torso(q), mn = 1e9, i;
+      for (i = 0; i <= 24; i++) mn = Math.min(mn, to.pt(i / 24, 0, -1)[0]);
+      return shallow(P, { x: q.x + WX66 + 1.5 - mn });
+    }
+    var A66D = {
+      id: 'E66', q: 1, v: [280, 290],
+      aria: 'Figura di profilo con la schiena al muro e le ginocchia piegate, mani sulle cosce: attacca la lombare al muro, apre il petto cercando di attaccare tutta la schiena, porta il mento indietro come per tenere un uovo sotto il mento e spinge la testa in alto, senza stendere le gambe. Prova a deglutire senza muovere la testa. Poi rilassa la pancia in fuori e respira a cilindro, dietro e di fianco. È una prova, non una postura da tenere',
+      base: { y: GS - 106, t: -90, cu: 12, t2: -85, cu2: -5, nk: 34, pb: 0, lo: 0, ds: 0, hc: 0, eg: 0, su: 0, cy: 0, ln: { p: A66, b: -1, f: 0 }, lf: { p: [A66[0] - 3, A66[1]], b: -1, f: 0 } },
+      keys: [
+        { d: 2, s: 'Schiena al muro, ginocchia piegate', ss: 'Schiena al muro', p: {}, k: 'no' },
+        { d: 2.5, s: 'Attacca la lombare al muro', ss: 'Lombare al muro', p: { cu: 0, lo: 1 }, k: 'gr', vis: 'io', ar: 1 },
+        { d: 2.5, s: 'Apri il petto: tutta la schiena al muro', ss: 'Apri il petto', p: { t2: -90, cu2: 0, nk: 30, ds: 1 }, k: 'gr' },
+        { d: 2.5, s: 'Mento indietro, come un uovo sotto il mento', ss: 'Mento indietro, l\'uovo', p: { nk: 18, hc: 1, eg: 1 }, k: 'gr', vis: 'io', ch: 1 },
+        { d: 2.5, s: 'Su, su: la testa spinge in alto, la colonna si allunga', ss: 'La testa spinge in alto', p: { su: 1 }, k: 'gr' },
+        { d: 2, s: 'Prova a deglutire: la testa non si muove', ss: 'Deglutisci, testa ferma', p: {}, k: 'gr', vis: 'io', sw: 1 },
+        { d: 2.5, s: 'Rilassa la pancia: buttala in fuori', ss: 'Pancia in fuori', p: { pb: 1, su: 0 }, k: 'gr' },
+        { d: 4, s: 'Inspira a cilindro: dietro e di fianco', ss: 'Inspira a cilindro', n: 1, p: { cy: 1 }, air: 1 },
+        { d: 4, s: 'Espira', n: 1, p: { cy: 0 }, air: -1 },
+        { d: 2, s: 'Molla, ' + FREE, ss: 'Molla', p: { cu: 12, t2: -85, cu2: -5, nk: 34, pb: 0, lo: 0, ds: 0, hc: 0, eg: 0 }, k: 'no' }
+      ],
+      nose: 1, main: 7, strip: [1, 3, 4, 6, 7],
+      pre: function (P, c, o) { floor(280, GS, o); wall(WX66, GS, 10, 1, o); },
+      post: function (P, c, o, J) {
+        var to = J.to, up = dir(J.hd), a, b, v = P.cy;
+        [[to.pt(0.26, 0, -1)[1], 'lombare', P.lo], [to.pt(0.76, 0, -1)[1], 'dorso', P.ds], [J.H[1], 'testa', P.hc]].forEach(function (d) {
+          o.push(CI([WX66 + 1, d[0]], 5, 'fgr', op(0.25 + 0.75 * d[2])), TX([WX66 - 12, d[0] + 4], d[1], 'tk', 'end', op(0.35 + 0.65 * d[2])));
+        });
+        if (c.k.ar) { a = to.pt(0.26, 30, 1); o.push(AR(a, add(a, [-20, 0]), 'gr', vis(c))); }
+        if (P.eg > 0.02) { var eg = rrect(add(add(J.H, J.face, 9), up, -19), 11, 15, ang(J.face), 'bf', 5.5); eg.a.style = 'stroke-width:2'; o.push(G(op(P.eg), [eg])); }
+        if (c.k.ch) o.push(TX(add(J.H, [26, 16]), 'un uovo', 'tk', null, op(vis(c))), TX(add(J.H, [26, 31]), 'sotto il mento', 't', null, op(vis(c))));
+        if (c.k.sw) { a = add(to.S, [32, -6]); o.push(AR2(add(a, [0, -12]), add(a, [0, 12]), 'gr', vis(c)), TX(add(a, [10, 4]), 'deglutisci', 'tk', null, op(vis(c)))); }
+        a = [J.H[0], J.H[1] - HR - 6];
+        o.push(AR(a, add(a, [0, -22]), 'gr', P.su), TX(add(a, [12, -8]), 'testa su', 'tk', null, op(P.su)));
+        a = to.pt(0.28, 3, 1); b = add(a, to.N(0.28), 6 + 14 * P.pb);
+        o.push(AR(a, b, 'br', P.pb), TX(add(b, [6, 4]), 'pancia in fuori', 't', null, op(P.pb)));
+        var q = [], i, m = to.pt(0.6, 22, 1);
+        for (i = 0; i <= 6; i++) q.push(to.pt(0.42 + 0.36 * i / 6, 0, -1));
+        o.push(PA(smooth(q), 'br', { 'stroke-width': 5, opacity: f1(100 * v) / 100 }), TX([WX66 - 12, q[3][1] + 4], 'dietro', 't', 'end', op(v)));
+        o.push(CI(m, 3 + 3 * v, 'br', op(v)), CI(m, 1.8, 'fbr', op(v)), CI(m, 9 + 7 * v, 'br dash', op(v)), TX(add(m, [20, 4]), 'di fianco', 't', null, op(v)));
+        o.push(TX([272, 24], 'è una prova,', 'tk', 'end'), TX([272, 38], 'non una postura', 't', 'end'), TX([272, 56], '3–5 respiri, poi molla', 't', 'end'));
+        var K = J.ln.K;
+        o.push(TX(add(K, [16, -4]), 'le ginocchia', 't'), TX(add(K, [16, 11]), 'restano piegate', 't'));
+      }
+    };
+    A66D.draw = (function (side) { // le mani sulle cosce vanno ricalcolate dopo aver spostato il bacino
+      return function (P, c) {
+        var Q = fit66(P), H = [Q.x, Q.y], K = ik(H, A66, TH, SH, -1)[0], u = unit(sub(K, H)), w = add(mid(H, K, 0.12), [0, -6.5]);
+        Q.an = { p: w, b: 1, w: ang(u) }; Q.af = { p: add(w, [3, 0]), b: 1, w: ang(u) };
+        return side(Q, c);
+      };
+    })(sideFig(A66D));
+    def(A66D);
+
+    // ---------- E72 (N11) — quadrupedia: mano radicata, spingi il pavimento ----------
+    // Ginocchio sotto l'anca, polso sotto la spalla, mani ferme. La spinta è la curva del solo tratto dorsale (cu2): il
+    // torace sale fra le scapole, il tratto lombare resta dritto. A destra una lente che cambia con la fase.
+    var W72 = [181, GQ - 4], LX72 = 298, LY72 = 78;
+    function lens72(iv, P, o) {
+      var g = [], x = LX72, y = LY72, f = y + 34, s, sn, cs;
+      if (iv === 1) { // il braccio da davanti: la piega del gomito viene davanti
+        g.push(rrect([x, y - 26], 22, 48, 0, 'bf', 10), rrect([x, y + 16], 18, 40, 0, 'bf', 8));
+        g.push(PA(pth([[x - 9, y + 33], [x - 15, y + 44], [x + 15, y + 44], [x + 9, y + 33]], true), 'bf'));
+        sn = Math.cos(P.ge * 90 * R); cs = Math.sin(P.ge * 90 * R);
+        g.push(PA(qd([x - 9 * sn - 2 - 6 * cs, y - 5], [x - 9 * sn, y + 3], [x - 9 * sn + 2 + 6 * cs, y - 5]), 'gr', { 'stroke-width': 3.5 }));
+        g.push(CAR([x, y - 3], 20, 6, 160, 20, 'gr'));
+      } else if (iv === 2) { // la mano di lato: il palmo si solleva, le dita agganciano
+        var sg = P.sg, wr = [x - 24, f - 9], k = [x + 4, f - 10 - 8 * sg], m = [x + 21, f - 7 - 3 * sg], t = [x + 33, f - 2];
+        g.push(L([x - 34, f + 4], [x + 44, f + 4], 0, 'g'), L([x - 30, y - 44], wr, 15), L(wr, k, 13), L(k, m, 8), L(m, t, 7));
+        g.push(PA(qd([x - 18, f + 1], [x - 2, f - 7 - 9 * sg], [x + 16, f + 1]), 'gr', ext(op(0.3 + 0.7 * sg), { 'stroke-width': 3 })), CI([x - 26, f + 2], 3.2, 'fgr', op(sg)), CI(t, 3.2, 'fgr', op(sg)));
+      } else { // la schiena dall'alto: avanti a destra, spina orizzontale, scapole che si allontanano
+        var d = 7 + 12 * P.sa;
+        g.push(L([x - 44, y], [x + 30, y], 6), CI([x + 42, y], 9, 'bf'));
+        [-1, 1].forEach(function (sd) {
+          g.push(PA(pth([[x - 16, y + sd * d], [x + 16, y + sd * d], [x + 6, y + sd * (d + 26)]], true), 'bf'));
+          var a = [x - 24, y + sd * 6];
+          g.push(AR(a, add(a, [0, sd * (8 + 10 * P.sa)]), 'gr', P.sa));
+        });
+        if (P.pc > 0.02) g.push(E('ellipse', { cx: x, cy: y, rx: f1(4 + 12 * P.pc), ry: f1(2 + 5 * P.pc), 'class': 'br', opacity: f1(cl(P.pc * 2, 0, 1) * 100) / 100 }));
+      }
+      o.push(CI([x, y], 56, 'b', { 'stroke-width': 2, style: 'stroke:var(--line-strong)' }));
+      o.push.apply(o, g);
+    }
+    var A72 = {
+      id: 'E72', q: 1, v: [360, 160],
+      aria: 'Figura a quattro zampe di profilo, polsi sotto le spalle e ginocchia sotto le anche; accanto una lente sul dettaglio. I gomiti ruotano e la piega guarda avanti; le dita agganciano il pavimento e il palmo si solleva; le spalle vanno lontano dalle orecchie. Poi si spinge il pavimento: il torace sale fra le scapole, il dorso si arrotonda appena e la lombare resta neutra. Si respira al centro della schiena, poi si molla',
+      base: { x: 104, y: GQ - 66, t: -14.1, cu: 0, t2: -14.1, cu2: 0, nk: 16, pb: 0, pc: 0, sh: 0, ge: 0, sg: 0, sa: 0,
+        ln: { p: [48, GQ - 6], b: -1, f: 182 }, lf: { p: [51, GQ - 6], b: -1, f: 182 }, an: { p: W72, b: 1, w: 0 }, af: { p: [W72[0] + 3, W72[1]], b: 1, w: 0 } },
+      keys: [
+        { d: 2.5, s: 'Polsi sotto le spalle, ginocchia sotto le anche', ss: 'Polsi e ginocchia sotto', p: {}, k: 'no' },
+        { d: 2.5, s: 'Gira i gomiti: la piega guarda avanti', ss: 'La piega del gomito avanti', p: { ge: 1 }, k: 'gr', vis: 'io', iv: 1 },
+        { d: 2.5, s: 'Le dita agganciano il pavimento', ss: 'Le dita agganciano', p: { sg: 1 }, k: 'gr', vis: 'io', iv: 2 },
+        { d: 2.5, s: 'Spalle giù, lontane dalle orecchie', ss: 'Spalle giù', p: { sh: -6 }, k: 'gr', vis: 'io', sh: 1 },
+        { d: 3, s: 'Spingi il pavimento, le scapole si allontanano', ss: 'Spingi il pavimento', p: { t: -11.2, t2: -11.2, cu2: -12, sa: 1, nk: -6 }, k: 'gr', vis: 'in', iv: 3, pu: 1 },
+        { d: 4, s: 'Inspira al centro della schiena', ss: 'Inspira al centro della schiena', n: 1, p: { pc: 1 }, air: 1, vis: 1, iv: 3, pu: 1 },
+        { d: 4, s: 'Espira, tieni la spinta', ss: 'Espira, tieni la spinta', n: 1, p: { pc: 0 }, air: -1, vis: 1, iv: 3, pu: 1 },
+        { d: 2.5, s: 'Molla, ' + FREE, ss: 'Molla', p: { t: -14.1, t2: -14.1, ge: 0, sg: 0, sh: 0, cu2: 0, sa: 0, nk: 16 }, k: 'no', vis: 'out', iv: 3 }
+      ],
+      nose: 1, main: 5, strip: [1, 2, 3, 4, 5],
+      pre: function (P, c, o) { floor(360, GQ, o); },
+      post: function (P, c, o, J) {
+        var to = J.to, E0 = J.an.E, a, b, va = vis(c);
+        o.push(CI(to.pt(0.25, 0, -1), 4.5, 'fbr'), TX(add(to.pt(0.25, 0, -1), [6, -11]), 'lombare neutra', 't', 'end'));
+        o.push(CI(add(E0, [5, 0]), 3.2, 'fgr', op(P.ge)));
+        if (c.k.sh) { a = to.pt(0.98, 11, -1); b = to.pt(0.72, 11, -1); o.push(AR(a, b, 'gr', va), TX(add(mid(a, b), [0, -9]), 'lontano dalle orecchie', 't', 'middle', op(va))); }
+        if (c.k.pu) { o.push(AR([W72[0] + 4, GQ + 3], [W72[0] + 4, GQ + 15], 'gr', 1)); a = to.pt(0.8, 5, -1); o.push(AR(a, add(a, [0, -18]), 'gr', c.air ? 0 : 1), TX(add(a, [0, -24]), 'il torace sale', 't', 'middle', op(c.air ? 0 : 1))); }
+        if (P.pc > 0.02) { a = to.pt(0.57, 3, -1); o.push(AR(a, add(a, to.N(0.57), -(6 + 14 * P.pc)), 'br', cl(P.pc * 2, 0, 1))); }
+        if (c.k.iv) { var g = []; lens72(c.k.iv, P, g); if (c.k.iv === 3) g.push(TX([LX72, 151], 'scapole lontane', 't', 'middle', op(P.sa))); o.push(G(op(va), g)); o.push(TX([LX72, 14], ['il braccio da davanti', 'la mano di lato', 'la schiena dall\'alto'][c.k.iv - 1], 't', 'middle', op(va))); }
+        o.push(TX([12, 155], '5 respiri, poi molla', 'tk'));
+      }
+    };
+    def(A72);
+
+    // ---------- E73 (N12) — push-up con la spinta. Tutto il corpo ruota attorno alle dita dei piedi (B73), le mani restano ferme ----------
+    var B73 = [38, GQ - 3.5], T073 = -19.7, F073 = 70, DM73 = 15, W73 = [217, GQ - 4];
+    var A073 = add(B73, [-2.75, -15]), H073 = add(A073, dir(T073), 115.8);
+    function rp73(p, d) { return add(B73, rot(sub(p, B73), d)); }
+    function rig73(P) {
+      var d = P.dn * DM73, H = rp73(H073, d), A = rp73(A073, d), t = T073 + d, f = F073 + d;
+      return shallow(P, { x: H[0], y: H[1], t: t, cu: 0, t2: t, nk: 8,
+        ln: { p: A, b: -1, f: f, tb: -f }, lf: { p: A, b: -1, f: f, tb: -f },
+        an: { p: W73, b: 1, w: 0 }, af: { p: add(W73, [3, 0]), b: 1, w: 0 } });
+    }
+    function lens73(P, o) { // dall'alto: i gomiti restano a metà strada, non aperti a T
+      var c = [72, 48], g = [];
+      g.push(CI(c, 40, 'b', { 'stroke-width': 2, style: 'stroke:var(--line-strong)' }));
+      g.push(rrect(add(c, [-10, 0]), 46, 24, 0, 'bf', 10), CI(add(c, [24, 0]), 8, 'bf'));
+      [-1, 1].forEach(function (s) {
+        var S = add(c, [10, s * 11]), Hn = add(c, [14, s * 26]), E0 = mix(mid(S, Hn), add(S, [-15, s * 15]), P.dn);
+        g.push(L(S, E0, 5), L(E0, Hn, 4), CI(Hn, 3, 'b', SOLID));
+      });
+      o.push.apply(o, g);
+    }
+    var A73 = {
+      id: 'E73', q: 1, v: [320, 160],
+      aria: 'Figura di profilo in plank alto, corpo in linea e mani sotto le spalle: spinge il pavimento con le spalle lontane dalle orecchie, poi scende piano piegando i gomiti, non aperti, tenendo la spinta e il bacino in linea. Risale spingendo. Pochi e lenti, finché si tiene la spinta. Una lente dall\'alto mostra i gomiti',
+      base: { dn: 0, cu2: 0, sh: 0, sa: 0 },
+      keys: [
+        { d: 2.5, s: 'Plank: mani sotto le spalle, corpo in linea', ss: 'Plank, corpo in linea', p: {}, k: 'no', vis: 'io', er: 1 },
+        { d: 2.5, s: 'Spingi il pavimento, spalle lontane dalle orecchie', ss: 'Spingi il pavimento', p: { cu2: -6, sh: -3, sa: 1 }, k: 'gr', pu: 1 },
+        { d: 3.5, s: 'Scendi piano, tieni la spinta', ss: 'Scendi piano', p: { dn: 1 }, k: 'gr', pu: 1 },
+        { d: 1.5, s: 'Gomiti non aperti, bacino in linea', ss: 'Gomiti non aperti', p: {}, k: 'gr', pu: 1 },
+        { d: 3, s: 'Risali spingendo il pavimento', ss: 'Risali spingendo', p: { dn: 0 }, k: 'gr', pu: 1 },
+        { d: 2, s: 'Pochi e lenti: ' + FREE, ss: 'Pochi e lenti', p: { cu2: 0, sh: 0, sa: 0 }, k: 'no' }
+      ],
+      main: 2, strip: [0, 1, 2, 4],
+      pre: function (P, c, o) { floor(320, GQ, o); },
+      post: function (P, c, o, J) {
+        var to = J.to, h = to.P, a = to.P, b = J.ln.A, s = to.S;
+        lens73(P, o);
+        o.push(TX([118, 26], 'gomiti', 't'), TX([118, 40], 'non aperti', 't'));
+        if (c.k.pu) o.push(AR([W73[0] + 4, GQ + 3], [W73[0] + 4, GQ + 15], 'gr', 1));
+        var sag = add(mid(b, s, 0.56), [0, 18]);
+        o.push(G(op(c.k.er ? vis(c) : 0), [PL([b, sag, s], 0, 'ghost', { style: 'stroke-width:4' }), cross(add(sag, [0, 14]), 5), TX(add(sag, [11, 11]), 'il bacino', 't'), TX(add(sag, [11, 25]), 'non cade', 't')]));
+        o.push(TX([12, 155], 'piano', 'tk'), TX([316, 155], 'scapole lontane', 't', 'end', op(P.sa)));
+      }
+    };
+    A73.draw = (function (side) { return function (P, c) { return side(rig73(P), c); }; })(sideFig(A73));
+    def(A73);
+  })();
+  /* ======================= FINE BLOCCO B ======================= */
+
   /* ---------- tempo, fasi, indicazioni ---------- */
   function isObj(o) { return o && typeof o === 'object' && !Array.isArray(o); }
   function mix(a, b, t) {
@@ -2813,7 +3301,10 @@
   function at(A, time) {
     var n = A.keys.length, t = ((time % A.total) + A.total) % A.total, i = 0;
     while (i < n - 1 && t >= A.start[i + 1]) i++;
-    var k = A.keys[i], u = (t - A.start[i]) / k.d, P = mix(A.full[(i - 1 + n) % n], A.full[i], k.e === 'l' ? u : ease(u));
+    // e: 'l' lineare; 'i' parte piano e arriva lanciata, 'o' parte lanciata e arriva piano: una coppia i+o passa per una
+    // posa di mezzo senza fermarsi (E28)
+    var k = A.keys[i], u = (t - A.start[i]) / k.d, P = mix(A.full[(i - 1 + n) % n], A.full[i],
+      k.e === 'l' ? u : k.e === 'i' ? 1 - Math.cos(Math.PI * u / 2) : k.e === 'o' ? Math.sin(Math.PI * u / 2) : ease(u));
     var gk = k.g || k.s, j = i;
     while (j > 0 && (A.keys[j - 1].g || A.keys[j - 1].s) === gk) j--;
     return { P: P, k: k, u: u, txt: k.s + (k.n ? ' · ' + (Math.floor(t - A.start[j]) + 1) : '') };
