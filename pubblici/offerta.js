@@ -32,33 +32,34 @@ var OFFERTA = {
   pacchetti: [
     {
       nome: "1 anno", mesi: 12, prezzo: null, prezzoLancio: null, rate: null, consigliato: false,
-      breve: "Tutto il 6 mesi per 12 mesi, prezzo bloccato ai rinnovi, le sfide una settimana prima.",
+      breve: "Tutto il 6 mesi per 12 mesi: fino a quattro cicli rifatti sui tuoi test, prezzo bloccato ai rinnovi, le sfide una settimana prima.",
       vantaggi: [
-        "Tutto il 6 mesi, per 12 mesi",
+        "Tutto il 6 mesi, per 12 mesi: fino a quattro cicli di 12 settimane, ognuno rifatto sui tuoi test, con gli esercizi del Quaderno",
+        "La videochiamata a fine ciclo, a ogni ciclo",
         "Prezzo bloccato ai rinnovi",
-        "Sfide una settimana prima",
-        "Il tuo «prima e dopo» di fine anno",
+        "Le sfide del mese una settimana prima degli altri",
+        "Il tuo «prima e dopo» di fine anno: tutti i tuoi test a confronto, solo per te",
         "Priorità sul one to one"
       ]
     },
     {
       nome: "6 mesi", mesi: 6, prezzo: null, prezzoLancio: null, rate: null, consigliato: true,
-      breve: "Tutto il 3 mesi, un secondo ciclo ricostruito sui tuoi test, una videochiamata a fine ciclo.",
+      breve: "Tutto il 3 mesi, una videochiamata a fine ciclo e un secondo ciclo di 12 settimane rifatto sui tuoi test.",
       vantaggi: [
         "Tutto il 3 mesi",
-        "Un secondo ciclo, ricostruito sui tuoi test",
-        "Una videochiamata a fine ciclo"
+        "Una videochiamata a fine ciclo: rivediamo insieme i test e impostiamo il ciclo dopo",
+        "Un secondo ciclo di 12 settimane, rifatto sui tuoi test: nuovo accento e dosi aggiornate, con gli esercizi del Quaderno"
       ]
     },
     {
       nome: "3 mesi", mesi: 3, prezzo: null, prezzoLancio: null, rate: null, consigliato: false,
-      breve: "Questionario e chiamata di avvio, il tuo percorso, il Quaderno con la tua password, 3 controlli video.",
+      breve: "Videochiamata di avvio, il tuo percorso nel Quaderno, 3 controlli video, chat con risposta entro 48 ore.",
       vantaggi: [
-        "Questionario e chiamata di avvio",
-        "Il tuo percorso, da un elenco chiaro di adattamenti",
-        "Il Quaderno con la tua password",
-        "3 controlli video, uno per blocco",
-        "Chat: risposta entro 48 ore nei feriali"
+        "Questionario e videochiamata di avvio: i tuoi test, il tuo obiettivo, il tuo tempo",
+        "Il tuo percorso, adattato da un elenco chiaro: percorso, dosi, esercizi da togliere",
+        "Il Quaderno con la tua password: 12 settimane in 3 blocchi, player guidato, 69 schede con figure animate, test e diario. Funziona anche senza internet",
+        "3 controlli video, uno a fine blocco: mi mandi il video della prova e ti rispondo con le correzioni",
+        "Chat: risposta entro 48 ore nei giorni feriali"
       ]
     }
   ],
@@ -105,8 +106,25 @@ var OFFERTA = {
     };
   }
   function haContatto() { var c = contatto(); return !!(c.modulo || c.email); }
-  function mailto(email, oggetto) { return "mailto:" + email + "?subject=" + encodeURIComponent(oggetto); }
-  var AZIONI = { piano: "Voglio il piano", avvisi: "Avvisami della prossima sfida" };
+  function mailto(email, oggetto, corpo) {
+    return "mailto:" + email + "?subject=" + encodeURIComponent(oggetto) + (corpo ? "&body=" + encodeURIComponent(corpo) : "");
+  }
+  var AZIONI = { piano: "Richiedi un appuntamento", avvisi: "Avvisami della prossima sfida" };
+  var OGGETTI = { piano: "Richiesta di appuntamento", avvisi: "Avvisami della prossima sfida" };
+  // La mail già scritta della richiesta di appuntamento: senza dati sulla salute.
+  function richiesta(pacchetto) {
+    return "Ciao, vorrei fissare la videochiamata di avvio" + (pacchetto ? " per il pacchetto " + pacchetto : "") + ".\r\n\r\n" +
+      "Giorni e orari in cui posso:\r\n\r\n" +
+      "Sport che pratico (o «nessuno»):\r\n\r\n" +
+      "Non scrivo qui informazioni sulla salute: il questionario arriva dopo, in un modulo.";
+  }
+  // Il pulsante del pacchetto: apre il modulo, o la mail già scritta col nome del pacchetto.
+  function bottonePacchetto(p) {
+    var c = contatto(), cls = "btn pac-cta" + (p.consigliato ? " primary" : "");
+    if (c.modulo) return '<a class="' + cls + '" href="' + esc(c.modulo) + '" target="_blank" rel="noopener">' + AZIONI.piano + "</a>";
+    if (c.email) return '<a class="' + cls + '" href="' + esc(mailto(c.email, OGGETTI.piano + " · " + p.nome, richiesta(p.nome))) + '">' + AZIONI.piano + "</a>";
+    return "";
+  }
 
   // ---- i prezzi ----
   // Il prezzo da mostrare per un pacchetto, deciso solo dalla configurazione e dalla data di oggi.
@@ -152,7 +170,8 @@ var OFFERTA = {
       h += bloccoPrezzo(x);
       if (rate >= 2) h += '<p class="pac-rate">Anche in ' + rate + " rate</p>";
       if (opz.breve) h += '<p class="pac-breve">' + esc(p.breve || (p.vantaggi || []).join(", ")) + "</p>";
-      else h += "<ul>" + (p.vantaggi || []).map(function (v) { return "<li>" + esc(v) + "</li>"; }).join("") + "</ul>";
+      else h += '<p class="pac-cosa">Cosa hai a disposizione</p><ul>' + (p.vantaggi || []).map(function (v) { return "<li>" + esc(v) + "</li>"; }).join("") + "</ul>";
+      h += bottonePacchetto(p);
       h += "</article>";
     });
     h += "</div>";
@@ -199,7 +218,7 @@ var OFFERTA = {
     } else {
       h += '<div class="ce"><p class="ce-riga"><span class="ce-ind">' + esc(c.email) + '</span>' +
         '<button class="btn ce-copia" type="button">Copia</button></p>' +
-        '<p class="ce-link">' + tipi.map(function (t) { return '<a href="' + esc(mailto(c.email, AZIONI[t])) + '">' + AZIONI[t] + "</a>"; }).join('<span aria-hidden="true"> · </span>') + "</p>" +
+        '<p class="ce-link">' + tipi.map(function (t) { return '<a href="' + esc(mailto(c.email, OGGETTI[t], t === "piano" ? richiesta("") : "")) + '">' + AZIONI[t] + "</a>"; }).join('<span aria-hidden="true"> · </span>') + "</p>" +
         '<p class="ce-esito" role="status" aria-live="polite"></p></div>';
     }
     el.innerHTML = h;

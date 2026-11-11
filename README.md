@@ -90,8 +90,13 @@ Su GitHub apri `pubblici/offerta.js`, tocca la matita, cambia solo i valori in c
 salva con **Commit changes**: il workflow **Pubblica** riparte da solo e dopo un paio di minuti
 le due pagine mostrano la versione nuova.
 
-- **Contatto**: `var CONTATTO = { email: "", modulo: "" };`. I pulsanti «Voglio il piano» e
-  «Avvisami della prossima sfida» stanno nell'offerta, al giorno 7 della sfida e nel piede.
+- **Contatto**: `var CONTATTO = { email: "", modulo: "" };`. I pulsanti «Richiedi un appuntamento» e
+  «Avvisami della prossima sfida» stanno nell'offerta, al giorno 7 della sfida e nel piede. Il sito è
+  solo informativo: la vendita passa da una videochiamata privata.
+  - **Un pulsante per pacchetto**: ogni pacchetto ha il suo «Richiedi un appuntamento». Con l'email
+    apre la posta con l'oggetto «Richiesta di appuntamento · 6 mesi» (col nome del pacchetto) e un
+    testo già scritto: giorni e orari, sport praticato, e l'avviso di non scrivere dati sulla salute.
+    Col modulo apre il modulo. Senza contatto il pulsante non compare.
   - **Modulo**: scrivi in `modulo` l'indirizzo intero del modulo esterno, quello scelto col
     consulente privacy (per esempio `modulo: "https://…"`). I pulsanti aprono il modulo.
   - **Solo email**: scrivi l'indirizzo in `email` (per esempio `email: "nome@dominio.it"`) e
@@ -119,7 +124,8 @@ le due pagine mostrano la versione nuova.
   alla data indicata.». Il giorno dopo la scadenza lo sconto sparisce da solo, senza ripubblicare.
   Una data scritta in un altro modo (per esempio `31/12/2026`) vale come nessuna scadenza.
 - **Vantaggi**: `vantaggi` è l'elenco del pacchetto, una voce per riga tra virgolette, separate
-  da virgole. `breve` è la riga che compare nel riepilogo al giorno 7 della sfida.
+  da virgole. Sulla pagina compare sotto «Cosa hai a disposizione»: scrivi che cosa riceve davvero
+  la persona. `breve` è la riga che compare nel riepilogo al giorno 7 della sfida.
 - **Ordine e pacchetto consigliato**: i pacchetti compaiono nell'ordine in cui sono scritti (oggi
   1 anno, 6 mesi, 3 mesi). `consigliato: true` mette il riquadro in evidenza con «Consigliato»:
   tienilo su un pacchetto solo (oggi il 6 mesi).
