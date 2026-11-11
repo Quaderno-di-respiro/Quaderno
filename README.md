@@ -250,6 +250,9 @@ l'invito a Instagram. Ricontrolla la riga cambiata.
   cifrata: così, dopo una visita, pillole e percorsi si aprono anche senza internet. Se c'è già la
   memoria del Quaderno non la toccano; quando si entra col codice, la guida registra la memoria
   intera. Un file pubblico nuovo si aggiunge all'elenco `FILE` in cima a `pubblici/sw.js`.
+  Con internet le pagine, `guida.json`, il PDF cifrato e i file `.js`, `.css` e `.json` arrivano prima dalla rete, così
+  un aggiornamento si vede già alla prima apertura; la memoria serve se la rete manca o tarda più di 4 secondi, e
+  si rinnova tutta insieme quando si installa la versione nuova (guida e PDF restano della stessa pubblicazione).
 - **I dati sul telefono**, tutti in localStorage e mai inviati: `qg-parto` le risposte di «Da dove
   parto?» (`v`, `obiettivo`, `tempo`, `allenamento`, `data`; «Cancella le risposte» la toglie);
   `qg-bolt` il test del respiro, fatto nella home o nella pagina delle pillole; `qg-sfida-respiro`
