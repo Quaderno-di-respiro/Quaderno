@@ -1218,36 +1218,46 @@
     }
   });
 
-  // E33 — apri il petto, lombare ferma: seduto come E20, tronco in due tratti (lombare e dorsale) con due pallini
+  // E33 — apri il petto, lombare ferma: tronco in due tratti (lombare e dorsale) con due pallini. In piedi, allineato come
+  // E34: è la versione chiara (L6). La versione seduta della lezione 4, «da vedere» nel catalogo, resta come E33S per la
+  // sessione di quella lezione (rilievo 7 della revisione del sito, 11/11).
   var E33B = { x: 128, y: SEAT - 12, t: -90, cu: 2, t2: -72, cu2: -9, nk: -16, wr: 0,
     ln: { p: [192, GS - 6], b: -1, f: 0 }, lf: { p: [189, GS - 6], b: -1, f: 0 },
     an: { a: 96, r: 78, b: 1 }, af: { p: [170, SEAT - 26], b: 1, w: 0 } };
+  var E33P = poseOf(STD, { x: 122, y: GS - 121, cu: 2, t2: -72, cu2: -9, nk: -16, wr: 0,
+    ln: { p: [124, GS - 6], b: -1, f: 0 }, lf: { p: [121, GS - 6], b: -1, f: 0 } });
   var E33OPEN = { t2: -93, cu2: -2, nk: 0 }, E33SHUT = { t: -90, cu: 2, t2: -72, cu2: -9, nk: -16 };
-  var A33 = {
-    id: 'E33', q: 1, v: [260, 290], aria: 'Figura seduta di profilo sul bordo della sedia, tronco diviso in lombare e petto: apre il petto senza muovere la bassa schiena; non deve inarcare la lombare al posto del petto. A petto chiuso il braccio alzato si ferma inclinato in avanti, a petto aperto arriva verticale',
-    base: E33B,
-    keys: [
-      { d: 3, s: 'Apri il petto, la lombare non si muove', ss: 'Apri il petto, lombare ferma', p: E33OPEN, k: 'gr' },
-      { d: 2, s: 'Non così: inarchi la bassa schiena', ss: 'Non così: inarchi la lombare', p: { t: -98, cu: 11, t2: -76, cu2: -9, nk: -8, wr: 1 }, k: 'gr' },
-      { d: 2.5, s: 'Petto chiuso: alza il braccio', ss: 'Petto chiuso: il braccio resta avanti', p: shallow(E33SHUT, { wr: 0, nk: -30, an: { a: -32, r: 81, b: 1 } }), k: 'gr' },
-      { d: 2.5, s: 'Petto aperto: alza il braccio', ss: 'Petto aperto: il braccio sale dritto', p: shallow(E33OPEN, { an: { a: -88, r: 81, b: 1 } }), k: 'gr' },
-      { d: 1.5, s: 'Giù il braccio, respira libero dal naso', ss: 'Giù il braccio', p: shallow(E33SHUT, { an: E33B.an }), k: 'no' }
-    ],
-    main: 0, strip: [0, 1, 2, 3],
-    pre: function (P, c, o) { floor(260, GS, o); chair(150, SEAT, GS, o); },
-    post: function (P, c, o, J) {
-      var to = J.to, lo = to.pt(0.24, 0, -1), pe = to.pt(0.8, 0, 1);
-      o.push(CI(lo, 5.5, P.wr > 0.5 ? 'fgr' : 'fbr'), CI(pe, 5.5, 'fgr'));
-      o.push(TX([84, lo[1] + 4], 'lombare', 'tk', 'end'), TX(add(pe, [10, -6]), 'petto', 'tk'));
-    }
-  };
-  A33.draw = (function (side) { // nell'errore la figura diventa grigia, con una croce sulla lombare
-    return function (P, c) {
-      var o = side(P, c);
-      return P.wr > 0.5 ? [G({ style: 'color:var(--line-strong)' }, o), cross(c.J.to.pt(0.22, 14, -1), 6)] : o;
+  function def33(id, B, seduto) {
+    var A = {
+      id: id, q: 1, v: seduto ? [260, 290] : [260, 330, -40],
+      aria: (seduto ? 'Figura seduta di profilo sul bordo della sedia' : 'Figura in piedi di profilo, allineata, ginocchia morbide') +
+        ', tronco diviso in lombare e petto: apre il petto senza muovere la bassa schiena; non deve inarcare la lombare al posto del petto. A petto chiuso il braccio alzato si ferma inclinato in avanti, a petto aperto arriva verticale',
+      base: B,
+      keys: [
+        { d: 3, s: 'Apri il petto, la lombare non si muove', ss: 'Apri il petto, lombare ferma', p: E33OPEN, k: 'gr' },
+        { d: 2, s: 'Non così: inarchi la bassa schiena', ss: 'Non così: inarchi la lombare', p: { t: -98, cu: 11, t2: -76, cu2: -9, nk: -8, wr: 1 }, k: 'gr' },
+        { d: 2.5, s: 'Petto chiuso: alza il braccio', ss: 'Petto chiuso: il braccio resta avanti', p: shallow(E33SHUT, { wr: 0, nk: -30, an: { a: -32, r: 81, b: 1 } }), k: 'gr' },
+        { d: 2.5, s: 'Petto aperto: alza il braccio', ss: 'Petto aperto: il braccio sale dritto', p: shallow(E33OPEN, { an: { a: -88, r: 81, b: 1 } }), k: 'gr' },
+        { d: 1.5, s: 'Giù il braccio, respira libero dal naso', ss: 'Giù il braccio', p: shallow(E33SHUT, { an: B.an }), k: 'no' }
+      ],
+      main: 0, strip: [0, 1, 2, 3],
+      pre: function (P, c, o) { floor(260, GS, o); if (seduto) chair(150, SEAT, GS, o); },
+      post: function (P, c, o, J) {
+        var to = J.to, lo = to.pt(0.24, 0, -1), pe = to.pt(0.8, 0, 1);
+        o.push(CI(lo, 5.5, P.wr > 0.5 ? 'fgr' : 'fbr'), CI(pe, 5.5, 'fgr'));
+        o.push(TX([seduto ? 84 : lo[0] - 26, lo[1] + 4], 'lombare', 'tk', 'end'), TX(add(pe, [10, -6]), 'petto', 'tk'));
+      }
     };
-  })(sideFig(A33));
-  def(A33);
+    A.draw = (function (side) { // nell'errore la figura diventa grigia, con una croce sulla lombare
+      return function (P, c) {
+        var o = side(P, c);
+        return P.wr > 0.5 ? [G({ style: 'color:var(--line-strong)' }, o), cross(c.J.to.pt(0.22, 14, -1), 6)] : o;
+      };
+    })(sideFig(A));
+    def(A);
+  }
+  def33('E33', E33P, 0);
+  def33('E33S', E33B, 1);
 
   // T8 (L1) — lingua al palato a bocca aperta: la testa di E2 ingrandita, bocca in sezione, mandibola che ruota
   var H8 = [92, 96], R8 = 54, JP8 = add(H8, dir(128), 49);
@@ -1890,7 +1900,7 @@
 
     // T13 (N12) — test del collo: testa su 10 secondi
     def({
-      id: 'T13', q: 1, v: [320, 112, 30], aria: 'Test di profilo, supini a ginocchia piegate e braccia incrociate sul petto: con la lingua sul palato si solleva la testa di pochi centimetri e la si tiene su 10 secondi respirando dal naso, poi la si poggia e ci si chiede se ci sono stati fatica, fastidio o dolore. Se il collo fa male dopo pochi secondi, è debole',
+      id: 'T13', q: 1, v: [320, 112, 30], aria: 'Test di profilo, supini a ginocchia piegate e braccia incrociate sul petto: con la lingua sul palato si solleva la testa di pochi centimetri e la si tiene su 10 secondi respirando dal naso, poi la si poggia e ci si chiede se ci sono stati fatica, fastidio o dolore. Se fa male, ci si ferma',
       base: poseOf(SUPX, { tg: 0 }),
       keys: [
         { d: 1.5, s: 'Lingua sul palato', p: { tg: 1 }, k: 'gr' },
@@ -1906,7 +1916,8 @@
       post: function (P, c, o, J) {
         var v = vis(c);
         o.push(TX([62, 56], 'lingua sul palato', P.tg > 0.5 ? 'tk' : 't', 'middle'));
-        o.push(TX([214, 46], 'dolore dopo pochi secondi:', 't', 'middle', op(v)), TX([214, 60], 'il collo è debole', 't', 'middle', op(v)));
+        // descrive, non giudica: la scheda dice «con dolore ti fermi» (rilievo 1 della revisione del sito, 11/11)
+        o.push(TX([214, 46], 'se fa male:', 't', 'middle', op(v)), TX([214, 60], 'fermati', 'tk', 'middle', op(v)));
       }
     });
 
@@ -2058,7 +2069,7 @@
         var os = c.k.os, w = os ? wave(c, os) : 0, v = os ? Math.cos(2 * Math.PI * os * c.u) : 0, ld = cl(P.ld, 0, 1);
         var Lc = [298, 78], g = [], E0 = J.an.E, au = unit(sub(J.an.Wr, J.sa)), fw = [au[1], -au[0]];
         o.push(CI(add(E0, fw, 5 * w), 3.2, 'fgr', op(Math.abs(w))));
-        o.push(TX([12, 24], ld < 0.5 ? 'se sei debole,' : 'più peso sulle braccia:', 'tk'), TX([12, 38], ld < 0.5 ? 'peso sulle gambe' : 'spalle sopra i polsi', 't'));
+        o.push(TX([12, 24], ld < 0.5 ? 'all\'inizio,' : 'più peso sulle braccia:', 'tk'), TX([12, 38], ld < 0.5 ? 'peso sulle gambe' : 'spalle sopra i polsi', 't'));
         g.push(L(E0, add(Lc, dir(180), 56), 0, 'ghost'));
         lensC(Lc, 56, g);
         g.push(L([Lc[0] - 31, 125], [Lc[0] + 31, 125], 0, 'g'));
@@ -2539,14 +2550,14 @@
       return p[8];
     }
     def({
-      id: 'T14', q: 1, v: [300, 220], aria: 'Prova seduti a 90/90 vista di lato e dall\'alto: inclinati indietro e appoggiati su una mano, con l\'altra mano si tira su il piede della gamba dietro tenendo il ginocchio a terra, ed è la flessibilità; poi lo si alza da solo, con la forza, ed è la mobilità. Più è piccola la differenza fra le due altezze, meglio è',
+      id: 'T14', q: 1, v: [300, 220], aria: 'Prova seduti a 90/90 vista di lato e dall\'alto: inclinati indietro e appoggiati su una mano, con l\'altra mano si tira su il piede della gamba dietro tenendo il ginocchio a terra, ed è la flessibilità; poi lo si alza da solo, con la forza, ed è la mobilità. La differenza fra le due altezze è il punto da cui si parte',
       base: poseOf(B9, { ap: 0, aa: 0 }),
       keys: [
         { d: 1.5, s: 'Appoggiati indietro, prendi il piede dietro', ss: 'Prendi il piede dietro', p: { h: -26, l: -17, nW: [0, 1, 0], fW: [0, 1] }, k: 'gr' },
         { d: 2, s: 'Con la mano tiralo su: è la flessibilità', ss: 'Con la mano: flessibilità', p: { bF: 55, ap: 1 }, k: 'gr' },
         { d: 1.5, s: 'Riportalo giù', p: { bF: 0 }, k: 'gr' },
         { d: 2, s: 'Ora alzalo da solo: è la mobilità', ss: 'Da solo: mobilità', p: { bF: 28, aa: 1, nW: [0, 0, 1] }, k: 'gr' },
-        { d: 2.5, s: 'La differenza: più è piccola, meglio è', ss: 'La differenza', p: {}, k: 'no', dif: 1 },
+        { d: 2.5, s: 'La differenza: è il punto da cui parti', ss: 'La differenza', p: {}, k: 'no', dif: 1 },
         { d: 1.5, s: 'Giù, respira libero', ss: 'Giù', p: { bF: 0, h: 0, l: 0, nW: [1, 0, 0], fW: [1, 0], ap: 0, aa: 0 }, k: 'no' }
       ],
       main: 4, strip: [1, 3, 4],
@@ -3309,7 +3320,24 @@
     while (j > 0 && (A.keys[j - 1].g || A.keys[j - 1].s) === gk) j--;
     return { P: P, k: k, u: u, txt: k.s + (k.n ? ' · ' + (Math.floor(t - A.start[j]) + 1) : '') };
   }
-  function draw(A, P, k, time, u) { return A.draw(P, { time: time, air: k.air, k: k, u: u, w: A.v[0] }); }
+  // Pelli: un corpo disegnato (Quiver) al posto dei tratti del manichino. pelli.js registra con QGFig.vesti una funzione
+  // che, dalle ossa della posa (c.J), restituisce le forme del corpo; qui si tolgono i tratti marcati qg-corpo e restano
+  // oggetti, frecce e scritte. Senza pelli.js (sito pubblico, strumenti di lavorazione) non cambia nulla.
+  var vesti = null;
+  function senzaCorpo(els) {
+    var out = [];
+    for (var i = 0; i < els.length; i++) {
+      var e = els[i];
+      if (e.a && /(^|\s)qg-corpo(\s|$)/.test(e.a['class'] || '')) continue;
+      out.push(e.k ? E(e.t, e.a, senzaCorpo(e.k), e.x) : e);
+    }
+    return out;
+  }
+  function draw(A, P, k, time, u) {
+    var c = { time: time, air: k.air, k: k, u: u, w: A.v[0] }, els = A.draw(P, c), pe = null;
+    if (vesti && c.J) { try { pe = vesti(A.id, c.J); } catch (err) { pe = null; } }
+    return pe ? pe.concat(senzaCorpo(els)) : els;
+  }
   function vb(A) { return '0 ' + (A.v[2] || 0) + ' ' + A.v[0] + ' ' + A.v[1]; }
   function svgOpen(box, label) { return '<svg xmlns="' + NS + '" viewBox="' + box + '" role="img" aria-label="' + esc(label) + '">'; }
 
@@ -3439,6 +3467,7 @@
       return old.sort(by).concat(nw.sort(by));
     },
     _j: function (id, t) { var A = get(id), r = at(A, t), c = { time: t, air: r.k.air, k: r.k, u: r.u, w: A.v[0] }; A.draw(r.P, c); return c.J; },
-    info: function (id) { var A = get(id); return A ? { id: id, durata: A.total, fasi: A.keys.map(function (k) { return { s: k.s, d: k.d }; }) } : null; }
+    info: function (id) { var A = get(id); return A ? { id: id, durata: A.total, fasi: A.keys.map(function (k) { return { s: k.s, d: k.d }; }) } : null; },
+    vesti: function (fn) { vesti = typeof fn === 'function' ? fn : null; }
   };
 })(window);
