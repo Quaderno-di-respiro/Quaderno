@@ -344,6 +344,7 @@ footer p { margin: 0; }
       </div>
       <div class="avviso">
         <p><b>Prima di iniziare.</b> Se hai la pressione alta, sei in gravidanza o hai problemi del pavimento pelvico, chiedi prima di fare il respiro al muro.</p>
+        <p>Il BOLT è un'apnea breve: saltalo se sei in gravidanza, hai problemi di cuore o pressione non controllata, epilessia o attacchi di panico, e chiedi prima al medico. Mai in acqua o alla guida.</p>
         <p>Se ti gira la testa o ti viene mal di testa, fermati e torna al respiro normale. La sfida non sostituisce un medico: con un dolore che peggiora ti fermi e chiedi.</p>
       </div>
     </details>
@@ -379,7 +380,7 @@ footer p { margin: 0; }
   <div class="wrap">
     <p class="eyebrow" id="test-occhiello">Il giorno 1</p>
     <h2 id="test-titolo">Prima della routine, i due test</h2>
-    <p class="intro" id="test-intro">Seduto e tranquillo, prima degli esercizi. I numeri restano su questo telefono: il giorno 7 li rifai nelle stesse condizioni e li confronti.</p>
+    <p class="intro" id="test-intro">Seduto e tranquillo, prima degli esercizi. I numeri restano su questo telefono, in questo browser: il giorno 7 li rifai nelle stesse condizioni e li confronti.</p>
     <div class="test-griglia">
       <div class="tool" id="t-bolt">
         <h3>BOLT: apnea dopo l'espirazione</h3>
@@ -391,12 +392,7 @@ footer p { margin: 0; }
         <p class="big" id="bolt-t">0,0 s</p>
         <button class="btn primary grande" type="button" id="bolt-b">Avvia apnea</button>
         <p class="esito" id="bolt-e" aria-live="polite"></p>
-        <ul class="soglie" id="bolt-s">
-          <li data-min="0" data-max="20"><span>Da allenare</span><b>sotto 20 s</b></li>
-          <li data-min="20" data-max="30"><span>Sufficiente</span><b>20–30 s</b></li>
-          <li data-min="30" data-max="40"><span>Buono</span><b>30–40 s</b></li>
-          <li data-min="40" data-max="9999"><span>Top performance</span><b>oltre 40 s</b></li>
-        </ul>
+        <p class="come">Non è un giudizio: conta il confronto con te stesso, nelle stesse condizioni.</p>
       </div>
       <div class="tool" id="t-resp">
         <h3>Respiri al minuto</h3>
@@ -405,11 +401,7 @@ footer p { margin: 0; }
         <button class="btn primary grande" type="button" id="resp-b">Avvia 60 s</button>
         <button class="btn tocca" type="button" id="resp-tap" disabled>Inspiro · 0</button>
         <p class="esito" id="resp-e" aria-live="polite"></p>
-        <ul class="soglie" id="resp-s">
-          <li data-min="0" data-max="7"><span>Top</span><b>6 o meno</b></li>
-          <li data-min="7" data-max="13"><span>Va benissimo</span><b>7–12</b></li>
-          <li data-min="13" data-max="999"><span>Alto</span><b>oltre 12</b></li>
-        </ul>
+        <p class="come">Per gli adulti a riposo il riferimento è 12–20 respiri al minuto. Anche qui conta il confronto con te stesso.</p>
       </div>
     </div>
   </div>
@@ -431,7 +423,7 @@ footer p { margin: 0; }
     </div>
 
     <h2 class="h-piano">Il passo dopo</h2>
-    <p class="intro">Il piano su misura parte dai tuoi numeri: le 12 settimane del Quaderno, adattate a te e seguite.</p>
+    <p class="intro">Adattiamo le 12 settimane del Quaderno al tuo obiettivo, al tuo tempo e a quello che oggi riesci a fare.</p>
     <div id="pacchetti"><p class="pac-presto">Tre durate: 1 anno, 6 mesi, 3 mesi. I prezzi escono presto.</p></div>
     <div class="one"><p><b>One to one</b> · <span id="one-testo">Correzioni dal vivo, online o in presenza. Pochi posti: si entra dopo una chiamata di 15 minuti.</span></p></div>
     <div class="cta">
@@ -629,14 +621,11 @@ footer p { margin: 0; }
   }
   document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible" && vuole) sveglio(true); });
 
-  // ---- le soglie ----
-  var FASCE = ["Da allenare", "Sufficiente", "Buono", "Top performance"], SOGLIE = [20, 30, 40];
-  function fascia(s) { return s < 20 ? 0 : s < 30 ? 1 : s < 40 ? 2 : 3; }
+  // ---- niente fasce di giudizio: le soglie non hanno studi alle spalle ----
   function evidenzia(ul, v) {
+    if (!ul) return;
     Array.prototype.forEach.call(ul.querySelectorAll("li"), function (li) { li.classList.toggle("attivo", v >= Number(li.dataset.min) && v < Number(li.dataset.max)); });
   }
-  function giudizioBolt(s) { return FASCE[fascia(s)]; }
-  function giudizioResp(n) { return n <= 6 ? "Top" : n <= 12 ? "Va benissimo" : "Alto"; }
 
   // ---- BOLT, come nella facciata: il numero si arrotonda al secondo una volta sola ----
   var boltT0 = 0, boltRaf = 0;
@@ -644,7 +633,7 @@ footer p { margin: 0; }
   function boltSalva(s) {
     var f = fase(); if (!f) return;
     S.test[f].bolt = s; salva();
-    $("bolt-e").textContent = giudizioBolt(s) + ": " + s + " secondi." + (memoria ? " Salvato." : "");
+    $("bolt-e").textContent = s + (s === 1 ? " secondo." : " secondi.") + (memoria ? " Salvato." : "");
     disegnaTest(); disegnaFine();
   }
   $("bolt-b").addEventListener("click", function () {
@@ -691,7 +680,7 @@ footer p { margin: 0; }
       sveglio(attivo());
       var f = fase(); if (!f) return;
       S.test[f].resp = respN; salva();
-      $("resp-e").textContent = giudizioResp(respN) + ": " + respN + " respiri al minuto." + (memoria ? " Salvato." : "");
+      $("resp-e").textContent = respN + " respiri al minuto." + (memoria ? " Salvato." : "");
       disegnaFine();
     }, 200);
   });
@@ -946,14 +935,14 @@ footer p { margin: 0; }
     $("test-titolo").textContent = g7 ? "Di nuovo i due test" : "Prima della routine, i due test";
     $("test-intro").textContent = g7
       ? "Nelle stesse condizioni del giorno 1: seduto e tranquillo, prima degli esercizi. Poi trovi il confronto."
-      : "Seduto e tranquillo, prima degli esercizi. I numeri restano su questo telefono: il giorno 7 li rifai nelle stesse condizioni e li confronti.";
+      : "Seduto e tranquillo, prima degli esercizi. I numeri restano su questo telefono, in questo browser: il giorno 7 li rifai nelle stesse condizioni e li confronti.";
     var t = S.test[f];
     if (!boltT0) {
-      if (t.bolt !== null) { $("bolt-t").textContent = t.bolt + " s"; evidenzia($("bolt-s"), t.bolt); $("bolt-b").textContent = "Rifai"; if (!$("bolt-e").textContent) $("bolt-e").textContent = giudizioBolt(t.bolt) + ": " + t.bolt + " secondi."; }
+      if (t.bolt !== null) { $("bolt-t").textContent = t.bolt + " s"; evidenzia($("bolt-s"), t.bolt); $("bolt-b").textContent = "Rifai"; if (!$("bolt-e").textContent) $("bolt-e").textContent = t.bolt + (t.bolt === 1 ? " secondo." : " secondi."); }
       else { $("bolt-t").textContent = "0,0 s"; evidenzia($("bolt-s"), -1); $("bolt-b").textContent = "Avvia apnea"; $("bolt-e").textContent = ""; }
     }
     if (!respTimer) {
-      if (t.resp !== null) { $("resp-t").textContent = "0:00"; evidenzia($("resp-s"), t.resp); $("resp-b").textContent = "Rifai"; if (!$("resp-e").textContent) $("resp-e").textContent = giudizioResp(t.resp) + ": " + t.resp + " respiri al minuto."; }
+      if (t.resp !== null) { $("resp-t").textContent = "0:00"; evidenzia($("resp-s"), t.resp); $("resp-b").textContent = "Rifai"; if (!$("resp-e").textContent) $("resp-e").textContent = t.resp + " respiri al minuto."; }
       else { $("resp-t").textContent = "1:00"; evidenzia($("resp-s"), -1); $("resp-b").textContent = "Avvia 60 s"; $("resp-e").textContent = ""; }
     }
     var usa = f === "g1" && t.bolt === null ? boltDiOggi() : null;
@@ -965,8 +954,8 @@ footer p { margin: 0; }
     h += '<p class="riga"><span>Giorno 1</span><b>' + (a !== null ? a + unita : "—") + "</b></p>";
     h += '<p class="riga"><span>Giorno 7</span><b>' + (b !== null ? b + unita : "—") + "</b></p>";
     if (a !== null && b !== null) {
-      var d = b - a, meglio = meglioSeAlto ? d > 0 : d < 0;
-      h += '<p class="delta' + (meglio ? " meglio" : "") + '">' + (d > 0 ? "+" : d < 0 ? "−" : "±") + Math.abs(d) + unita + "</p>";
+      var d = b - a;
+      h += '<p class="delta">' + (d > 0 ? "+" : d < 0 ? "−" : "±") + Math.abs(d) + unita + "</p>";
     }
     return h + "</div>";
   }
@@ -982,20 +971,18 @@ footer p { margin: 0; }
       return '<p class="riga"><span>' + r[0] + "</span><b>" + r[1] + " → " + r[2] + "</b></p>";
     }).join("") + "</div>";
   }
-  // La frase del BOLT legge la fascia: quanti secondi mancano alla prossima.
+  // La frase del BOLT non giudica: in 7 giorni il numero sale anche solo perché si impara il test.
+  // Sotto circa 8 secondi di differenza è dentro il margine di errore (stima nostra).
+  var MARGINE_BOLT = 8;
   function fraseBolt(a, b, finita) {
     var chiusa = finita ? "Hai fatto 7 giorni su 7, ed era la parte difficile." : "Ti manca solo la routine di oggi per fare 7 giorni su 7.";
-    if (b > a) {
-      var t = "Da " + a + " a " + b + " secondi in 7 giorni.", fa = fascia(a), fb = fascia(b);
-      if (fb > fa) t += " Adesso sei in «" + FASCE[fb] + "».";
-      if (fb < 3) t += " Ti mancano " + (SOGLIE[fb] - b) + (SOGLIE[fb] - b === 1 ? " secondo" : " secondi") + " per «" + FASCE[fb + 1] + "».";
-      return t;
-    }
-    if (b === a) return "Il numero è fermo: il coach rifà i test ogni due settimane. " + chiusa;
-    return "Il numero è sceso di " + (a - b) + (a - b === 1 ? " secondo" : " secondi") + ": il coach rifà i test ogni due settimane, e in 7 giorni può succedere. " + chiusa;
+    var d = b - a, rifai = "Rifallo fra due settimane, nelle stesse condizioni. ";
+    if (d === 0) return "Il numero è fermo: " + b + " secondi. " + rifai + chiusa;
+    if (Math.abs(d) < MARGINE_BOLT) return "Da " + a + " a " + b + " secondi: è dentro il margine di errore del test. " + rifai + chiusa;
+    if (d > 0) return "Da " + a + " a " + b + " secondi in 7 giorni. Parte di questo è aver imparato il test: hai imparato a restare tranquillo più a lungo con la voglia di respirare. " + chiusa;
+    return "Il numero è sceso di " + (-d) + " secondi: in 7 giorni può succedere, conta anche la giornata. " + rifai + chiusa;
   }
   function fraseResp(a, b) {
-    if (b < a) return "Respiri al minuto: da " + a + " a " + b + ", più lenti: è la direzione giusta.";
     if (b === a) return "Respiri al minuto: " + b + ", come il giorno 1.";
     return "Respiri al minuto: da " + a + " a " + b + ".";
   }
@@ -1039,11 +1026,6 @@ footer p { margin: 0; }
   function voceCarta(x, X, Y, L, titolo, a, b, u, alto) {
     tondo(x, X, Y, L, 300, 30); x.fillStyle = COL.surface; x.fill(); x.lineWidth = 3; x.strokeStyle = COL.line; x.stroke();
     x.textAlign = "left"; x.fillStyle = COL.muted; x.font = "700 30px " + MONO; x.fillText(titolo, X + 44, Y + 68);
-    if (a !== null && b !== null) {
-      var d = b - a, meglio = alto ? d > 0 : d < 0;
-      x.textAlign = "right"; x.fillStyle = meglio ? COL.breath : COL.muted; x.font = "700 46px " + MONO;
-      x.fillText((d > 0 ? "+" : d < 0 ? "−" : "±") + Math.abs(d) + u, X + L - 44, Y + 72);
-    }
     x.textAlign = "left"; x.fillStyle = COL.muted; x.font = "700 26px " + MONO;
     x.fillText("GIORNO 1", X + 44, Y + 140); x.fillText("GIORNO 7", X + 500, Y + 140);
     var wa = numeroCarta(x, a, u, X + 44, Y + 250, COL.ink);
@@ -1067,14 +1049,15 @@ footer p { margin: 0; }
       var x = c.getContext("2d");
       if (!x) throw new Error("canvas");
       x.fillStyle = COL.bg; x.fillRect(0, 0, W, H);
-      // in alto il nome della sfida
+      // in alto il nome della sfida e i giorni fatti
+      var n = Math.min(7, S.fatti.length);
       if (icona) { x.save(); tondo(x, P, P, 92, 92, 22); x.clip(); x.drawImage(icona, P, P, 92, 92); x.restore(); }
       x.fillStyle = COL.ink; x.textBaseline = "middle"; x.font = "800 46px " + DISP; x.fillText("PRIMA LE RADICI", P + (icona ? 120 : 0), P + 48);
       x.textBaseline = "alphabetic";
-      x.fillStyle = COL.breath; x.font = "700 32px " + MONO; x.fillText("SFIDA GRATUITA · 7 GIORNI", P, 296);
+      x.fillStyle = COL.breath; x.font = "700 32px " + MONO; x.fillText("SFIDA GRATUITA · " + n + (n === 1 ? " GIORNO" : " GIORNI") + " SU 7 FATTI", P, 296);
       x.fillStyle = COL.ink; adatta(x, "RESPIRO AL MURO", "800", DISP, 160, W - 2 * P); x.fillText("RESPIRO AL MURO", P, 432);
       // i 7 giorni
-      var n = Math.min(7, S.fatti.length), g = 14, w = (W - 2 * P - 6 * g) / 7;
+      var g = 14, w = (W - 2 * P - 6 * g) / 7;
       for (var i = 0; i < 7; i++) {
         tondo(x, P + i * (w + g), 478, w, 28, 8);
         x.fillStyle = i < n ? COL.breath : COL.surface; x.fill();
