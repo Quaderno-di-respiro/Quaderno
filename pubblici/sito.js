@@ -23,12 +23,12 @@
   var TEMPI = ["breve", "base", "pieno"], LIVELLI = ["inizio", "medio", "avanzato"];
   // La pillola che chiede prima un test: il collo contro gravità, dopo il test del collo.
   var TEST_PRIMA = { E45: { test: "T13", breve: "Collo contro gravità" } };
-  // Figure dei test: per ora nessuna. Quelle di T13 e T14 hanno scritte che giudicano («il collo è
-  // debole», «più è piccola, meglio è») e quella di E21 dice «un minuto per gamba». Quando la chat dei
-  // contenuti le corregge si rimettono: { T13: "T13", T14: "T14", T4: "E21" }.
-  var FIGURA_TEST = {};
-  // Esercizi senza figura nella parte gratuita: la figura di E33 mostra la versione seduta, «da vedere».
-  var SENZA_FIGURA = { E33: true };
+  // Figure dei test: solo T13, con le scritte corrette («se fa male: fermati»). Restano senza figura
+  // T14 (la figura appoggia sulla mano, il test gratuito dice «su un gomito») e T4 (la figura di E21
+  // dice «un minuto per gamba», il test gratuito si ferma a 30 secondi).
+  var FIGURA_TEST = { T13: "T13" };
+  // Esercizi senza figura nella parte gratuita: nessuno. E33 ora è la versione in piedi (la seduta è E33S).
+  var SENZA_FIGURA = {};
   var AVVISO_BOLT = "<b>Saltalo</b> se sei in gravidanza, hai problemi di cuore o pressione non controllata, se ti capita di svenire, se hai epilessia o attacchi di panico: chiedi prima al medico. Mai in acqua o alla guida.";
   var AVVISI_TEST = { T1: AVVISO_BOLT, T4: "<b>Attenzione.</b> Sempre vicino a un muro o a una sedia. Con l'epilessia, mai a occhi chiusi da solo. Con il diabete e i piedi poco sensibili, tieni le scarpe." };
   var BOLT = "qg-bolt";
