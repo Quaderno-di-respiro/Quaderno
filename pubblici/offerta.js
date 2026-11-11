@@ -8,7 +8,7 @@
 //   «Voglio il piano» e «Avvisami della prossima sfida» aprono il modulo.
 // - email: l'indirizzo email del progetto. Se c'è solo l'email, le pagine la mostrano da copiare,
 //   con il pulsante «Copia» e un link che apre l'app della posta.
-var CONTATTO = { email: "", modulo: "" };
+var CONTATTO = { email: "radicidelmovimento@gmail.com", modulo: "" };
 
 // L'indirizzo del profilo Instagram, per esempio "https://www.instagram.com/nomeprofilo/".
 // Vuoto: al posto dei link compare «Scrivi PIANO su Instagram (profilo in arrivo)».
