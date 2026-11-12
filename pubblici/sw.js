@@ -16,7 +16,7 @@ const VERSIONE = "qg-__VERSIONE__";
 const FONT = "qg-font";
 const FILE = ["./", "index.html", "guida.json", "sfida.html", "figure.js", "offerta.js", "manifest.webmanifest", "icona.svg", "icona-180.png", "icona-192.png", "icona-512.png",
   "dentro-programma.webp", "dentro-player.webp", "dentro-scheda.webp", "quaderno-del-respiro.pdf.enc",
-  "pillole.html", "percorso-benessere.html", "percorso-corsa.html", "percorso-combattimento.html", "percorso-forza.html", "pillole.js", "sito.js", "sito.css"];
+  "pillole.html", "percorso-benessere.html", "percorso-corsa.html", "percorso-combattimento.html", "percorso-forza.html", "piano.html", "pillole.js", "sito.js", "sito.css"];
 const GUIDA = ["guida.json", "quaderno-del-respiro.pdf.enc"];
 const SOLO_PUBBLICI = new URL(self.location.href).searchParams.get("solo") === "pubblici";
 const RADICE = new URL("index.html", self.location).href;

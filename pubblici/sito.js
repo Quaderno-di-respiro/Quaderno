@@ -1,14 +1,18 @@
 /* Prima le Radici: le pagine «Le pillole» (pillole.html) e i quattro percorsi (percorso-*.html).
    Dati: pillole.js (window.QGPillole). Contatto e percorsi attivi: offerta.js (window.QGOfferta).
    Figure: figure.js, caricato dopo il primo disegno; senza figure resta il testo di ripiego.
-   Memoria del browser, sempre dentro try/catch: legge qg-parto (le risposte di «Da dove parto?») e
-   qg-chiave (il codice ricordato, solo per sapere se c'è); scrive solo qg-bolt (il test del respiro,
-   come la home e la sfida). Nessun dato esce dal telefono. */
+   Memoria del browser, sempre dentro try/catch: legge qg-parto (le risposte di «Da dove parto?»),
+   qg-sfida-respiro (per il passo dopo la routine guidata) e qg-chiave (il codice ricordato, solo per
+   sapere se c'è); scrive qg-bolt (il test del respiro, come la home e la sfida) e qg-routine (l'ultima
+   routine finita, che la home usa per il passo dopo). Nessun dato esce dal telefono. */
 (function (W, D) {
   "use strict";
   var P = W.QGPillole && W.QGPillole.strutture ? W.QGPillole : null;
   var PAGINA = D.body.getAttribute("data-pagina") || "";
   var ID_PERCORSO = D.body.getAttribute("data-percorso") || "";
+  // La routine guidata dell'imbuto: pillole.html?guidata=1#routine-{struttura} parte da sola, dopo
+  // pochi secondi per mettersi in posizione, e alla fine propone un passo solo: la sfida.
+  var GUIDATA = PAGINA === "pillole" && /(?:^|&)guidata=1(?:&|$)/.test(location.search.slice(1));
 
   // ---- costanti delle pagine ----
   var FILE_PERCORSO = { "benessere": "percorso-benessere.html", "corsa-e-fiato": "percorso-corsa.html", "combattimento": "percorso-combattimento.html", "forza-e-scatti": "percorso-forza.html" };
@@ -84,8 +88,53 @@
   // ---- testata: con un codice ricordato, «Il tuo Quaderno» ----
   function testata() {
     var a = $("vai-accesso");
-    if (a && (leggi("localStorage", "qg-chiave") || leggi("sessionStorage", "qg-chiave"))) { a.textContent = "Il tuo Quaderno"; a.setAttribute("href", "./");
-      Array.prototype.forEach.call(D.querySelectorAll('a[href="./#percorsi"]'), function (l) { l.setAttribute("href", "percorso-benessere.html"); }); }
+    if (a && (leggi("localStorage", "qg-chiave") || leggi("sessionStorage", "qg-chiave"))) { a.textContent = "Il tuo Quaderno"; a.setAttribute("href", "./"); }
+  }
+
+  // ---- il passo dopo la routine guidata: la sfida (stato in qg-sfida-respiro, scritto dalla sfida) ----
+  // «Azione · durata»: la durata va sotto, più piccola.
+  function conDurata(t) { var i = t.indexOf(" · "); return i > 0 ? esc(t.slice(0, i)) + '<small class="dur">' + esc(t.slice(i + 3)) + "</small>" : esc(t); }
+  function oggiIso() { var d = new Date(); return d.getFullYear() + "-" + due(d.getMonth() + 1) + "-" + due(d.getDate()); }
+  function passoSfida() {
+    var s = leggiJSON("qg-sfida-respiro");
+    if (!s || typeof s !== "object" || !Array.isArray(s.fatti)) return { t: "Continua domani con la sfida · giorno 1 di 7, 3 minuti", h: "sfida.html", cal: true,
+      frase: "Il passo dopo è la sfida di 7 giorni: 3 minuti al giorno, sempre la stessa routine, e due test il primo e l'ultimo giorno per confrontare i numeri." };
+    var f = s.fatti.filter(function (d) { return typeof d === "string" && /^\d{4}-\d{2}-\d{2}$/.test(d); });
+    var n = Math.min(7, f.length), fattoOggi = f.indexOf(oggiIso()) !== -1;
+    if (n >= 7) return { t: "Richiedi un appuntamento · in videochiamata", h: "piano.html", frase: "Hai già fatto la sfida di 7 giorni. Il passo dopo è un programma su misura." };
+    if (fattoOggi) return { t: "Continua domani con la sfida · giorno " + (n + 1) + " di 7", h: "sfida.html", cal: !s.ora, frase: "Oggi hai già fatto il giorno " + n + " della sfida." };
+    return { t: "Continua la sfida · giorno " + (n + 1) + " di 7", h: "sfida.html", frase: "Oggi tocca al giorno " + (n + 1) + " della sfida: 3 minuti." };
+  }
+  // Promemoria della sfida nel calendario: un file .ics creato qui, nessun dato inviato. Un evento al
+  // giorno per 7 giorni, da domani, alla stessa ora di adesso (arrotondata ai 5 minuti).
+  function testoIcs(s) { return String(s).replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n"); }
+  function piega(riga) {
+    var out = "", n = 0;
+    for (var i = 0; i < riga.length;) {
+      var cp = riga.codePointAt(i), ch = String.fromCodePoint(cp), len = cp < 0x80 ? 1 : cp < 0x800 ? 2 : cp < 0x10000 ? 3 : 4;
+      if (n + len > 75) { out += "\r\n "; n = 1; }
+      out += ch; n += len; i += ch.length;
+    }
+    return out;
+  }
+  function calendarioSfida(esito) {
+    var d = new Date(); d.setDate(d.getDate() + 1); d.setSeconds(0, 0); d.setMinutes(Math.ceil(d.getMinutes() / 5) * 5);
+    var url = new URL("sfida.html", location.href).href, ora = due(d.getHours()) + ":" + due(d.getMinutes());
+    function loc(x) { return x.getFullYear() + due(x.getMonth() + 1) + due(x.getDate()) + "T" + due(x.getHours()) + due(x.getMinutes()) + "00"; }
+    function utc(x) { return x.getUTCFullYear() + due(x.getUTCMonth() + 1) + due(x.getUTCDate()) + "T" + due(x.getUTCHours()) + due(x.getUTCMinutes()) + due(x.getUTCSeconds()) + "Z"; }
+    var r = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Prima le Radici//Respiro al muro//IT", "CALSCALE:GREGORIAN", "METHOD:PUBLISH", "BEGIN:VEVENT",
+      "UID:" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10) + "@primaleradici", "DTSTAMP:" + utc(new Date()), "DTSTART:" + loc(d),
+      "DURATION:PT5M", "RRULE:FREQ=DAILY;COUNT=7", "SUMMARY:" + testoIcs("Respiro al muro: 3 minuti"),
+      "DESCRIPTION:" + testoIcs("La sfida di 7 giorni, un giorno alla volta. Apri la sfida: " + url), "URL:" + url, "TRANSP:TRANSPARENT",
+      "BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:" + testoIcs("Respiro al muro: 3 minuti"), "TRIGGER:PT0S", "END:VALARM", "END:VEVENT", "END:VCALENDAR"];
+    var testo = r.map(piega).join("\r\n") + "\r\n";
+    try {
+      var u = URL.createObjectURL(new Blob([testo], { type: "text/calendar;charset=utf-8" })), a = D.createElement("a");
+      a.href = u; a.download = "sfida-7-giorni.ics"; a.rel = "noopener";
+      D.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(u); }, 60000);
+      if (esito) esito.textContent = "7 promemoria alle " + ora + ", da domani. Apri il file «sfida-7-giorni.ics» e aggiungilo al calendario.";
+    } catch (e) { if (esito) esito.textContent = "Questo browser non riesce a creare il file del calendario."; }
   }
 
   // ---- figure ----
@@ -253,9 +302,12 @@
     fermaDentro();
     f.chiave = c.hash;
     var player = c.tipo === "routine" || c.tipo === "sessione";
+    // la routine guidata vale una volta: si toglie ?guidata=1 dall'indirizzo, così le altre routine della pagina partono a mano
+    var guida = GUIDATA && c.tipo === "routine";
+    if (GUIDATA) { GUIDATA = false; try { history.replaceState(history.state, "", location.pathname + location.hash); } catch (e) {} }
     if (c.tipo === "pillola") disegnaPillola(c.k);
     else if (c.tipo === "test") disegnaTest(c.k);
-    else disegnaPlayer(c.tipo, c.k);
+    else disegnaPlayer(c.tipo, c.k, guida);
     mostraFinestra(player ? "player" : "", player ? "pl-titolo" : "fin-t");
     fuoco($("fin-t"));
   }
@@ -318,7 +370,7 @@
       '</dd><dt class="ev">Evita</dt><dd>' + esc(p.evita) + '</dd><dt>Dose di prova, per due settimane <span class="origine">' + esc(p.origineDose) + "</span></dt><dd>" + esc(p.dose) + "</dd></dl>";
     var g = P.generale || {};
     if (g.frequenza) h += '<p class="piccolo"><b>Quante volte</b>' + (g.origineFrequenza ? ' <span class="origine">' + esc(g.origineFrequenza) + "</span>" : "") + " " + esc(g.frequenza) + "</p>";
-    h += '<div class="di-piu">' + LUCCHETTO + '<p><b>Di più · nel Quaderno.</b> Perché si fa così, come sale la dose settimana per settimana, le parole del coach. Si apre col codice. <a href="./#piano">Come funziona ›</a></p></div>';
+    h += '<div class="di-piu">' + LUCCHETTO + '<p><b>Di più · nel Quaderno.</b> Perché si fa così, come sale la dose settimana per settimana, le parole del coach. Si apre col codice. <a href="piano.html">Come funziona ›</a></p></div>';
     h += '<div class="nav-fin"><button class="btn" type="button" data-vai="' + esc(l[i - 1] || "") + '"' + (i > 0 ? "" : " disabled") + '>‹ Precedente</button>' +
       '<button class="btn" type="button" data-vai="' + esc(l[i + 1] || "") + '"' + (i < l.length - 1 ? "" : " disabled") + ">Successiva ›</button></div>";
     F.box.innerHTML = h + "</div>";
@@ -433,7 +485,7 @@
   var STRUMENTI = { T1: strumentoBolt, T2: strumentoRespiri, T4: strumentoEquilibrio, T13: strumentoCollo };
 
   // ================= il player: routine e sessione tipo (5) =================
-  function disegnaPlayer(tipo, id) {
+  function disegnaPlayer(tipo, id, guida) {
     var passi, titolo, nome, fineTesto, tornaTesto;
     if (tipo === "routine") {
       var s = STR[id]; passi = s.routine; nome = s.nome; titolo = s.nome + " · routine";
@@ -444,7 +496,7 @@
     }
     var tot = somma(passi);
     fineTesto = tipo === "routine" ? mmss(tot) + " di " + nome + "." : mmss(tot) + ": la sessione tipo di " + nome + ".";
-    var st = { i: 0, resta: passi[0].durataSec * 1000, corre: false, fine: 0, timer: 0 };
+    var st = { i: 0, resta: passi[0].durataSec * 1000, corre: false, fine: 0, timer: 0, pronti: 0 };
     F.box.innerHTML = '<div class="fin-barra sinistra"><button class="chiudi" type="button" data-azione="chiudi"><span aria-hidden="true">×</span><span class="sr">Chiudi</span></button>' +
       '<p id="pl-titolo">' + esc(titolo) + '</p><p class="conta" id="pl-conta"></p></div><div class="fin-corpo" id="pl-corpo"></div><p class="sr" aria-live="polite" id="pl-voce"></p>';
     var corpo = $("pl-corpo"), conta = $("pl-conta"), voce = $("pl-voce"), el = {};
@@ -454,7 +506,7 @@
         '<div class="avviso"><p></p></div><div class="posto-fig"></div><div class="player-cambio" hidden><p class="pl-cnota"></p><p class="pl-poi"></p></div>' +
         '<h2 id="fin-t" class="player-nome" tabindex="-1"></h2><p class="player-nota"></p><p class="player-senti"></p>' +
         '<details class="player-det"><summary>Come si fa</summary><p></p></details>' +
-        '<div class="player-piede"><p class="orologio" aria-live="off"></p><div class="comandi"><button class="btn" type="button" data-pl="indietro">‹ Indietro</button>' +
+        '<div class="player-piede"><p class="pl-pronti" hidden></p><p class="orologio" aria-live="off"></p><p class="pl-dopo"></p><div class="comandi"><button class="btn" type="button" data-pl="indietro">‹ Indietro</button>' +
         '<button class="btn primary" type="button" data-pl="via">Avvia</button><button class="btn" type="button" data-pl="avanti">Avanti ›</button></div>' +
         '<p class="fermati piccolo">Se senti dolore, fermati.</p></div>';
       var posto = corpo.querySelector(".posto-fig");
@@ -462,15 +514,24 @@
       el = {
         seg: corpo.querySelectorAll(".player-seg li"), cambio: corpo.querySelector(".player-cambio"), cnota: corpo.querySelector(".pl-cnota"), poi: corpo.querySelector(".pl-poi"),
         nome: $("fin-t"), nota: corpo.querySelector(".player-nota"), senti: corpo.querySelector(".player-senti"), det: corpo.querySelector(".player-det"),
-        come: corpo.querySelector(".player-det p"), avv: corpo.querySelector(".avviso"), orologio: corpo.querySelector(".orologio"),
+        come: corpo.querySelector(".player-det p"), avv: corpo.querySelector(".avviso"), orologio: corpo.querySelector(".orologio"), pronti: corpo.querySelector(".pl-pronti"), dopo: corpo.querySelector(".pl-dopo"),
         indietro: corpo.querySelector('[data-pl="indietro"]'), via: corpo.querySelector('[data-pl="via"]')
       };
     }
     function nomePasso(x) { return x.cod === "cambio" ? "Cambio" : PIL[x.cod] ? PIL[x.cod].p.nome : x.cod; }
     function aggiornaVia() {
       var pieno = passi[st.i].durataSec * 1000;
-      el.via.textContent = st.corre ? "Pausa" : st.resta < pieno - 250 ? "Riprendi" : "Avvia";
+      el.via.textContent = st.pronti ? "Parti ora" : st.corre ? "Pausa" : st.resta < pieno - 250 ? "Riprendi" : "Avvia";
     }
+    // Routine guidata: qualche secondo per mettersi in posizione, poi parte da sola.
+    function prepara() {
+      var n = 5;
+      function scrivi() { el.pronti.textContent = "Mettiti in posizione: si parte fra " + n + (n === 1 ? " secondo." : " secondi."); }
+      el.pronti.hidden = false; scrivi();
+      st.pronti = setInterval(function () { n--; if (n > 0) scrivi(); else via(); }, 1000);
+      aggiornaVia();
+    }
+    function finePronti() { if (st.pronti) { clearInterval(st.pronti); st.pronti = 0; } if (el.pronti) el.pronti.hidden = true; }
     function aggiorna() {
       var x = passi[st.i], pil = x.cod !== "cambio" ? PIL[x.cod] : null, p = pil ? pil.p : null;
       Array.prototype.forEach.call(el.seg, function (li, j) { li.className = j < st.i ? "fatto" : j === st.i ? "ora" : ""; });
@@ -495,6 +556,10 @@
       el.avv.hidden = !(pa && pa.avviso);
       el.avv.firstChild.innerHTML = pa && pa.avviso ? "<b>Attenzione" + (p ? "" : ", nel prossimo passo") + ".</b> " + esc(pa.avviso) : "";
       el.orologio.textContent = mmssMs(st.resta);
+      // l'esercizio dopo, sempre in vista (i cambi si saltano)
+      var j = st.i + 1;
+      while (j < passi.length && passi[j].cod === "cambio") j++;
+      el.dopo.innerHTML = j < passi.length ? "<b>Poi:</b> " + esc(nomePasso(passi[j])) + (passi[j].nota ? " · " + esc(passi[j].nota) : "") : "<b>Poi:</b> fine";
       el.indietro.disabled = st.i === 0;
       aggiornaVia();
     }
@@ -508,6 +573,7 @@
       aggiorna(); annuncia();
     }
     function via() {
+      finePronti();
       if (st.corre) { pausa(); return; }
       st.corre = true; st.fine = performance.now() + st.resta;
       clearInterval(st.timer); st.timer = setInterval(tick, 200);
@@ -528,22 +594,39 @@
       aggiorna(); annuncia();
     }
     function fatto() {
+      finePronti();
       st.corre = false; clearInterval(st.timer); st.timer = 0; sveglio(false);
       if (F.fig._qg) F.fig._qg.play = false;
+      if (tipo === "routine") scriviJSON("qg-routine", { v: 1, data: oggiIso(), struttura: id });
+      conta.textContent = passi.length + "/" + passi.length;
+      if (guida) { fineGuidata(); return; }
       corpo.innerHTML = '<div class="fatto-player"><h2 id="fin-t" tabindex="-1">Fatto</h2><p><b>' + esc(fineTesto) + "</b></p>" +
         "<p>Quanto farne e quando salire lo trovi nel Quaderno, adattato a te in videochiamata.</p>" +
         '<div class="bottoni"><button class="btn primary" type="button" data-pl="rifai">Rifalla</button><button class="btn" type="button" data-azione="chiudi">' + esc(tornaTesto) + "</button></div>" +
-        '<p><a class="link-riga" href="./#piano">Come funziona il piano ›</a></p></div>';
-      conta.textContent = passi.length + "/" + passi.length;
+        '<p><a class="link-riga" href="piano.html">Come funziona il piano ›</a></p></div>';
       voce.textContent = "Fatto. " + fineTesto;
       fuoco($("fin-t"));
     }
-    function rifai() { st.i = 0; st.resta = passi[0].durataSec * 1000; st.corre = false; scheletro(); aggiorna(); fuoco($("fin-t")); }
+    // La fine della routine guidata: che cosa hai fatto e un passo solo, la sfida.
+    function fineGuidata() {
+      var cods = [];
+      passi.forEach(function (x) { if (x.cod !== "cambio" && cods.indexOf(x.cod) === -1) cods.push(x.cod); });
+      var titolo = "Fatto: " + cods.length + " esercizi, " + Math.round(tot / 60) + " minuti.", dopo = passoSfida();
+      corpo.innerHTML = '<div class="fatto-player fatto-guida"><h2 id="fin-t" tabindex="-1">' + esc(titolo) + "</h2><p>" + esc(dopo.frase) + "</p>" +
+        '<a class="btn primary grande" href="' + esc(dopo.h) + '">' + conDurata(dopo.t) + "</a>" +
+        '<p class="pl-link">' + (dopo.cal ? '<button class="link" type="button" data-pl="calendario">Aggiungi al calendario</button>' : "") +
+        '<button class="link" type="button" data-pl="rifai">Rifai la routine</button><a href="piano.html">Il piano su misura</a></p>' +
+        '<p class="pl-cal piccolo" role="status" aria-live="polite"></p></div>';
+      voce.textContent = titolo;
+      fuoco($("fin-t"));
+    }
+    function rifai() { finePronti(); st.i = 0; st.resta = passi[0].durataSec * 1000; st.corre = false; scheletro(); aggiorna(); fuoco($("fin-t")); }
 
     scheletro(); aggiorna();
-    F.player = { via: via, vai: vai, rifai: rifai };
+    if (guida) prepara();
+    F.player = { via: via, vai: vai, rifai: rifai, calendario: function () { calendarioSfida(corpo.querySelector(".pl-cal")); } };
     F.pausa = pausa;
-    F.ferma = function () { st.corre = false; clearInterval(st.timer); st.timer = 0; sveglio(false); F.player = null; };
+    F.ferma = function () { finePronti(); st.corre = false; clearInterval(st.timer); st.timer = 0; sveglio(false); F.player = null; };
   }
 
   // ---- i tocchi: un ascoltatore solo per pagina e finestra ----
@@ -554,7 +637,7 @@
     if (t.hasAttribute("data-azione")) { e.preventDefault(); chiudiDaUtente(); return; }
     if (t.hasAttribute("data-pl")) {
       var a = t.getAttribute("data-pl");
-      if (F && F.player) { if (a === "via") F.player.via(); else if (a === "avanti") F.player.vai(1); else if (a === "indietro") F.player.vai(-1); else if (a === "rifai") F.player.rifai(); }
+      if (F && F.player) { if (a === "via") F.player.via(); else if (a === "avanti") F.player.vai(1); else if (a === "indietro") F.player.vai(-1); else if (a === "rifai") F.player.rifai(); else if (a === "calendario") F.player.calendario(); }
       return;
     }
     var c = null;
@@ -599,7 +682,7 @@
     test.forEach(function (cod) { h += cartaTest(cod, ""); });
     var nq = lista(s.nelQuaderno);
     h += '<div class="one"><h3>Nel Quaderno c\'è di più</h3>' + (nq.length ? "<ul>" + nq.map(function (v) { return "<li>" + esc(v) + "</li>"; }).join("") + "</ul>" : "") +
-      '<p>Si apre col codice che ti do in videochiamata. <a href="./#piano">Come funziona ›</a></p></div>';
+      '<p>Si apre col codice che ti do in videochiamata. <a href="piano.html">Come funziona ›</a></p></div>';
     corpo.innerHTML = h;
   }
   function paginaPillole() {

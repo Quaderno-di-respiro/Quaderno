@@ -288,8 +288,17 @@ var PERCORSI_ATTIVI = [];
   }
   function percorsoAttivo(id) { return percorsiAttivi().indexOf(id) !== -1; }
 
+  // L'indirizzo di «Richiedi un appuntamento» senza un pacchetto scelto (il modulo, o la mail già
+  // scritta); "" se il contatto non c'è.
+  function appuntamento(pacchetto) {
+    var c = contatto();
+    if (c.modulo) return c.modulo;
+    if (c.email) return mailto(c.email, OGGETTI.piano + (pacchetto ? " · " + pacchetto : ""), richiesta(pacchetto || ""));
+    return "";
+  }
+
   W.QGOfferta = {
-    pacchetti: pacchetti, contatti: contatti, domande: domande, profilo: profilo, contatto: contatto,
+    pacchetti: pacchetti, contatti: contatti, domande: domande, profilo: profilo, contatto: contatto, appuntamento: appuntamento,
     haContatto: haContatto, prezzoDi: prezzoDi, lancioAttivo: lancioAttivo, haPrezzi: haPrezzi,
     oneToOne: function () { return testo(conf().oneToOne); },
     percorsiAttivi: percorsiAttivi, percorsoAttivo: percorsoAttivo

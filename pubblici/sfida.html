@@ -122,7 +122,7 @@ main > section.cima { padding-top: 28px; }
 .sette li { aspect-ratio: 1; max-height: 64px; border-radius: 10px; display: grid; place-items: center; font: 700 1rem/1 var(--mono);
   background: var(--surface); color: var(--muted); box-shadow: inset 0 0 0 1px var(--line-strong); position: relative; }
 .sette li.test::after { content: "test"; position: absolute; bottom: -1.35em; left: 0; right: 0; text-align: center; font: 600 .62rem/1 var(--mono); color: var(--muted); letter-spacing: .03em; }
-.sette li.fatta { background: var(--breath); color: var(--on-breath); box-shadow: none; }
+.sette li.fatta { background: var(--breath-soft); color: var(--breath); box-shadow: inset 0 0 0 1.5px var(--breath); }
 .sette li.oggi { box-shadow: inset 0 0 0 3px var(--breath); color: var(--breath); }
 .stato { font-weight: 700; margin: 22px 0 4px; }
 .salto { color: var(--muted); margin: 0; }
@@ -136,8 +136,6 @@ main > section.cima { padding-top: 28px; }
 .promemoria > summary::after { content: "+"; position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font: 700 1.3rem/1 var(--mono); color: var(--breath); }
 .promemoria[open] > summary::after { content: "–"; }
 .promemoria[open] > summary + .pm-corpo { padding-top: 0; }
-.promemoria:not(.aggiunto) > summary { display: none; }
-.promemoria:not(.aggiunto) > .pm-corpo { padding-top: 12px; }
 .pm-riga { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .pm-ora { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; }
 .pm-ora input { min-height: 44px; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--bordo); background: var(--surface); color: var(--ink); font: 700 1rem var(--mono); }
@@ -311,6 +309,45 @@ footer p { margin: 0; }
   .sette li { max-height: none; }
   .sette, .promemoria { max-width: 560px; }
 }
+
+.sr { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+/* il giorno di oggi: una carta, un pulsante */
+main > section.oggi { border-top: 0; padding-block: 22px 30px; }
+.oggi h1 { font-size: clamp(2.6rem, 13vw, 4.6rem); }
+.oggi .sette { margin-top: 10px; }
+.oggi-cosa { color: var(--muted); font-size: 1.08rem; line-height: 1.5; max-width: 38ch; margin: 30px 0 22px; }
+.oggi .btn { width: 100%; max-width: 400px; }
+.oggi .salto { margin: 10px 0 0; }
+.oggi-link { display: flex; flex-wrap: wrap; gap: 0 18px; margin: 10px 0 0; }
+.link-forte, .oggi-link a { display: inline-flex; align-items: center; min-height: 44px; background: none; border: 0; padding: 0 2px; color: var(--breath);
+  font: 700 .95rem/1.2 var(--body); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.cima .presenta > summary { display: flex !important; }
+main > section.cima { padding-block: 18px 20px; }
+.cima h2 { font-size: clamp(1.5rem, 6vw, 2rem); }
+#giorni { padding-block: 10px 24px; border-top: 0; }
+
+/* il giorno, un passo alla volta: si vede solo il passo di adesso */
+body.in-giorno #oggi, body.in-giorno #cima, body.in-giorno #giorni, body.in-giorno #fine { display: none !important; }
+body:not(.in-giorno) #test, body:not(.in-giorno) #routine, body:not(.in-giorno) #avanti-box, body:not(.in-giorno) #giorno-barra { display: none !important; }
+body[data-passo="bolt"] #t-resp, body[data-passo="resp"] #t-bolt { display: none !important; }
+body[data-passo="bolt"] #routine, body[data-passo="resp"] #routine { display: none !important; }
+body[data-passo="p1"] #test, body[data-passo="p2"] #test, body[data-passo="chiudi"] #test { display: none !important; }
+body[data-passo="chiudi"] .passo, body[data-passo="chiudi"] #routine-titolo, body[data-passo="chiudi"] #routine-occhiello { display: none !important; }
+body:not([data-passo="chiudi"]) #sensazioni, body:not([data-passo="chiudi"]) #fatto-box { display: none !important; }
+body[data-passo="chiudi"] #avanti-box { display: none !important; }
+.passi-tab, #p1-avanti { display: none !important; }
+main > section#test, main > section#routine { border-top: 0; padding-top: 8px; }
+.test-griglia { grid-template-columns: minmax(0, 1fr) !important; max-width: 560px; }
+.giorno-barra { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 52px; }
+.giorno-barra span { font: 700 .76rem/1.3 var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); text-align: right; }
+.avanti-box { padding-block: 0 34px; }
+.avanti-box .wrap { display: grid; justify-items: start; }
+#avanti.btn { width: 100%; max-width: 400px; }
+.passo-dopo { margin-top: 26px; display: grid; gap: 10px; justify-items: start; }
+.passo-dopo p { margin: 0; }
+.passo-dopo .btn { width: 100%; max-width: 400px; }
+.btn.grande { flex-wrap: wrap; row-gap: 2px; }
+.btn .dur { flex-basis: 100%; font: 400 .9rem/1.2 var(--body); }
 </style>
 </head>
 <body>
@@ -322,13 +359,31 @@ footer p { margin: 0; }
 </header>
 
 <main id="pagina">
-<!-- in cima: cos'è, perché, cosa misuri, avvertenze. Dal giorno 2 si chiude e si apre a richiesta. -->
-<section class="cima" id="cima">
+<!-- il giorno 1–7 in corso, durante i passi: «Indietro» e a che passo sei -->
+<div class="wrap giorno-barra" id="giorno-barra">
+  <button class="link-forte" type="button" id="giorno-indietro">‹ Indietro</button>
+  <span id="giorno-passo">Passo 1 di 5</span>
+</div>
+
+<!-- il giorno di oggi: chi apre la pagina atterra qui, con un solo pulsante -->
+<section class="oggi" id="oggi">
   <div class="wrap">
-    <p class="eyebrow">Sfida gratuita · 7 giorni</p>
-    <h1>Respiro al muro</h1>
-    <p class="lede">Tre minuti al giorno, per sette giorni, sempre la stessa routine: un minuto di respiro di pancia e cinque respiri al muro.</p>
-    <details class="presenta" id="presenta" open>
+    <p class="eyebrow">Respiro al muro · sfida gratuita</p>
+    <h1 id="oggi-t" tabindex="-1">Giorno 1 di 7</h1>
+    <ol class="sette" id="sette" aria-label="I giorni della sfida">
+      <li class="test">1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li class="test">7</li>
+    </ol>
+    <p class="sr" id="stato" aria-live="polite">Giorno 1 di 7: oggi i test e la prima routine.</p>
+    <p class="oggi-cosa" id="oggi-cosa">Tre minuti al giorno per sette giorni: un minuto di respiro di pancia e cinque respiri al muro. Oggi prima due test da un minuto, per sapere da dove parti.</p>
+    <button class="btn primary grande" type="button" id="oggi-b">Fai il giorno 1<small class="dur">5 minuti, con i due test</small></button>
+    <p class="salto" id="salto" hidden>Hai saltato qualche giorno: non si blocca niente, riparti da qui.</p>
+  </div>
+</section>
+
+<!-- cos'è, perché, cosa misuri, avvertenze: chiuso, si apre a richiesta -->
+<section class="cima compatta" id="cima">
+  <div class="wrap">
+    <details class="presenta" id="presenta">
       <summary>Come funziona, e prima di iniziare</summary>
       <div class="tre">
         <div>
@@ -356,14 +411,8 @@ footer p { margin: 0; }
 <!-- i 7 giorni -->
 <section id="giorni">
   <div class="wrap">
-    <p class="eyebrow">I 7 giorni</p>
-    <ol class="sette" id="sette" aria-label="I giorni della sfida">
-      <li class="test">1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li class="test">7</li>
-    </ol>
-    <p class="stato" id="stato" aria-live="polite">Giorno 1 di 7: oggi i test e la prima routine.</p>
-    <p class="salto" id="salto">Se salti un giorno non si blocca niente: riparti da qui.</p>
     <p class="memoria" id="memoria" hidden>Questo browser non salva i dati della pagina: la sfida funziona, ma chiudendola perdi i giorni fatti e i test.</p>
-    <details class="promemoria" id="promemoria" open>
+    <details class="promemoria" id="promemoria">
       <summary id="pm-sum">Promemoria nel calendario</summary>
       <div class="pm-corpo">
       <p id="pm-tit"><b>Un promemoria al giorno</b>, all'ora che scegli. Il file del calendario si crea su questo telefono: non parte nessun dato.</p>
@@ -382,10 +431,11 @@ footer p { margin: 0; }
   <div class="wrap">
     <p class="eyebrow" id="test-occhiello">Il giorno 1</p>
     <h2 id="test-titolo">Prima della routine, i due test</h2>
-    <p class="intro" id="test-intro">Seduto e tranquillo, prima degli esercizi. I numeri restano su questo telefono, in questo browser: il giorno 7 li rifai nelle stesse condizioni e li confronti.</p>
+    <p class="intro" id="test-intro">Seduto e tranquillo, prima degli esercizi. Il giorno 7 li rifai e confronti i numeri, che restano su questo telefono.</p>
     <div class="test-griglia">
       <div class="tool" id="t-bolt">
         <h3>BOLT: apnea dopo l'espirazione</h3>
+        <div class="avviso"><p><b>Saltalo</b> se sei in gravidanza, hai problemi di cuore o pressione non controllata, se ti capita di svenire, se hai epilessia o attacchi di panico: chiedi prima al medico. Mai in acqua o alla guida.</p></div>
         <p class="come">Seduto e tranquillo, qualche respiro normale dal naso. Dopo un'espirazione normale, non forzata, tappa il naso e avvia. Ferma al primo segnale: voglia di deglutire, primo spasmo, prima fame d'aria. Se alla ripresa boccheggi, sei rimasto troppo.</p>
         <div class="usa" id="bolt-usa" hidden>
           <p id="bolt-usa-t"></p>
@@ -419,23 +469,16 @@ footer p { margin: 0; }
     <p class="frase-resp" id="frase-resp" hidden></p>
     <div class="condividi">
       <img class="carta-img" id="carta-img" alt="L'immagine da condividere: Respiro al muro, BOLT e respiri al minuto del giorno 1 e del giorno 7." width="1080" height="1350" hidden>
-      <button class="btn primary grande" type="button" id="carta-b">Condividi il tuo risultato</button>
+      <button class="btn grande" type="button" id="carta-b">Condividi il tuo risultato</button>
       <p class="piccolo">Un'immagine pronta con i tuoi due numeri, senza nomi.<span data-se="ig" hidden> Se la pubblichi, tagga <span data-ig-nome></span>.</span></p>
       <p class="carta-e" id="carta-e" role="status" aria-live="polite"></p>
     </div>
 
-    <h2 class="h-piano">Il passo dopo</h2>
-    <p class="intro">Adattiamo le 12 settimane del Quaderno al tuo obiettivo, al tuo tempo e a quello che oggi riesci a fare.</p>
-    <div id="pacchetti"><p class="pac-presto">Tre durate: 1 anno, 6 mesi, 3 mesi. I prezzi escono presto.</p></div>
-    <div class="one"><p><b>One to one</b> · <span id="one-testo">Correzioni dal vivo, online o in presenza. Pochi posti: si entra dopo una chiamata di 15 minuti.</span></p></div>
-    <div class="cta">
-      <p data-se="modulo" hidden>Vuoi il piano? Richiedi un appuntamento dal pacchetto che ti interessa, o lascia qui nome ed email.</p>
-      <p data-se="email" hidden>Vuoi il piano? Richiedi un appuntamento dal pacchetto che ti interessa, o scrivimi a questo indirizzo.</p>
-      <p data-se="vuoto">Per il piano o per il one to one, scrivi PIANO su Instagram: ti mando cosa contiene e quanto costa.</p>
-      <div class="cta-azioni cta-forte" data-contatto="piano">
-        <span class="btn primary grande" data-ig data-ig-testo="Scrivi PIANO su Instagram">Scrivi PIANO su Instagram</span>
-      </div>
-      <p class="piccolo" data-se="contatto ig" hidden>Oppure <span data-ig data-ig-testo="scrivi PIANO su Instagram">scrivi PIANO su Instagram</span>.</p>
+    <div class="passo-dopo">
+      <h2 class="h-piano">Il passo dopo</h2>
+      <p class="intro">Adattiamo le 12 settimane del Quaderno al tuo obiettivo, al tuo tempo e a quello che oggi riesci a fare. Si parte da una videochiamata privata.</p>
+      <a class="btn primary grande" href="piano.html">Richiedi un appuntamento</a>
+      <p class="piccolo">Su questo sito non si compra niente: prima ne parliamo.</p>
     </div>
     <div class="non-ora" data-se="contatto" hidden>
       <p>Non ora?</p>
@@ -449,7 +492,7 @@ footer p { margin: 0; }
 <section id="routine">
   <div class="wrap">
     <p class="eyebrow" id="routine-occhiello">La routine di oggi</p>
-    <h2>Tre minuti, due esercizi</h2>
+    <h2 id="routine-titolo">Tre minuti, due esercizi</h2>
     <div class="passi-tab">
       <button type="button" id="tab-1" aria-pressed="true" aria-controls="passo-1"><b>1 · Respiro di pancia</b><small>1 minuto</small></button>
       <button type="button" id="tab-2" aria-pressed="false" aria-controls="passo-2"><b>2 · Al muro</b><small>5 respiri</small></button>
@@ -506,7 +549,7 @@ footer p { margin: 0; }
 
     <!-- il giorno 1 e il giorno 7: tre domande, salvate sul telefono -->
     <div class="sensazioni" id="sensazioni" hidden>
-      <h3>Tre domande, dopo la routine</h3>
+      <h3 id="chiudi-titolo" tabindex="-1">Tre domande, dopo la routine</h3>
       <p class="piccolo" id="sens-intro">Le risposte restano su questo telefono: il giorno 7 le ritrovi accanto ai numeri.</p>
       <div class="domanda" role="group" aria-labelledby="d-e1">
         <p id="d-e1">Respiro di pancia: la mano sulla pancia sale e scende, e quella sul petto resta quasi ferma?</p>
@@ -536,6 +579,7 @@ footer p { margin: 0; }
   </div>
 </section>
 
+<div class="avanti-box" id="avanti-box"><div class="wrap"><button type="button" id="avanti" class="link-forte">Salta il test ›</button></div></div>
 </main>
 
 <footer>
@@ -877,7 +921,7 @@ footer p { margin: 0; }
     var pm = $("promemoria");
     pm.hidden = stato().finita;
     pm.classList.toggle("aggiunto", !!S.ora);
-    if (!S.ora) { pm.open = true; return; }
+    if (!S.ora) { pm.open = stato().fattoOggi; return; }
     if (iniziale) pm.open = false;
     $("pm-sum").textContent = "Promemoria nel calendario alle " + S.ora;
     $("pm-ora").value = S.ora;
@@ -900,8 +944,97 @@ footer p { margin: 0; }
     $("fatto-e").textContent = n >= 7 ? "Settimana completata." : "Segnato il giorno " + n + ". A domani.";
     disegna();
     ordina(false);
-    if (n >= 7) $(S.test.g7.bolt !== null || S.test.g7.resp !== null ? "fine" : "test").scrollIntoView({ block: "start" });
+    esciGiorno();
   });
+
+  // ---- il giorno, un passo alla volta ----
+  // Giorno 1 e 7: BOLT, respiri al minuto, respiro di pancia, al muro, tre domande e «Fatto oggi».
+  // Gli altri giorni: respiro di pancia e al muro; l'ultimo «Avanti» segna il giorno.
+  var GIORNO = null, NOMI_PASSI = { bolt: "BOLT", resp: "Respiri al minuto", p1: "Respiro di pancia", p2: "Al muro", chiudi: "Tre domande" };
+  function fattoPasso(p) {
+    var f = fase();
+    if (p === "bolt") return !!f && S.test[f].bolt !== null && !boltT0;
+    if (p === "resp") return !!f && S.test[f].resp !== null && !respTimer;
+    if (p === "p1") return P1.stato === "fine";
+    if (p === "p2") return P2.stato === "fine";
+    return false;
+  }
+  var ultimoAvanti = "";
+  function aggiornaAvanti() {
+    if (!GIORNO) return;
+    var p = GIORNO.passi[GIORNO.i], fatto = fattoPasso(p), ultimo = GIORNO.i === GIORNO.passi.length - 1, g = stato().giorno, t;
+    if (p === "bolt") t = fatto ? "Avanti: respiri al minuto ›" : "Salta il test ›";
+    else if (p === "resp") t = fatto ? "Avanti: la routine ›" : "Salta il test ›";
+    else if (p === "p1") t = fatto ? "Avanti: al muro ›" : "Avanti senza finire ›";
+    else if (p === "p2") t = ultimo ? (fatto ? "Fatto: segna il giorno " + g : "Ho finito: segna il giorno " + g) : (fatto ? "Avanti: tre domande ›" : "Avanti senza finire ›");
+    else t = "";
+    var chiave = p + "|" + fatto + "|" + t;
+    if (chiave === ultimoAvanti) return;
+    ultimoAvanti = chiave;
+    var av = $("avanti");
+    av.textContent = t;
+    av.className = fatto ? "btn primary grande" : "link-forte";
+    // il pulsante del passo resta pieno finché il passo non è fatto; poi il pieno passa ad «Avanti»
+    var proprio = { bolt: "bolt-b", resp: "resp-b", p1: "p1-via", p2: "p2-via" }[p];
+    if (proprio) $(proprio).classList.toggle("primary", !fatto);
+  }
+  function mostraPasso() {
+    var p = GIORNO.passi[GIORNO.i];
+    document.body.setAttribute("data-passo", p);
+    if (p === "p1") passo(1); else if (p === "p2") passo(2);
+    $("giorno-passo").textContent = "Passo " + (GIORNO.i + 1) + " di " + GIORNO.passi.length + " · " + NOMI_PASSI[p];
+    ultimoAvanti = "";
+    aggiornaAvanti();
+    window.scrollTo(0, 0);
+    var h = p === "bolt" || p === "resp" ? $("test-titolo") : p === "chiudi" ? $("chiudi-titolo") : $("routine-titolo");
+    if (h) { if (!h.hasAttribute("tabindex")) h.setAttribute("tabindex", "-1"); try { h.focus({ preventScroll: true }); } catch (e) {} }
+  }
+  var timerAvanti = 0;
+  function entraGiorno() {
+    var st = stato();
+    if (st.finita || st.fattoOggi) return;
+    var passi = fase() ? ["bolt", "resp", "p1", "p2", "chiudi"] : ["p1", "p2"], i = 0;
+    while (i < passi.length - 1 && fattoPasso(passi[i])) i++;
+    GIORNO = { passi: passi, i: i };
+    document.body.classList.add("in-giorno");
+    mostraPasso();
+    clearInterval(timerAvanti); timerAvanti = setInterval(aggiornaAvanti, 300);
+  }
+  function fermaTutto() {
+    fermaP1(); fermaP2();
+    if (boltT0) { cancelAnimationFrame(boltRaf); boltT0 = 0; $("bolt-b").textContent = "Avvia apnea"; $("bolt-t").textContent = "0,0 s"; }
+    if (respTimer) { clearInterval(respTimer); respTimer = 0; $("resp-tap").disabled = true; $("resp-b").disabled = false; disegnaTest(); }
+    sveglio(false);
+  }
+  function esciGiorno() {
+    if (GIORNO) fermaTutto();
+    GIORNO = null;
+    clearInterval(timerAvanti); timerAvanti = 0;
+    document.body.classList.remove("in-giorno");
+    document.body.removeAttribute("data-passo");
+    ["bolt-b", "resp-b", "p1-via", "p2-via"].forEach(function (id) { $(id).classList.add("primary"); });
+    disegna();
+    window.scrollTo(0, 0);
+    var h = stato().finita ? $("fine").querySelector("h2") : $("oggi-t");
+    if (h) { if (!h.hasAttribute("tabindex")) h.setAttribute("tabindex", "-1"); try { h.focus({ preventScroll: true }); } catch (e) {} }
+  }
+  $("oggi-b").addEventListener("click", entraGiorno);
+  $("avanti").addEventListener("click", function () {
+    if (!GIORNO) return;
+    var p = GIORNO.passi[GIORNO.i];
+    if (p === "p2" && GIORNO.i === GIORNO.passi.length - 1) { fermaTutto(); $("fatto").click(); return; }
+    fermaTutto();
+    GIORNO.i = Math.min(GIORNO.passi.length - 1, GIORNO.i + 1);
+    mostraPasso();
+  });
+  $("giorno-indietro").addEventListener("click", function () {
+    if (!GIORNO) return;
+    fermaTutto();
+    if (GIORNO.i === 0) { esciGiorno(); return; }
+    GIORNO.i--;
+    mostraPasso();
+  });
+
 
   // ---- disegno della pagina ----
   function disegnaGiorni() {
@@ -920,13 +1053,30 @@ footer p { margin: 0; }
     else t = "Giorno " + (st.n + 1) + " di 7.";
     $("stato").textContent = t;
     var ultimo = st.n ? S.fatti[st.n - 1] : null;
-    $("salto").textContent = !st.finita && !st.fattoOggi && ultimo && ultimo < ieri()
-      ? "Hai saltato qualche giorno: non si blocca niente, riparti da qui."
-      : "Se salti un giorno non si blocca niente: riparti da qui.";
+    $("salto").hidden = !(!st.finita && !st.fattoOggi && ultimo && ultimo < ieri());
     $("routine-occhiello").textContent = st.finita ? "La routine, se vuoi continuare" : "La routine di oggi";
     $("fatto").hidden = st.fattoOggi || st.finita;
     $("fatto-box").hidden = st.finita && !$("fatto-e").textContent;
     disegnaPromemoria();
+    disegnaOggi();
+  }
+  function disegnaOggi() {
+    var st = stato(), test = st.giorno === 1 || st.giorno === 7;
+    $("oggi").hidden = st.finita;
+    if (st.finita) return;
+    if (st.fattoOggi) {
+      $("oggi-t").textContent = "Giorno " + st.n + " fatto";
+      $("oggi-cosa").textContent = st.n === 6 ? "Domani il giorno 7: di nuovo i due test, poi il confronto." : "Domani il giorno " + (st.n + 1) + ". Se vuoi, aggiungi un promemoria qui sotto.";
+      $("oggi-b").hidden = true;
+      return;
+    }
+    $("oggi-t").textContent = "Giorno " + st.giorno + " di 7";
+    $("oggi-cosa").textContent = st.giorno === 1
+      ? "Tre minuti al giorno per sette giorni: un minuto di respiro di pancia e cinque respiri al muro. Oggi prima due test da un minuto, per sapere da dove parti."
+      : st.giorno === 7 ? "L'ultimo giorno: di nuovo i due test, poi la routine e il confronto col giorno 1."
+      : "Oggi la routine: un minuto di respiro di pancia e cinque respiri al muro.";
+    $("oggi-b").hidden = false;
+    $("oggi-b").innerHTML = "Fai il giorno " + st.giorno + '<small class="dur">' + (test ? "5 minuti, con i due test" : "3 minuti") + "</small>";
   }
   function disegnaTest() {
     var f = fase();
@@ -937,7 +1087,7 @@ footer p { margin: 0; }
     $("test-titolo").textContent = g7 ? "Di nuovo i due test" : "Prima della routine, i due test";
     $("test-intro").textContent = g7
       ? "Nelle stesse condizioni del giorno 1: seduto e tranquillo, prima degli esercizi. Poi trovi il confronto."
-      : "Seduto e tranquillo, prima degli esercizi. I numeri restano su questo telefono, in questo browser: il giorno 7 li rifai nelle stesse condizioni e li confronti.";
+      : "Seduto e tranquillo, prima degli esercizi. Il giorno 7 li rifai e confronti i numeri, che restano su questo telefono.";
     var t = S.test[f];
     if (!boltT0) {
       if (t.bolt !== null) { $("bolt-t").textContent = t.bolt + " s"; evidenzia($("bolt-s"), t.bolt); $("bolt-b").textContent = "Rifai"; if (!$("bolt-e").textContent) $("bolt-e").textContent = t.bolt + (t.bolt === 1 ? " secondo." : " secondi."); }
@@ -990,7 +1140,7 @@ footer p { margin: 0; }
   }
   function disegnaFine() {
     var st = stato(), g1 = S.test.g1, g7 = S.test.g7;
-    var mostra = st.giorno === 7 && (g7.bolt !== null || g7.resp !== null);
+    var mostra = st.finita;
     $("fine").hidden = !mostra;
     if (!mostra) return;
     $("confronto").innerHTML = voce("BOLT", " s", g1.bolt, g7.bolt, true) + voce("Respiri al minuto", "", g1.resp, g7.resp, false) + voceSens();
@@ -1005,11 +1155,10 @@ footer p { margin: 0; }
   function disegna() { disegnaGiorni(); disegnaTest(); disegnaFine(); disegnaSens(); }
   // Dal giorno 2 la presentazione si chiude e la pagina parte da giorni e routine; a sfida finita il
   // confronto sale in cima. All'apertura (iniziale) la presentazione si apre o si chiude da sola.
+  // La pagina parte sempre dal giorno di oggi; a sfida finita il confronto sta in cima.
   function ordina(iniziale) {
-    var st = stato(), primo = st.giorno === 1, main = $("pagina");
-    $("cima").classList.toggle("compatta", !primo);
-    if (iniziale || primo) $("presenta").open = primo;
-    main.insertBefore($("fine"), st.finita ? $("giorni") : $("routine"));
+    if (iniziale) $("presenta").open = false;
+    $("pagina").insertBefore($("fine"), $("oggi"));
   }
 
   // ---- la carta del risultato: un'immagine fatta qui, coi colori del sito e senza nomi ----
@@ -1113,6 +1262,7 @@ footer p { margin: 0; }
   $("ricomincia").addEventListener("click", function () { $("conferma").hidden = false; $("conferma-no").focus(); });
   $("conferma-no").addEventListener("click", function () { $("conferma").hidden = true; });
   $("conferma-si").addEventListener("click", function () {
+    if (GIORNO) esciGiorno();
     S = nuovo(); salva();
     fermaP1(); fermaP2(); sveglio(false);
     P1 = { stato: "pronto", resta: 60000, t: 0, ultimo: 0, raf: 0 }; P2 = { n: 0, stato: "pronto", t0: 0, raf: 0 };
@@ -1127,11 +1277,7 @@ footer p { margin: 0; }
 
   // ---- avvio ----
   if (window.QGFig) { try { QGFig.mount($("fig-e1")); QGFig.mount($("fig-e64")); } catch (e) {} }
-  if (window.QGOfferta) {
-    QGOfferta.pacchetti($("pacchetti"), { breve: true });
-    QGOfferta.contatti(document);
-    var one = QGOfferta.oneToOne(); if (one) $("one-testo").textContent = one;
-  }
+  if (window.QGOfferta) QGOfferta.contatti(document);
   $("memoria").hidden = memoria;
   disegnaP1(); disegnaP2(); disegna(); ordina(true); disegnaPromemoria(true);
 })();
