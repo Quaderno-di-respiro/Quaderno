@@ -25,25 +25,33 @@ valido i file sono illeggibili, sia nel repository sia sul sito.
 
 ## Accesso personale: un link per persona (anche dal telefono)
 
-Ogni persona ha un segreto suo su GitHub, col nome che inizia con `ACCESSO_` (per esempio
-`ACCESSO_NOME`). Tutti aprono la stessa guida; quando ne cancelli uno smette di funzionare solo
-quello. Non c'è un elenco da riscrivere: si aggiunge e si toglie un segreto alla volta.
+Ogni persona ha un segreto suo su GitHub, numerato da `ACCESSO_01` a `ACCESSO_50`. Tutti
+aprono la stessa guida; quando ne cancelli uno smette di funzionare solo quello. Non c'è un
+elenco da riscrivere: si aggiunge e si toglie un segreto alla volta.
+
+Il workflow nomina i 50 segreti uno per uno. Un workflow che prende tutti i segreti insieme
+GitHub lo ferma come sospetto e non lo esegue finché qualcuno non lo approva (è successo il
+23/11/2026). Per averne più di 50 si aggiungono righe `ACCESSO_51` e seguenti nel workflow.
 
 **Dare l'accesso a una persona**
 
 1. Apri **https://quaderno-di-respiro.github.io/Quaderno/accesso-nuovo.html**, scrivi il nome
-   della persona e tocca **Crea il link**. La pagina prepara nome e valore del segreto, il link
-   e il messaggio da mandare. Il codice nasce sul telefono e non va da nessuna parte; la pagina
-   lo tiene solo finché chiudi la scheda.
-2. Tocca **Apri GitHub › Nuovo segreto**: incolla il nome (`ACCESSO_…`) in *Name* e il codice
-   in *Secret*, poi **Add secret**.
+   della persona, controlla il numero proposto e tocca **Crea il link**. La pagina prepara nome
+   e valore del segreto, il link e il messaggio da mandare. Il codice nasce sul telefono e non
+   va da nessuna parte; la pagina lo tiene solo finché chiudi la scheda.
+2. Tocca **Apri GitHub › Nuovo segreto**: incolla il nome (`ACCESSO_` e il numero) in *Name* e
+   il codice in *Secret*, poi **Add secret**. Se GitHub dice che il nome c'è già, nella pagina
+   tocca «usa il numero dopo».
 3. Tocca **Apri Actions › Pubblica** › **Run workflow** › **Run workflow** e aspetta la spunta
    verde (un paio di minuti).
 4. Torna alla pagina, tocca **Controlla che il link funzioni** e, quando dice «Funziona», copia
    il messaggio e mandalo solo a quella persona.
+5. Tocca **Fatto**: la pagina segna su quel telefono numero, nome e data (mai il codice), così
+   sai di chi è ogni numero quando devi toglierlo. Da un altro telefono l'elenco non c'è: i
+   numeri usati li vedi su GitHub.
 
 **Togliere l'accesso**: in **Settings → Secrets and variables → Actions** cancella il segreto
-`ACCESSO_…` della persona, poi **Actions → Pubblica → Run workflow**. Dopo un paio di minuti il
+`ACCESSO_` col numero della persona, poi **Actions → Pubblica → Run workflow**. Dopo un paio di minuti il
 suo link e il suo codice non aprono più il Quaderno, anche se li aveva ricordati.
 
 Chi aveva già scaricato la versione precedente sul telefono la può ancora aprire offline con il
@@ -271,8 +279,8 @@ l'invito a Instagram. Ricontrolla la riga cambiata.
 
 1. Crea il repository e carica questi file (senza `_site/`).
 2. **Settings → Secrets and variables → Actions → New repository secret**:
-   `CHIAVE_SORGENTE` col contenuto di `segreti/chiave-sorgente.txt`, e almeno un accesso
-   `ACCESSO_…` con un codice di almeno 8 caratteri. Dopo la prima pubblicazione gli altri si
+   `CHIAVE_SORGENTE` col contenuto di `segreti/chiave-sorgente.txt`, e almeno il segreto
+   `ACCESSO_01` con un codice di almeno 8 caratteri. Dopo la prima pubblicazione gli altri si
    creano con la pagina `accesso-nuovo.html`.
 3. **Settings → Pages → Build and deployment → Source: GitHub Actions**.
 4. **Actions → Pubblica → Run workflow**. L'indirizzo compare nel riepilogo del workflow

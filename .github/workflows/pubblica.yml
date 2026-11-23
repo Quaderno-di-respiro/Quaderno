@@ -1,5 +1,7 @@
 # Pubblica il Quaderno su GitHub Pages, cifrato con gli accessi personali: un segreto per
-# persona col nome che inizia con ACCESSO_ (più PASSWORD e PASSWORDS, se ci sono ancora).
+# persona, da ACCESSO_01 a ACCESSO_50 (più PASSWORD e PASSWORDS, se ci sono ancora).
+# I segreti sono scritti qui uno per uno: un workflow che li prende tutti insieme GitHub lo
+# ferma come sospetto e non lo esegue.
 # Parte da solo a ogni aggiornamento dei file; dopo aver aggiunto o cancellato un accesso si
 # lancia a mano da Actions → Pubblica → Run workflow.
 name: Pubblica
@@ -30,8 +32,57 @@ jobs:
         run: node strumenti/cifra.js
         env:
           CHIAVE_SORGENTE: ${{ secrets.CHIAVE_SORGENTE }}
-          # tutti i segreti: cifra.js usa solo quelli che iniziano con ACCESSO_
-          SEGRETI: ${{ toJSON(secrets) }}
+          # gli accessi personali, uno per persona; quelli che non esistono arrivano vuoti
+          ACCESSO_01: ${{ secrets.ACCESSO_01 }}
+          ACCESSO_02: ${{ secrets.ACCESSO_02 }}
+          ACCESSO_03: ${{ secrets.ACCESSO_03 }}
+          ACCESSO_04: ${{ secrets.ACCESSO_04 }}
+          ACCESSO_05: ${{ secrets.ACCESSO_05 }}
+          ACCESSO_06: ${{ secrets.ACCESSO_06 }}
+          ACCESSO_07: ${{ secrets.ACCESSO_07 }}
+          ACCESSO_08: ${{ secrets.ACCESSO_08 }}
+          ACCESSO_09: ${{ secrets.ACCESSO_09 }}
+          ACCESSO_10: ${{ secrets.ACCESSO_10 }}
+          ACCESSO_11: ${{ secrets.ACCESSO_11 }}
+          ACCESSO_12: ${{ secrets.ACCESSO_12 }}
+          ACCESSO_13: ${{ secrets.ACCESSO_13 }}
+          ACCESSO_14: ${{ secrets.ACCESSO_14 }}
+          ACCESSO_15: ${{ secrets.ACCESSO_15 }}
+          ACCESSO_16: ${{ secrets.ACCESSO_16 }}
+          ACCESSO_17: ${{ secrets.ACCESSO_17 }}
+          ACCESSO_18: ${{ secrets.ACCESSO_18 }}
+          ACCESSO_19: ${{ secrets.ACCESSO_19 }}
+          ACCESSO_20: ${{ secrets.ACCESSO_20 }}
+          ACCESSO_21: ${{ secrets.ACCESSO_21 }}
+          ACCESSO_22: ${{ secrets.ACCESSO_22 }}
+          ACCESSO_23: ${{ secrets.ACCESSO_23 }}
+          ACCESSO_24: ${{ secrets.ACCESSO_24 }}
+          ACCESSO_25: ${{ secrets.ACCESSO_25 }}
+          ACCESSO_26: ${{ secrets.ACCESSO_26 }}
+          ACCESSO_27: ${{ secrets.ACCESSO_27 }}
+          ACCESSO_28: ${{ secrets.ACCESSO_28 }}
+          ACCESSO_29: ${{ secrets.ACCESSO_29 }}
+          ACCESSO_30: ${{ secrets.ACCESSO_30 }}
+          ACCESSO_31: ${{ secrets.ACCESSO_31 }}
+          ACCESSO_32: ${{ secrets.ACCESSO_32 }}
+          ACCESSO_33: ${{ secrets.ACCESSO_33 }}
+          ACCESSO_34: ${{ secrets.ACCESSO_34 }}
+          ACCESSO_35: ${{ secrets.ACCESSO_35 }}
+          ACCESSO_36: ${{ secrets.ACCESSO_36 }}
+          ACCESSO_37: ${{ secrets.ACCESSO_37 }}
+          ACCESSO_38: ${{ secrets.ACCESSO_38 }}
+          ACCESSO_39: ${{ secrets.ACCESSO_39 }}
+          ACCESSO_40: ${{ secrets.ACCESSO_40 }}
+          ACCESSO_41: ${{ secrets.ACCESSO_41 }}
+          ACCESSO_42: ${{ secrets.ACCESSO_42 }}
+          ACCESSO_43: ${{ secrets.ACCESSO_43 }}
+          ACCESSO_44: ${{ secrets.ACCESSO_44 }}
+          ACCESSO_45: ${{ secrets.ACCESSO_45 }}
+          ACCESSO_46: ${{ secrets.ACCESSO_46 }}
+          ACCESSO_47: ${{ secrets.ACCESSO_47 }}
+          ACCESSO_48: ${{ secrets.ACCESSO_48 }}
+          ACCESSO_49: ${{ secrets.ACCESSO_49 }}
+          ACCESSO_50: ${{ secrets.ACCESSO_50 }}
           PASSWORD: ${{ secrets.PASSWORD }}
           PASSWORDS: ${{ secrets.PASSWORDS }}
       - uses: actions/upload-pages-artifact@v3

@@ -34,6 +34,13 @@ textarea { font: inherit; font-size: .95rem; width: 100%; min-height: 15em; padd
 #controllo-e.no { color: var(--err); }
 ol.istr { padding-left: 1.2em; margin: 0 0 .6em; }
 ol.istr li { margin: 0 0 .3em; }
+input[type=number] { font: inherit; width: 8em; min-height: 50px; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--bordo); background: var(--bg); color: var(--ink); }
+button.link { background: none; border: 0; padding: 0; color: var(--breath); font: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.elenco-accessi { list-style: none; padding: 0; margin: 0; }
+.elenco-accessi li { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 0; border-top: 1px solid var(--line); }
+.elenco-accessi .chi { min-width: 0; overflow-wrap: anywhere; }
+.elenco-accessi .chi b { font-family: var(--mono); }
+.elenco-accessi .btn { flex: none; min-height: 44px; padding: 8px 12px; }
 </style>
 </head>
 <body>
@@ -54,8 +61,19 @@ ol.istr li { margin: 0 0 .3em; }
         <label for="nome">Nome della persona</label>
         <input type="text" id="nome" autocomplete="off" autocapitalize="words" spellcheck="false" required>
       </div>
+      <div class="campo">
+        <label for="numero">Numero dell'accesso (da 1 a 50)</label>
+        <input type="number" id="numero" min="1" max="50" step="1" inputmode="numeric" required>
+        <p class="piccolo" style="margin:6px 0 0">Ti propongo il primo libero tra quelli creati da questo telefono. Se hai creato accessi da un altro telefono, controlla su GitHub quali numeri ci sono già.</p>
+      </div>
       <button class="btn primary grande" type="submit" style="width:100%">Crea il link</button>
     </form>
+  </section>
+
+  <section class="passo" id="elenco" hidden>
+    <h2>Accessi creati da questo telefono</h2>
+    <p class="piccolo">Qui ci sono solo numero, nome e data, mai i codici. Restano su questo telefono.</p>
+    <ul id="elenco-l" class="elenco-accessi"></ul>
   </section>
 
   <div id="fatto" hidden>
@@ -66,8 +84,8 @@ ol.istr li { margin: 0 0 .3em; }
       <div class="valore"><code id="s-nome"></code><button class="btn" type="button" data-copia="s-nome">Copia</button></div>
       <p class="nome-campo">Secret</p>
       <div class="valore"><code id="s-codice"></code><button class="btn" type="button" data-copia="s-codice">Copia</button></div>
-      <p class="piccolo">Se c'è già un segreto con questo nome, aggiungi al nome l'iniziale del cognome e crea di nuovo il link.</p>
       <div class="azioni"><a class="btn primary" href="https://github.com/Quaderno-di-respiro/Quaderno/settings/secrets/actions/new" target="_blank" rel="noopener noreferrer">Apri GitHub › Nuovo segreto</a></div>
+      <p class="piccolo" style="margin-top:12px">Se GitHub dice che quel nome c'è già, il numero è occupato: <button class="link" type="button" id="dopo">usa il numero dopo</button>. Il codice resta lo stesso.</p>
     </section>
 
     <section class="passo">
@@ -93,15 +111,15 @@ ol.istr li { margin: 0 0 .3em; }
       <textarea id="messaggio"></textarea>
       <div class="azioni">
         <button class="btn primary" type="button" data-copia="messaggio">Copia il messaggio</button>
-        <button class="btn" type="button" id="nuovo">Fatto: nuovo accesso</button>
+        <button class="btn" type="button" id="nuovo">Fatto: segnalo e ne creo un altro</button>
       </div>
     </section>
-
-    <section class="passo">
-      <h2>Per togliere un accesso</h2>
-      <p>Su GitHub, in Settings › Secrets and variables › Actions, cancella il segreto della persona (il cestino accanto a ACCESSO_…). Poi ripubblica il sito come al passo 2: il suo link e il suo codice smettono di funzionare.</p>
-    </section>
   </div>
+
+  <section class="passo">
+    <h2>Per togliere un accesso</h2>
+    <p>Su GitHub, in Settings › Secrets and variables › Actions, cancella il segreto della persona (il cestino accanto a ACCESSO_ e il suo numero). Poi ripubblica il sito (Actions › Pubblica › Run workflow): il suo link e il suo codice smettono di funzionare. Il numero torna libero.</p>
+  </section>
 </main>
 
 <script>
@@ -119,11 +137,39 @@ ol.istr li { margin: 0 0 .3em; }
     }
     return out.slice(0, 4) + "-" + out.slice(4, 8) + "-" + out.slice(8);
   }
-  // Il nome del segreto: ACCESSO_ e il nome senza accenti, in maiuscolo, con _ al posto di spazi e segni.
-  function nomeSegreto(nome) {
-    var s = nome.normalize("NFD").replace(/[̀-ͯ]/g, "").toUpperCase().replace(/[^A-Z0-9]+/g, "_").replace(/^_+|_+$/g, "");
-    return "ACCESSO_" + (s || "PERSONA");
+  // Il nome del segreto: ACCESSO_ e il numero a due cifre. Il workflow legge da ACCESSO_01 a
+  // ACCESSO_50, scritti uno per uno (GitHub ferma come sospetto un workflow che li prende tutti).
+  var MASSIMO = 50;
+  function nomeSegreto(n) { return "ACCESSO_" + (n < 10 ? "0" : "") + n; }
+  // Gli accessi creati da questo telefono: numero, nome e data, mai il codice.
+  var ELENCO = "qg-accessi";
+  function leggiElenco() { try { var l = JSON.parse(localStorage.getItem(ELENCO) || "[]"); return Array.isArray(l) ? l : []; } catch (e) { return []; } }
+  function scriviElenco(l) { try { if (l.length) localStorage.setItem(ELENCO, JSON.stringify(l)); else localStorage.removeItem(ELENCO); } catch (e) {} }
+  function primoLibero(oltre) {
+    var usati = leggiElenco().map(function (x) { return x.n; });
+    for (var n = (oltre || 0) + 1; n <= MASSIMO; n++) if (usati.indexOf(n) === -1) return n;
+    return null;
   }
+  function disegnaElenco() {
+    var l = leggiElenco().sort(function (a, b) { return a.n - b.n; });
+    var ul = $("elenco-l"); ul.textContent = "";
+    l.forEach(function (x) {
+      var li = document.createElement("li");
+      var chi = document.createElement("span"); chi.className = "chi";
+      var b = document.createElement("b"); b.textContent = nomeSegreto(x.n);
+      chi.appendChild(b); chi.appendChild(document.createTextNode(" · " + x.nome + " · " + x.quando));
+      var tolto = document.createElement("button"); tolto.className = "btn"; tolto.type = "button"; tolto.textContent = "Tolto";
+      tolto.setAttribute("aria-label", "Tolto: ho cancellato " + nomeSegreto(x.n) + " su GitHub");
+      tolto.addEventListener("click", function () {
+        if (!confirm("Hai cancellato " + nomeSegreto(x.n) + " su GitHub e ripubblicato il sito? Lo tolgo da questo elenco.")) return;
+        scriviElenco(leggiElenco().filter(function (y) { return y.n !== x.n; }));
+        disegnaElenco(); proponiNumero();
+      });
+      li.appendChild(chi); li.appendChild(tolto); ul.appendChild(li);
+    });
+    $("elenco").hidden = !l.length;
+  }
+  function proponiNumero() { var n = primoLibero(0); $("numero").value = n || ""; }
   function sito() { return location.origin + location.pathname.replace(/[^/]*$/, ""); }
   function messaggio(nome, codice) {
     var link = sito() + "#entra=" + codice;
@@ -136,26 +182,46 @@ ol.istr li { margin: 0 0 .3em; }
   function scriviBozza(b) { try { if (b) sessionStorage.setItem(BOZZA, JSON.stringify(b)); else sessionStorage.removeItem(BOZZA); } catch (e) {} }
 
   function mostra(b) {
-    $("s-nome").textContent = nomeSegreto(b.nome);
+    $("s-nome").textContent = nomeSegreto(b.n);
     $("s-codice").textContent = b.codice;
     $("messaggio").value = messaggio(b.nome, b.codice);
     $("controllo-e").textContent = ""; $("controllo-e").className = "";
     $("crea").hidden = true; $("fatto").hidden = false;
   }
+  disegnaElenco(); proponiNumero();
   var attuale = leggiBozza();
-  if (attuale && attuale.nome && attuale.codice) mostra(attuale);
+  if (attuale && attuale.nome && attuale.codice && attuale.n) mostra(attuale);
 
   $("crea-f").addEventListener("submit", function (e) {
     e.preventDefault();
     var nome = $("nome").value.trim();
+    var n = parseInt($("numero").value, 10);
     if (!nome) return;
-    attuale = { nome: nome, codice: nuovoCodice() };
+    if (!(n >= 1 && n <= MASSIMO)) { $("numero").setCustomValidity("Scegli un numero da 1 a " + MASSIMO + "."); $("numero").reportValidity(); return; }
+    attuale = { nome: nome, n: n, codice: nuovoCodice() };
     scriviBozza(attuale);
     mostra(attuale);
     window.scrollTo(0, 0);
   });
+  $("numero").addEventListener("input", function () { this.setCustomValidity(""); });
+  // GitHub dice che il nome c'è già: stesso codice, numero dopo (il primo libero in questo elenco).
+  $("dopo").addEventListener("click", function () {
+    if (!attuale) return;
+    var n = primoLibero(attuale.n);
+    if (!n) { alert("Sono finiti i numeri fino a " + MASSIMO + ": per averne altri vanno aggiunte righe al workflow."); return; }
+    attuale.n = n; scriviBozza(attuale);
+    $("s-nome").textContent = nomeSegreto(n);
+  });
+  // Fatto: l'accesso entra nell'elenco di questo telefono (senza il codice) e si ricomincia.
   $("nuovo").addEventListener("click", function () {
+    if (attuale) {
+      var oggi = new Date();
+      var l = leggiElenco().filter(function (y) { return y.n !== attuale.n; });
+      l.push({ n: attuale.n, nome: attuale.nome, quando: oggi.getDate() + "/" + (oggi.getMonth() + 1) + "/" + oggi.getFullYear() });
+      scriviElenco(l);
+    }
     attuale = null; scriviBozza(null);
+    disegnaElenco(); proponiNumero();
     $("nome").value = ""; $("fatto").hidden = true; $("crea").hidden = false; $("nome").focus();
   });
 
