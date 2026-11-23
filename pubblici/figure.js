@@ -261,7 +261,7 @@
     var v = c.k && c.k.vis, u = c.u == null ? 0.5 : c.u;
     return !v ? 0 : v === 1 ? 1 : cl(Math.min(v !== 'out' ? 4 * u : 1, v !== 'in' ? 4 * (1 - u) : 1), 0, 1);
   }
-  function ghostBody(P, out) { // sagoma tratteggiata di una posa: l'errore da evitare
+  function ghostBody(P, out) { // sagoma tratteggiata di una posa: la posa da evitare
     var J = body(resolve(P)), to = J.to, pts = [], st = { style: 'stroke-width:4' };
     for (var i = 0; i <= 8; i++) pts.push(to.B(i / 8));
     out.push(PA(smooth(pts), 'ghost', st), CI(J.H, HR, 'ghost', st));
@@ -757,7 +757,7 @@
     return shallow(P, { x: h[0], y: h[1], t: a, t2: a - P.ex });
   }
   var G31 = add(K31, dir(-130), TH);
-  var GH31 = { x: G31[0], y: G31[1], t: -100, cu: 14, nk: -16, ln: KN, an: HN31 }; // l'errore: seduto verso i talloni, lombare piegata
+  var GH31 = { x: G31[0], y: G31[1], t: -100, cu: 14, nk: -16, ln: KN, an: HN31 }; // da evitare: seduto verso i talloni, lombare piegata
   var A31 = {
     id: 'E31', v: [230, 245], aria: 'Figura in ginocchio di profilo, dita dei piedi puntate, mani dietro sul bacino: stringe i glutei, chiude le coste e porta l\'ombelico in dentro, poi si inclina indietro di pochi gradi piegando solo il ginocchio, con coscia, bacino e busto in linea, mentre il quadricipite frena; apre appena il petto, fa 5 respiri lunghi solo in alto e torna su piano. Da evitare: piegare la schiena indietro o sedersi verso i talloni',
     base: { kb: 0, ex: 0, nk: 3, cu: 1, cu2: -3, pp: 0, cz: 0, ln: KN, lf: shallow(KN, { p: [53, GK - 15] }), an: HN31, af: HN31 },
@@ -788,7 +788,7 @@
       o.push(TX([116, 22], 'coscia e busto in linea', 'tk', 'middle', op((0.4 + 0.6 * dn) * (1 - v))));
       o.push(TX([124, 178], 'il quadricipite', 't', 'start', op(qv)), TX([124, 192], c.k.qd || 'frena', 'tk', 'start', op(qv)));
       o.push(TX([124, 212], 'si piega solo', 't', 'start', op(0.45 + 0.55 * dn)), TX([124, 226], 'il ginocchio', 't', 'start', op(0.45 + 0.55 * dn)));
-      if (v) { // la sagoma dell'errore, con la scritta sopra di lei (in alto a sinistra)
+      if (v) { // la sagoma da evitare, con la scritta sopra di lei (in alto a sinistra)
         var g = [], Jg = ghostBody(GH31, g);
         o.push(G(op(v), g), cross(Jg.to.pt(0.24, 13, -1), 6, v));
         o.push(TX([8, 20], 'non così:', 'tk', 'start', op(v)), TX([8, 34], 'schiena piegata, seduto', 't', 'start', op(v)), TX([8, 48], 'verso i talloni', 't', 'start', op(v)));
@@ -1248,7 +1248,7 @@
         o.push(TX([seduto ? 84 : lo[0] - 26, lo[1] + 4], 'lombare', 'tk', 'end'), TX(add(pe, [10, -6]), 'petto', 'tk'));
       }
     };
-    A.draw = (function (side) { // nell'errore la figura diventa grigia, con una croce sulla lombare
+    A.draw = (function (side) { // nella posa da evitare la figura diventa grigia, con una croce sulla lombare
       return function (P, c) {
         var o = side(P, c);
         return P.wr > 0.5 ? [G({ style: 'color:var(--line-strong)' }, o), cross(c.J.to.pt(0.22, 14, -1), 6)] : o;
@@ -1280,7 +1280,7 @@
       function jr(p, b) { return add(JP8, rot(sub(p, JP8), b)); }
       var U = add(H8, dir(30), R8), Pj = add(H8, dir(128), R8), Lj = add(H8, dir(36), R8), Mc = add(H8, dir(33), R8 - 8);
       function jaw(b) { return 'M' + M(jr(Pj, b)) + 'A' + R8 + ' ' + R8 + ' 0 0 0 ' + M(jr(Lj, b)); }
-      // l'errore: la mandibola che risale (fantasma)
+      // da evitare: la mandibola che risale (fantasma)
       var gv = cl(2 * P.gh - 1, 0, 1), gc = jr(add(H8, dir(70), R8), a * 0.2);
       o.push(PA(jaw(a * 0.2), 'ghost', op(gv)), cross(add(gc, [16, 14]), 5, gv), TX(add(gc, [28, 19]), 'non chiudere', 't', 'start', op(gv)));
       var tg = TG.map(function (q) { return mix(jr(h(q[0]), a), q[2] ? h(q[1]) : jr(h(q[1]), a), P.tu); });
@@ -1434,9 +1434,9 @@
         CI(add(T(s * 19, -5), [s * 3, 9]), 2.5, 'fbr', op((Math.abs(a) - 7) / 5)), TX(add(p, [0, -18]), 'il catino', 't', 'middle'));
     }
 
-    // E34 (N1) — in piedi, allineato: dall'errore alla posizione di partenza, poi il respiro
+    // E34 (N1) — in piedi, allineato: da una posa comune alla posizione di partenza, poi il respiro
     var A34 = {
-      id: 'E34', q: 1, v: [230, 290], aria: 'Figura in piedi di profilo che si allinea. Dall\'errore (spalle tirate indietro, sedere in fuori, ginocchia tese, mento in fuori) apre il petto a spalle rilassate, porta il bacino neutro, sblocca le ginocchia, mento dentro, testa su e sacro giù; poi respira dal naso col peso su tre punti del piede',
+      id: 'E34', q: 1, v: [230, 290], aria: 'Figura in piedi di profilo che si allinea. Da una posa comune (spalle tirate indietro, sedere in fuori, ginocchia tese, mento in fuori) apre il petto a spalle rilassate, porta il bacino neutro, sblocca le ginocchia, mento dentro, testa su e sacro giù; poi respira dal naso col peso su tre punti del piede',
       base: poseOf(STD, { y: GS - 121.9, t: -97, cu: 9, t2: -101, cu2: 4, nk: 16, pa: 13, wr: 1, ar: 0, wd: 0, an: { a: 102, r: 80, b: 1 }, af: { a: 100, r: 80, b: 1 } }),
       keys: [
         K(2, 'Non così: spalle indietro, sedere in fuori, ginocchia tese', 0, { ss: 'Non così', k: 'no', air: 0 }),
@@ -1460,7 +1460,7 @@
         o.push(TX([133, GS + 15], 'peso su tre punti', 't', 'start', op(wd)), TX([140, GS - 70], 'ginocchia', 't', 'start', kn), TX([140, GS - 56], 'morbide', 't', 'start', kn));
       }
     };
-    A34.draw = (function (side) { // nell'errore la figura diventa grigia, con una croce sulla lombare (come E33)
+    A34.draw = (function (side) { // nella posa da evitare la figura diventa grigia, con una croce sulla lombare (come E33)
       return function (P, c) {
         var o = side(P, c);
         return P.wr > 0.5 ? [G({ style: 'color:var(--line-strong)' }, o), cross(c.J.to.pt(0.3, 16, -1), 6)] : o;
@@ -3002,14 +3002,14 @@
     var FREE = 'respira libero dal naso', THIN = { style: 'stroke-width:2' }, SOLID = { style: 'fill:currentColor', 'stroke-width': 0 };
 
     // ---------- T15 (N1) — prova: il braccio teso sale fin dove arriva da solo ----------
-    // L'errore è una sagoma tratteggiata accanto alla figura: sovrapposta al corpo non si leggerebbe (come nota E34).
+    // La posa da evitare è una sagoma tratteggiata accanto alla figura: sovrapposta al corpo non si leggerebbe (come nota E34).
     function arm15(a) { return { a: a, r: 84, b: 1 }; } // r oltre la lunghezza: l'IK lo tiene teso
     var G15 = [], J15 = ghostBody(poseOf(STD, { x: 232, y: GS - 120, t: -100, cu: 16, nk: 16, ln: { p: [218, GS - 6], b: -1, f: 0 }, an: arm15(-101) }), G15);
     [10, 4, 7, 5].forEach(function (w, i) { G15[i].a.style = 'stroke-width:' + w; });
     G15.push(cross(J15.to.pt(0.24, 18, -1), 6), AR(add(J15.to.P, [12, 4]), add(J15.to.P, [32, 4]), 'gr'), TX([216, GS + 15], 'non così', 'tk', 'middle'));
     def({
       id: 'T15', q: 1, v: [300, 322, -30],
-      aria: 'Prova di profilo, in piedi: il braccio teso lungo il fianco sale in avanti e poi in alto, fin dove arriva da solo, con la bassa schiena ferma. Accanto, una sagoma tratteggiata con la croce mostra l\'errore: il bacino avanza e la bassa schiena si inarca. Poi il braccio scende e si rifà con l\'altro',
+      aria: 'Prova di profilo, in piedi: il braccio teso lungo il fianco sale in avanti e poi in alto, fin dove arriva da solo, con la bassa schiena ferma. Accanto, una sagoma tratteggiata con la croce mostra cosa evitare: il bacino avanza e la bassa schiena si inarca. Poi il braccio scende e si rifà con l\'altro',
       base: poseOf(STD, { an: arm15(84), li: 0 }),
       keys: [
         { d: 2, s: 'Di profilo, braccio teso lungo il fianco', ss: 'Braccio lungo il fianco', p: {}, k: 'no' },
