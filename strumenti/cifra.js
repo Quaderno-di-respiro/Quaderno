@@ -92,9 +92,10 @@ fs.writeFileSync(path.join(USCITA, "guida.json"), dati);
 fs.writeFileSync(path.join(USCITA, "quaderno-del-respiro.pdf.enc"), chiudi(apri(path.join(RADICE, "sorgente", "pdf.enc"))));
 
 const pubblici = path.join(RADICE, "pubblici");
+// Anche le cartelle (per esempio fonts/, i caratteri del sito e del Quaderno); i file nascosti no.
 for (const f of fs.readdirSync(pubblici)) {
-  if (f === "sw.js") continue;
-  fs.copyFileSync(path.join(pubblici, f), path.join(USCITA, f));
+  if (f === "sw.js" || f.startsWith(".")) continue;
+  fs.cpSync(path.join(pubblici, f), path.join(USCITA, f), { recursive: true });
 }
 const versione = new Date().toISOString().replace(/\D/g, "").slice(0, 12) + "-" + crypto.createHash("sha256").update(dati).digest("hex").slice(0, 8);
 fs.writeFileSync(path.join(USCITA, "sw.js"), fs.readFileSync(path.join(pubblici, "sw.js"), "utf8").replace("__VERSIONE__", versione));

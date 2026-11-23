@@ -13,10 +13,10 @@
 // percorsi) registrano «sw.js?solo=pubblici», che salta la guida cifrata: chi non ha il codice non la
 // scarica. Quando poi si entra col codice, la guida registra «sw.js» e la memoria si completa.
 const VERSIONE = "qg-__VERSIONE__";
-const FONT = "qg-font";
 const FILE = ["./", "index.html", "guida.json", "sfida.html", "figure.js", "offerta.js", "manifest.webmanifest", "icona.svg", "icona-180.png", "icona-192.png", "icona-512.png",
   "dentro-programma.webp", "dentro-player.webp", "dentro-scheda.webp", "quaderno-del-respiro.pdf.enc",
-  "pillole.html", "percorso-benessere.html", "percorso-corsa.html", "percorso-combattimento.html", "percorso-forza.html", "piano.html", "pillole.js", "sito.js", "sito.css"];
+  "pillole.html", "percorso-benessere.html", "percorso-corsa.html", "percorso-combattimento.html", "percorso-forza.html", "piano.html", "pillole.js", "sito.js", "sito.css",
+  "fonts/fonts.css", "fonts/archivo-500-800-latin-ext.woff2", "fonts/archivo-500-800-latin.woff2", "fonts/atkinson-hyperlegible-400-latin-ext.woff2", "fonts/atkinson-hyperlegible-400-latin.woff2", "fonts/atkinson-hyperlegible-700-latin-ext.woff2", "fonts/atkinson-hyperlegible-700-latin.woff2", "fonts/atkinson-hyperlegible-corsivo-400-latin-ext.woff2", "fonts/atkinson-hyperlegible-corsivo-400-latin.woff2", "fonts/jetbrains-mono-500-700-latin-ext.woff2", "fonts/jetbrains-mono-500-700-latin.woff2"];
 const GUIDA = ["guida.json", "quaderno-del-respiro.pdf.enc"];
 const SOLO_PUBBLICI = new URL(self.location.href).searchParams.get("solo") === "pubblici";
 const RADICE = new URL("index.html", self.location).href;
@@ -53,7 +53,7 @@ self.addEventListener("install", (e) => {
 self.addEventListener("activate", (e) => {
   e.waitUntil(
     caches.keys()
-      .then((nomi) => Promise.all(nomi.filter((n) => n !== VERSIONE && n !== FONT).map((n) => caches.delete(n))))
+      .then((nomi) => Promise.all(nomi.filter((n) => n !== VERSIONE).map((n) => caches.delete(n))))
       .then(() => self.clients.claim())
   );
 });
@@ -63,11 +63,6 @@ self.addEventListener("fetch", (e) => {
   if (r.method !== "GET") return;
   const u = new URL(r.url);
 
-  // I caratteri di Google Fonts: dalla memoria se ci sono, altrimenti dalla rete e poi in memoria.
-  if (u.origin === "https://fonts.googleapis.com" || u.origin === "https://fonts.gstatic.com") {
-    e.respondWith(caches.open(FONT).then((c) => c.match(r).then((m) => m || fetch(r).then((res) => { c.put(r, res.clone()); return res; }))));
-    return;
-  }
   if (u.origin !== self.location.origin) return;
 
   if (r.mode === "navigate") {
