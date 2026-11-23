@@ -15,7 +15,7 @@
 const VERSIONE = "qg-__VERSIONE__";
 const FILE = ["./", "index.html", "guida.json", "sfida.html", "figure.js", "offerta.js", "manifest.webmanifest", "icona.svg", "icona-180.png", "icona-192.png", "icona-512.png",
   "dentro-programma.webp", "dentro-player.webp", "dentro-scheda.webp", "quaderno-del-respiro.pdf.enc",
-  "pillole.html", "percorso-benessere.html", "percorso-corsa.html", "percorso-combattimento.html", "percorso-forza.html", "piano.html", "pillole.js", "sito.js", "sito.css",
+  "pillole.html", "percorso-benessere.html", "percorso-corsa.html", "percorso-combattimento.html", "percorso-forza.html", "piano.html", "privacy.html", "pillole.js", "sito.js", "sito.css",
   "fonts/fonts.css", "fonts/archivo-500-800-latin-ext.woff2", "fonts/archivo-500-800-latin.woff2", "fonts/atkinson-hyperlegible-400-latin-ext.woff2", "fonts/atkinson-hyperlegible-400-latin.woff2", "fonts/atkinson-hyperlegible-700-latin-ext.woff2", "fonts/atkinson-hyperlegible-700-latin.woff2", "fonts/atkinson-hyperlegible-corsivo-400-latin-ext.woff2", "fonts/atkinson-hyperlegible-corsivo-400-latin.woff2", "fonts/jetbrains-mono-500-700-latin-ext.woff2", "fonts/jetbrains-mono-500-700-latin.woff2"];
 const GUIDA = ["guida.json", "quaderno-del-respiro.pdf.enc"];
 const SOLO_PUBBLICI = new URL(self.location.href).searchParams.get("solo") === "pubblici";

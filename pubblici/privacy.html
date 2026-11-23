@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Privacy · Prima le Radici</title>
+<meta name="description" content="Come Prima le Radici tratta i dati personali: cosa resta sul telefono, cosa ricevo, per quanto tempo, chi li vede e quali sono i tuoi diritti.">
+<!-- Fuori dai motori di ricerca finché profilo e nome non sono definitivi. -->
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="it_IT">
+<meta property="og:site_name" content="Prima le Radici">
+<meta property="og:title" content="Privacy · Prima le Radici">
+<meta property="og:description" content="Informativa sui dati personali di Prima le Radici.">
+<meta property="og:image" content="icona-512.png">
+<meta property="og:image:width" content="512">
+<meta property="og:image:height" content="512">
+<meta property="og:image:alt" content="L'icona di Prima le Radici">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#F1F4F1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1412" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icona.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icona-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Quaderno">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<!-- I caratteri sono serviti dal sito: nessuna richiesta a Google Fonts. -->
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+/* La pagina d'ingresso: gli stessi colori e caratteri della guida, pensata prima per il telefono. */
+:root {
+  --bg: #F1F4F1; --surface: #FFFFFF; --surface-2: #E5ECE8; --ink: #16201C; --muted: #55625C;
+  --line: #D3DBD6; --line-strong: #A9B6AF; --breath: #1B6B5C; --breath-soft: #D5EBE4; --on-breath: #FFFFFF;
+  --ground: #93550F; --ground-soft: #F4E5D0; --stop: #A23A2B; --stop-soft: #F6DDD8; --err: #A3341F;
+  /* bordo di pulsanti e campi: almeno 3:1 sullo sfondo */
+  --bordo: #7A8781;
+  --display: "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --testata: 54px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E1412; --surface: #151D1A; --surface-2: #1E2925; --ink: #E2EAE5; --muted: #9AA8A1;
+    --line: #27332F; --line-strong: #43534D; --breath: #5DC3AD; --breath-soft: #183B34; --on-breath: #0E1412;
+    --ground: #E3A75B; --ground-soft: #3A2A16; --stop: #E8907F; --stop-soft: #3E1F1A; --err: #F08A72; --bordo: #667870; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E1412; --surface: #151D1A; --surface-2: #1E2925; --ink: #E2EAE5; --muted: #9AA8A1;
+  --line: #27332F; --line-strong: #43534D; --breath: #5DC3AD; --breath-soft: #183B34; --on-breath: #0E1412;
+  --ground: #E3A75B; --ground-soft: #3A2A16; --stop: #E8907F; --stop-soft: #3E1F1A; --err: #F08A72; --bordo: #667870; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { background: var(--bg); scroll-behavior: smooth; scroll-padding-top: calc(var(--testata) + env(safe-area-inset-top, 0px) + 10px); -webkit-text-size-adjust: 100%; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 1.0625rem/1.5 var(--body); overflow-x: hidden;
+  padding-top: calc(var(--testata) + env(safe-area-inset-top, 0px)); }
+.wrap { max-width: 1040px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+p { margin: 0 0 .8em; }
+a { color: var(--breath); }
+img, svg { max-width: 100%; }
+[hidden] { display: none !important; }
+button { font: inherit; color: inherit; }
+a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--ground); outline-offset: 2px; }
+q { quotes: "«" "»"; }
+.sr { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* testata fissa, due righe: il marchio e il codice; i quattro link */
+.testata { position: fixed; top: 0; left: 0; right: 0; z-index: 10; background: var(--bg); box-shadow: 0 1px 0 var(--line); padding-top: env(safe-area-inset-top, 0px); }
+.testata .riga1 { height: 54px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.marchio { display: inline-flex; align-items: center; gap: 9px; min-width: 0; min-height: 44px; color: var(--ink); text-decoration: none;
+  font: 800 1.05rem/1 var(--display); font-stretch: 78%; text-transform: uppercase; letter-spacing: .02em; white-space: nowrap; }
+.marchio img { width: 28px; height: 28px; border-radius: 7px; flex: none; }
+/* «Ho il codice»: per chi ha già il Quaderno, un link semplice */
+.ho-pw { flex: none; display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px; color: var(--breath); font: 700 .95rem/1 var(--body);
+  text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.ho-pw:hover { text-decoration-thickness: 2px; }
+.riga2 { height: 44px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.riga2 a { display: flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 2px; color: var(--muted); text-decoration: none;
+  font: 700 .95rem/1 var(--body); border-bottom: 3px solid transparent; white-space: nowrap; }
+.riga2 a:hover { color: var(--ink); }
+.riga2 a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--breath); }
+
+/* testi */
+.eyebrow { font: 700 .76rem/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--breath); margin: 0 0 .4em; }
+h1 { font-family: var(--display); font-weight: 800; font-stretch: 72%; font-size: clamp(3rem, 12.5vw, 6rem); line-height: .9; letter-spacing: -.005em;
+  text-transform: uppercase; margin: .12em 0 .32em; text-wrap: balance; }
+h1 em { font-style: normal; color: var(--ground); }
+h2 { font-family: var(--display); font-weight: 800; font-stretch: 78%; text-transform: uppercase; font-size: clamp(1.6rem, 6.6vw, 2.6rem); line-height: 1;
+  letter-spacing: .005em; margin: .1em 0 .35em; text-wrap: balance; }
+h3 { font-family: var(--display); font-weight: 700; font-stretch: 88%; font-size: 1.22rem; line-height: 1.2; margin: 0 0 .3em; text-wrap: balance; }
+.intro { max-width: 62ch; color: var(--muted); margin-bottom: 10px; }
+.piccolo { font-size: .9rem; color: var(--muted); }
+.link-riga { display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; }
+.etichetta { display: inline-block; font: 700 .68rem/1 var(--mono); text-transform: uppercase; letter-spacing: .05em; padding: 5px 8px; border-radius: 999px;
+  background: var(--breath); color: var(--on-breath); white-space: nowrap; }
+
+/* pulsanti */
+.btn { display: inline-flex; align-items: center; justify-content: center; text-align: center; gap: 8px; min-height: 48px; padding: 12px 18px;
+  border-radius: 10px; border: 1px solid var(--bordo); background: var(--surface); color: var(--ink); font: 700 1rem/1.15 var(--body);
+  text-decoration: none; cursor: pointer; }
+.btn:hover { border-color: var(--breath); }
+.btn.primary { background: var(--breath); color: var(--on-breath); border-color: var(--breath); }
+.btn.primary:hover { filter: brightness(1.06); }
+.btn.grande { min-height: 56px; font-size: 1.08rem; padding: 14px 22px; }
+.btn:disabled { opacity: .5; cursor: default; }
+/* il profilo Instagram non c'è ancora: niente aria da pulsante */
+.btn.ig-attesa, .btn.primary.ig-attesa { background: transparent; border: 1px dashed var(--line-strong); color: var(--muted); cursor: default; filter: none; }
+.avviso { border-left: 4px solid var(--stop); background: var(--stop-soft); border-radius: 0 10px 10px 0; padding: 10px 14px; font-size: .95rem; }
+.avviso p { margin: 0; }
+.avviso b { color: var(--stop); }
+
+/* sezioni */
+main > section { padding-block: 18px 20px; border-top: 1px solid var(--line); }
+main > section.apertura { border-top: 0; padding-block: 18px 24px; }
+
+/* apertura */
+.lede { font-size: 1.18rem; line-height: 1.5; color: var(--muted); max-width: 40ch; margin-bottom: 0; }
+.lede b { color: var(--ink); font-weight: 700; }
+.azioni { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+.azioni .btn { flex: 1 1 15rem; }
+.al-piano { margin: 6px 0 0; font-size: .9rem; }
+.senza { margin: 4px 0 0; font-size: .92rem; color: var(--muted); }
+.apertura-player { display: none; }
+
+/* da dove parto? */
+.parto { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: grid; gap: 8px; max-width: 640px; }
+.parto p { margin: 0; }
+.parto-n { font: 700 .74rem/1.4 var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.parto h3 { font-size: 1.4rem; margin: 0; }
+.parto h3:focus { outline: none; }
+.parto-sotto { color: var(--muted); font-size: .92rem; margin-top: -4px !important; }
+.risposte { display: grid; gap: 8px; }
+.risp { width: 100%; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 1px; min-height: 52px; padding: 7px 14px; text-align: left;
+  border-radius: 10px; border: 1px solid var(--bordo); background: var(--bg); color: var(--ink); font: 700 1rem/1.25 var(--body); cursor: pointer; }
+.risp:hover { border-color: var(--breath); }
+.risp small { font-weight: 400; font-size: .86rem; color: var(--muted); }
+.risp.scelta { border: 2px solid var(--breath); background: var(--breath-soft); }
+.indietro { justify-self: start; background: none; border: 0; min-height: 44px; padding: 0 2px; color: var(--breath); font-weight: 700; text-decoration: underline;
+  text-underline-offset: 3px; cursor: pointer; }
+.blocco { border-top: 1px dashed var(--line-strong); padding-top: 12px; display: grid; gap: 6px; justify-items: start; }
+.blocco .btn { width: 100%; max-width: 360px; }
+.blocco.q { border-top: 0; background: var(--surface-2); border-radius: 12px; padding: 12px 14px; }
+.ris-fondo { display: flex; flex-wrap: wrap; gap: 0 18px; }
+
+/* le strutture e i percorsi: riquadri che sono link interi */
+.griglia { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.griglia li { display: flex; min-width: 0; }
+.carta { width: 100%; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 8px 10px 10px; border-radius: 12px; border: 1px solid var(--line);
+  background: var(--surface); color: var(--ink); text-decoration: none; min-height: 44px; }
+.carta:hover { border-color: var(--breath); }
+.carta h3 { font-size: 1.08rem; margin: 0; }
+.carta .riga { font-size: .84rem; line-height: 1.25; color: var(--muted); }
+.carta .foto { width: 100%; height: 56px; display: flex; align-items: center; justify-content: center; color: var(--ink); margin-bottom: 2px; }
+.carta .foto svg { width: 100%; height: 100%; }
+.carta .foto svg text { display: none; }
+.sotto-link { margin: 2px 0 0; }
+.regola { margin: 0; padding: 0; list-style: none; counter-reset: r; display: grid; gap: 6px; max-width: 70ch; font-size: .98rem; line-height: 1.45; }
+.regola li { counter-increment: r; display: grid; grid-template-columns: 1.8rem minmax(0, 1fr); gap: 10px; align-items: start; }
+.regola li::before { content: counter(r); font: 700 .85rem/1.8rem var(--mono); text-align: center; width: 1.8rem; height: 1.8rem; border-radius: 50%; background: var(--breath-soft); color: var(--breath); }
+.h-regola { margin: 14px 0 6px; }
+
+/* il Quaderno: tre schermate vere; sul telefono si scorrono di lato */
+.schermate { list-style: none; margin: 0 -16px; padding: 4px 16px 10px; display: grid; grid-auto-flow: column; grid-auto-columns: min(50%, 200px); gap: 14px;
+  overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 16px; overscroll-behavior-x: contain; }
+.schermate li { scroll-snap-align: start; min-width: 0; }
+.schermata { margin: 0; }
+.schermata .cornice { display: block; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: #FFFFFF; box-shadow: 0 1px 2px rgba(0,0,0,.05), 0 6px 18px rgba(22,32,28,.07); }
+.schermata img { display: block; width: 100%; height: auto; }
+.schermata figcaption { margin-top: 8px; font-size: .9rem; line-height: 1.4; color: var(--muted); }
+.schermata figcaption b { color: var(--ink); }
+.persona { margin: 8px 0 0; max-width: 62ch; padding: 10px 14px; font-size: .92rem; line-height: 1.45; border-left: 4px solid var(--ground); background: var(--ground-soft); border-radius: 0 10px 10px 0; }
+.persona b { color: var(--ink); }
+
+/* figure ferme (i fotogrammi delle strutture) */
+figure { margin: 0; }
+figcaption { font-size: .86rem; line-height: 1.45; color: var(--muted); margin-top: 8px; }
+svg .b { stroke: currentColor; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+svg .bf { fill: var(--surface-2); stroke: currentColor; stroke-width: 3; stroke-linejoin: round; }
+svg .br { stroke: var(--breath); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+svg .gr { stroke: var(--ground); fill: none; stroke-width: 2.5; stroke-linecap: round; }
+svg .dash { stroke-dasharray: 4 5; }
+svg .ghost { stroke: var(--line-strong); fill: none; stroke-width: 2.5; stroke-dasharray: 5 5; }
+svg .g { stroke: var(--line-strong); stroke-width: 2; }
+svg .mat { fill: var(--surface-2); }
+svg .water { stroke: var(--breath); opacity: .5; fill: none; stroke-width: 2; stroke-linecap: round; }
+svg .fbr { fill: var(--breath); }
+svg .fgr { fill: var(--ground); }
+svg .t { fill: var(--muted); font: 400 12px var(--body); }
+svg .tk { fill: var(--ink); font: 700 12.5px var(--body); }
+svg .tn { fill: var(--surface); font: 700 11px var(--mono); text-anchor: middle; dominant-baseline: central; }
+
+/* il test */
+.test { display: grid; gap: 12px; align-items: start; }
+.come-si-fa { margin: 0 0 4px; border-radius: 10px; background: var(--surface-2); }
+.come-si-fa > summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; padding: 8px 12px; font-weight: 700; }
+.come-si-fa .passi { padding: 0 12px 12px; }
+.passi { margin: 0; padding: 0; list-style: none; counter-reset: p; display: grid; gap: 8px; }
+.passi li { counter-increment: p; display: grid; grid-template-columns: 2rem minmax(0, 1fr); gap: 10px; align-items: start; }
+.passi li::before { content: counter(p); font: 700 .9rem/2rem var(--mono); text-align: center; width: 2rem; height: 2rem; border-radius: 50%; background: var(--breath-soft); color: var(--breath); }
+.test .avviso { margin-top: 12px; }
+.tool .esito:empty, .storico:empty { display: none; }
+.tool { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.tool .big { font: 700 2.6rem/1 var(--mono); font-variant-numeric: tabular-nums; margin: 2px 0 0; text-align: center; }
+.tool .esito { font-weight: 700; min-height: 1.5em; margin: 0; text-align: center; }
+.storico { font: 500 .8rem/1.5 var(--mono); color: var(--muted); margin: 0; min-height: 1.2em; text-align: center; }
+.dopo { border-top: 1px dashed var(--line-strong); padding-top: 14px; display: grid; gap: 10px; text-align: center; }
+.dopo p { margin: 0; }
+
+/* sfida */
+.sfida-card { background: var(--breath-soft); border: 1px solid var(--breath); border-radius: 14px; padding: 14px; display: grid; gap: 10px; }
+.sfida-card p { margin: 0; }
+.sfida-card .giorni { display: flex; gap: 5px; }
+.sfida-card .giorni span { flex: 1; height: 10px; border-radius: 3px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--breath); }
+.sfida-card .giorni span:first-child, .sfida-card .giorni span:last-child { background: var(--breath); }
+.sfida-card .leg { font: 600 .74rem/1.4 var(--mono); color: var(--breath); display: flex; justify-content: space-between; gap: 8px; margin-top: -6px; }
+.avvisi-riga { margin-top: 10px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; }
+.avvisi-riga p { margin: 0; color: var(--muted); }
+.avvisi-riga .cta-azioni { width: auto; justify-items: start; }
+.avvisi-riga .ce { justify-items: start; }
+.avvisi-riga .ce-riga { justify-content: flex-start; }
+.avvisi-riga .cta-azioni .btn { width: auto; }
+
+/* il piano: i pacchetti di offerta.js */
+.scegli { margin: 0 0 10px; }
+.scegli-t { font: 700 .74rem/1.4 var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 6px; }
+.scegli-b { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; align-items: start; }
+.scegli-b > div { display: grid; gap: 4px; justify-items: center; }
+.scegli-b button { width: 100%; min-height: 44px; border-radius: 10px; border: 1px solid var(--bordo); background: var(--surface); color: var(--ink); font: 700 1rem/1.1 var(--body); cursor: pointer; }
+.scegli-b button[aria-pressed="true"] { border: 2px solid var(--breath); background: var(--breath-soft); }
+.scegli-b small { font: 700 .66rem/1 var(--mono); text-transform: uppercase; letter-spacing: .04em; color: var(--breath); }
+.pac-griglia { display: grid; gap: 10px; }
+.pac { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.pac-consigliato { border: 2px solid var(--breath); }
+.pac-testa { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; }
+.pac-testa h3 { margin: 0; font-size: 1.35rem; }
+.pac-durata { font: 700 .72rem/1 var(--mono); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); white-space: nowrap; }
+.pac-badge { margin-left: auto; font: 700 .72rem/1 var(--mono); text-transform: uppercase; letter-spacing: .05em; color: var(--on-breath); background: var(--breath); padding: 5px 9px; border-radius: 999px; }
+.pac-prezzo { margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; }
+.pac-euro { font: 700 1.7rem/1.1 var(--mono); font-variant-numeric: tabular-nums; }
+.pac-mese, .pac-fino { flex-basis: 100%; font: 600 .8rem/1.4 var(--mono); color: var(--muted); }
+.pac-fino { color: var(--ground); }
+.pac-rate { margin: 0; font: 600 .8rem/1.4 var(--mono); color: var(--muted); }
+.pac ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 5px; font-size: .95rem; line-height: 1.35; }
+.pac li { position: relative; padding-left: 1.4em; }
+.pac li::before { content: ""; position: absolute; left: .15em; top: .38em; width: .62em; height: .34em; border-left: 2.5px solid var(--breath); border-bottom: 2.5px solid var(--breath); transform: rotate(-45deg); }
+.pac-breve { margin: 0; font-size: .95rem; color: var(--muted); }
+.pac-cosa { margin: 4px 0 0; font: 700 .72rem/1.2 var(--mono); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.pac .pac-cta { margin-top: auto; width: 100%; }
+.pac-dentro { margin-top: 6px; }
+.pac-dentro summary { cursor: pointer; color: var(--breath); font-weight: 600; min-height: 44px; display: flex; align-items: center; }
+.pac-dentro ul { margin-top: 4px; }
+@media (min-width: 720px) { .pac-dentro { display: none; } }
+.pac-presto { margin: 0 0 8px; font-weight: 700; font-size: .95rem; line-height: 1.4; }
+.pac-nota { font-size: .82rem; color: var(--muted); margin: 10px 0 0; }
+.pac-garanzia { margin: 12px 0 0; padding: 12px 14px; border-radius: 10px; background: var(--surface-2); }
+.altro { display: grid; gap: 8px; margin-top: 8px; }
+.one, .dopo-passi { border-radius: 14px; padding: 10px 14px; min-width: 0; }
+.one { border: 1px dashed var(--line-strong); }
+.one p { margin: 0; color: var(--muted); }
+.one b { color: var(--ink); }
+.dopo-passi { background: var(--surface-2); }
+.dopo-passi h3 { margin-bottom: 4px; }
+.dopo-passi ol { margin: 0; padding-left: 1.3em; display: grid; gap: 3px; font-size: .92rem; line-height: 1.42; }
+.dopo-passi li::marker { font: 700 .9rem var(--mono); color: var(--breath); }
+.cta-azioni { display: grid; gap: 10px; justify-items: center; width: 100%; }
+.cta-azioni .btn { width: 100%; max-width: 360px; }
+/* contatto con la sola email: l'indirizzo da copiare e il link che apre la posta */
+.ce { display: grid; gap: 4px; justify-items: center; width: 100%; }
+.ce p { margin: 0; font-size: 1rem; }
+.ce-riga { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 10px; }
+.ce-ind { font: 700 .9rem/1.3 var(--mono); color: var(--ink); user-select: all; -webkit-user-select: all; overflow-wrap: anywhere; }
+.ce-copia { width: auto; min-height: 44px; padding: 8px 16px; }
+.ce-link a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; }
+.ce-esito { min-height: 1.3em; font-size: .9rem !important; color: var(--muted); }
+.ce-esito:empty { min-height: 0; }
+.cta-azioni .ce-copia { width: auto; }
+
+/* domande */
+.sicurezza { margin: 0 0 14px; border-left: 4px solid var(--stop); background: var(--stop-soft); border-radius: 0 14px 14px 0; padding: 10px 14px; font-size: .9rem; line-height: 1.45; }
+.sicurezza p { margin: 0; }
+.sicurezza b { color: var(--stop); }
+.faq { display: grid; gap: 6px; max-width: 760px; }
+.faq details { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+.faq summary { cursor: pointer; list-style: none; padding: 11px 44px 11px 14px; font-weight: 700; position: relative; min-height: 46px; line-height: 1.35; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font: 700 1.3rem/1 var(--mono); color: var(--breath); }
+.faq details[open] summary::after { content: "–"; }
+.faq details p { padding: 0 16px 14px; margin: 0; color: var(--muted); }
+
+/* accesso: il riquadro del codice */
+.accesso { display: grid; justify-items: center; }
+#porta { width: 100%; max-width: 420px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px; display: grid; gap: 10px; }
+#porta .marca { display: flex; align-items: center; gap: 12px; }
+#porta .marca img { width: 48px; height: 48px; border-radius: 12px; flex: none; }
+#porta h2 { margin: 0; font-size: clamp(1.6rem, 6.4vw, 2rem); }
+#porta p { margin: 0; color: var(--muted); }
+#porta form { display: grid; gap: 8px; }
+#porta label { font-weight: 700; display: grid; gap: 6px; }
+#porta input[type=password] { font: inherit; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--bordo); background: var(--bg); color: var(--ink); width: 100%; min-height: 50px; }
+#porta .ricorda { display: flex; gap: 10px; align-items: center; font-weight: 400; color: var(--muted); min-height: 44px; }
+#porta .ricorda input { width: 22px; height: 22px; accent-color: var(--breath); }
+#porta button { font: 700 1.05rem/1 var(--body); min-height: 52px; border-radius: 10px; border: 0; background: var(--breath); color: var(--on-breath); cursor: pointer; }
+#porta button[disabled] { opacity: .6; cursor: wait; }
+#esito { min-height: 1.5em; font-weight: 700; color: var(--err); }
+#esito.ok { color: var(--muted); font-weight: 400; }
+#porta details { border-top: 1px dashed var(--line-strong); padding-top: 4px; }
+#porta summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; font-weight: 700; color: var(--ink); }
+#porta details ol { margin: 4px 0 0; padding-left: 1.3em; display: grid; gap: 6px; color: var(--muted); font-size: .95rem; }
+
+/* piede */
+footer { border-top: 1px solid var(--line); padding-block: 18px calc(22px + env(safe-area-inset-bottom, 0px)); }
+footer .wrap { display: grid; gap: 6px; }
+footer p { margin: 0; }
+footer .privacy { font-size: .9rem; color: var(--muted); max-width: 60ch; }
+footer .marchio { font-size: .95rem; }
+.piede-contatti { display: grid; gap: 4px; }
+.piede-contatti .cta-azioni { justify-items: start; }
+.piede-contatti .ce { justify-items: start; }
+.piede-contatti .ce-riga { justify-content: flex-start; }
+.piede-link { display: flex; flex-wrap: wrap; gap: 0 18px; margin: 0; padding: 0; list-style: none; }
+.piede-link a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; }
+
+@media (min-width: 720px) {
+  main > section { padding-block: 44px 46px; }
+  main > section.apertura { padding-block: 34px 44px; }
+  .riga2 { grid-template-columns: repeat(4, auto); justify-content: start; gap: 30px; }
+  .azioni { max-width: 660px; }
+  .griglia { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .griglia.quattro { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .schermate { margin: 0; padding: 4px 0 0; grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; gap: 22px; }
+  .schermata { max-width: 260px; }
+  .test { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; }
+  .altro { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pac-griglia { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .scegli { display: none; }
+  .sfida-card { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+  .sfida-card .giorni, .sfida-card .leg { grid-column: 1 / -1; }
+}
+/* le schermate sono del tema chiaro: col tema scuro si abbassano un poco */
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .cornice img { filter: brightness(.9); } }
+:root[data-theme="dark"] .cornice img { filter: brightness(.9); }
+/* sul desktop, nella metà vuota dell'apertura, il player */
+@media (min-width: 900px) {
+  .apertura .wrap { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 56px; align-items: center; }
+  .apertura-player { display: block; margin: 0; }
+  .apertura-player .cornice { display: block; border: 1px solid var(--line); border-radius: 22px; overflow: hidden; background: #FFFFFF; box-shadow: 0 2px 4px rgba(0,0,0,.05), 0 14px 36px rgba(22,32,28,.12); }
+  .apertura-player img { display: block; width: 100%; height: auto; }
+  .apertura-player figcaption { text-align: center; }
+}
+
+/* la pagina del piano */
+.tua-idea { margin-top: 18px; padding: 12px 14px; border-radius: 12px; background: var(--surface-2); max-width: 62ch; }
+.tua-idea p { margin: 0; }
+/* un solo colore pieno, quello del pulsante: etichette e «Consigliato» solo col bordo */
+.etichetta, .pac-badge { background: transparent; color: var(--breath); box-shadow: inset 0 0 0 1.5px var(--breath); }
+.scegli { margin: 0 0 12px; }
+#prima h2 { margin-bottom: .5em; }
+.finale .btn { width: 100%; max-width: 400px; margin: 4px 0 12px; }
+.link-ig { display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; color: var(--breath); }
+
+/* la pagina Privacy */
+.informativa p, .informativa li { max-width: 66ch; }
+.informativa ul { margin: 0 0 .8em; padding-left: 1.2em; display: grid; gap: 6px; }
+.informativa ul ul { margin: 6px 0; }
+.aggiornata { color: var(--muted); margin-bottom: 18px; }
+.campo { color: var(--ground); background: var(--ground-soft); border: 1px dashed var(--ground); border-radius: 4px; padding: 0 4px; font-weight: 700; }
+.voci { display: grid; gap: 10px; }
+.voce { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; min-width: 0; }
+.voce.salute { border-color: var(--ground); }
+.voce h3 { margin: 0 0 2px; }
+.voce dl { margin: 0; }
+.voce dt { font: 700 .72rem/1.4 var(--mono); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-top: 8px; }
+.voce dd { margin: 2px 0 0; }
+#cancella .btn { margin-top: 4px; }
+.conferma { margin-top: 12px; padding: 12px 14px; border-radius: 12px; background: var(--stop-soft); max-width: 560px; }
+.conferma p { margin: 0; }
+.conferma .bottoni { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.btn.si { border-color: var(--stop); color: var(--stop); }
+.esito { font-weight: 700; margin: 10px 0 0; }
+.esito:empty { display: none; }
+.h-dopo { margin-top: 26px; }
+@media (min-width: 720px) { .voci { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+</style>
+</head>
+<body>
+<header class="testata">
+  <div class="wrap riga1">
+    <a class="marchio" href="./"><img src="icona-180.png" alt="">Prima le Radici</a>
+    <a class="ho-pw" href="./#accesso">Ho il codice</a>
+  </div>
+</header>
+
+<main id="pagina" class="informativa">
+<!-- Il testo viene da privacy/01-informativa.md (senza la nota interna in testa). Se l'informativa cambia, si
+     cambia qui e si rilancia catalogo/sito-20261111/applica-privacy.py. -->
+<section class="apertura" id="privacy">
+  <div class="wrap">
+    <p class="eyebrow">Informativa sui dati personali</p>
+    <h1>Privacy</h1>
+    <p class="aggiornata">Aggiornata al 23 novembre 2026.</p>
+    <h2>In breve</h2>
+    <ul class="breve">
+      <li><b>Sul sito e nel Quaderno</b>, quello che scegli, misuri e scrivi resta sul tuo telefono: io non lo ricevo.</li>
+      <li><b>Ricevo solo quello che mi mandi tu:</b> le email e, se entri nel piano o nella prova, il questionario d'ingresso.</li>
+      <li><b>Il questionario può contenere dati sulla tua salute.</b> Quelle domande sono facoltative. Le tratto solo con il tuo consenso esplicito, le leggo solo io, non le pubblico, non le vendo e non le uso per pubblicità.</li>
+      <li><b>Puoi chiedere in ogni momento</b> di vedere, correggere o cancellare i tuoi dati, e ritirare il consenso.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="titolare">
+  <div class="wrap">
+    <h2>Chi tratta i tuoi dati</h2>
+    <p><b>Titolare del trattamento:</b> Mattia, che segue il percorso Prima le Radici. Per qualsiasi domanda sui tuoi dati scrivi a <a href="mailto:radicidelmovimento@gmail.com"><b>radicidelmovimento@gmail.com</b></a>.</p>
+    <p>Per un'attività di queste dimensioni non è obbligatorio nominare un responsabile della protezione dei dati (DPO, art. 37 GDPR), quindi non c'è.</p>
+  </div>
+</section>
+
+<section id="prova">
+  <div class="wrap">
+    <h2>Durante la prova gratuita</h2>
+    <p>Nella prova gratuita il questionario è lo stesso del piano, con le stesse regole. Cambia solo il tempo di conservazione: le risposte si cancellano 3 mesi dopo la fine della prova.</p>
+  </div>
+</section>
+
+<section id="quali">
+  <div class="wrap">
+    <h2>Quali dati, perché e per quanto tempo</h2>
+    <div class="voci">
+      <article class="voce">
+        <h3>Visiti il sito o usi il Quaderno</h3>
+        <dl>
+          <dt>Quali dati</dt><dd>Risposte alle 3 domande, test, sfida, diario, codice ricordato: <b>restano nella memoria del tuo browser</b>, sul tuo telefono.</dd>
+          <dt>Perché</dt><dd>Far funzionare sfida, test e Quaderno.</dd>
+          <dt>Base giuridica</dt><dd>Io non li ricevo.</dd>
+          <dt>Per quanto tempo</dt><dd>Finché non li cancelli tu: con il pulsante «Cancella i dati da questo telefono», più in basso in questa pagina, o dalle impostazioni del browser (dati del sito).</dd>
+        </dl>
+      </article>
+      <article class="voce">
+        <h3>Il sito viene consegnato al tuo telefono</h3>
+        <dl>
+          <dt>Quali dati</dt><dd>Dati tecnici della visita, come indirizzo IP e tipo di browser, registrati dal servizio che ospita il sito (vedi «Chi vede i tuoi dati»).</dd>
+          <dt>Perché</dt><dd>Consegnare le pagine e proteggerle da abusi.</dd>
+          <dt>Base giuridica</dt><dd>Interesse legittimo a un sito sicuro (art. 6.1.f GDPR).</dd>
+          <dt>Per quanto tempo</dt><dd>Secondo i tempi del servizio di hosting. Io non li ricevo.</dd>
+        </dl>
+      </article>
+      <article class="voce">
+        <h3>Mi scrivi</h3>
+        <dl>
+          <dt>Quali dati</dt><dd>Indirizzo email, nome, quello che scrivi.</dd>
+          <dt>Perché</dt><dd>Risponderti e fissare la videochiamata.</dd>
+          <dt>Base giuridica</dt><dd>Tua richiesta, prima di un eventuale accordo (art. 6.1.b).</dd>
+          <dt>Per quanto tempo</dt><dd>12 mesi dall'ultimo messaggio, se non entri nel piano.</dd>
+        </dl>
+      </article>
+      <article class="voce">
+        <h3>Compili il questionario d'ingresso</h3>
+        <dl>
+          <dt>Quali dati</dt><dd>Nome, email, fascia d'età, obiettivo, sport, tempo a disposizione, lavoro, scarpe.</dd>
+          <dt>Perché</dt><dd>Preparare la videochiamata e adattare il programma.</dd>
+          <dt>Base giuridica</dt><dd>Servizio che mi chiedi (art. 6.1.b).</dd>
+          <dt>Per quanto tempo</dt><dd>Fino a 6 mesi dopo la fine del piano (3 mesi dopo la fine della prova gratuita).</dd>
+        </dl>
+      </article>
+      <article class="voce salute">
+        <h3>Rispondi alle domande facoltative sulla salute</h3>
+        <dl>
+          <dt>Quali dati</dt><dd>Segnali per cui serve prima il medico (solo sì o no), condizioni che cambiano gli esercizi, dolore attuale.</dd>
+          <dt>Perché</dt><dd>Togliere gli esercizi non adatti a te, rallentare, o dirti di sentire prima il medico.</dd>
+          <dt>Base giuridica</dt><dd><b>Tuo consenso esplicito</b> (art. 9.2.a GDPR).</dd>
+          <dt>Per quanto tempo</dt><dd>Come il questionario, oppure subito se ritiri il consenso.</dd>
+        </dl>
+      </article>
+      <article class="voce">
+        <h3>Facciamo la videochiamata</h3>
+        <dl>
+          <dt>Quali dati</dt><dd>Immagine e voce, in diretta.</dd>
+          <dt>Perché</dt><dd>Scegliere insieme percorso, livello e tempo.</dd>
+          <dt>Base giuridica</dt><dd>Servizio che mi chiedi (art. 6.1.b); per la salute, il tuo consenso.</dd>
+          <dt>Per quanto tempo</dt><dd><b>Non la registro.</b> Mi segno solo l'adattamento deciso (per esempio «tolto un esercizio»), con la stessa durata del questionario.</dd>
+        </dl>
+      </article>
+      <article class="voce">
+        <h3>Partecipi alla prova gratuita</h3>
+        <dl>
+          <dt>Quali dati</dt><dd>Le tue opinioni sul Quaderno.</dd>
+          <dt>Perché</dt><dd>Migliorarlo.</dd>
+          <dt>Base giuridica</dt><dd>Tuo consenso (art. 6.1.a).</dd>
+          <dt>Per quanto tempo</dt><dd>3 mesi dopo la fine della prova. Dopo, tengo solo osservazioni senza il tuo nome.</dd>
+        </dl>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="cancella">
+  <div class="wrap">
+    <h2>Cancellare i dati da questo telefono</h2>
+    <p>Cancelli tutto quello che il sito e il Quaderno hanno salvato in questo browser: le risposte alle tre domande, la routine, i test, la sfida e, se hai il Quaderno, il diario e il codice ricordato. Io non ho una copia: non si può annullare.</p>
+    <button class="btn" type="button" id="cancella-b">Cancella i dati da questo telefono</button>
+    <div class="conferma" id="cancella-conferma" hidden role="group" aria-labelledby="cancella-t">
+      <p id="cancella-t"><b>Sicuro?</b> Dopo, il sito riparte da zero su questo telefono. Il codice del Quaderno lo dovrai riscrivere.</p>
+      <div class="bottoni">
+        <button class="btn si" type="button" id="cancella-si">Sì, cancella</button>
+        <button class="btn" type="button" id="cancella-no">No, lascia così</button>
+      </div>
+    </div>
+    <p class="esito" id="cancella-e" role="status" aria-live="polite"></p>
+  </div>
+</section>
+
+<section id="salute">
+  <div class="wrap">
+    <h2>Se non rispondi alle domande sulla salute</h2>
+    <p>Sono facoltative. Se le salti, puoi partire lo stesso con il programma generale, più prudente, e ne parliamo in videochiamata.</p>
+  </div>
+</section>
+
+<section id="chi">
+  <div class="wrap">
+    <h2>Chi vede i tuoi dati</h2>
+    <ul>
+      <li><b>Solo io.</b> Il coach che ha creato gli esercizi non vede le tue risposte.</li>
+      <li><b>Chi altro tratta i dati:</b> i servizi tecnici che li custodiscono per conto mio.
+        <ul>
+          <li>Google, per Gmail e Google Moduli (per l'Europa: Google Ireland Limited).</li>
+          <li>Il servizio di videochiamata con cui facciamo la chiamata: te lo indico quando la fissiamo.</li>
+          <li>GitHub, Inc., che ospita il sito (<a href="https://docs.github.com/it/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">informativa di GitHub</a>).</li>
+        </ul>
+        Questi servizi possono trattare dati anche fuori dall'Unione europea, con le garanzie previste dal GDPR. Per gli Stati Uniti valgono il quadro UE-USA per la protezione dei dati o le clausole contrattuali standard.</li>
+      <li><b>Nessun altro</b>, salvo un obbligo di legge.</li>
+      <li><b>I dati sulla salute non vengono mai diffusi né pubblicati.</b> Nessuna testimonianza senza un tuo consenso scritto a parte, e mai con dati sulla salute.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="non-faccio">
+  <div class="wrap">
+    <h2>Cosa non faccio</h2>
+    <ul>
+      <li><b>Nessuna decisione automatica.</b> Le risposte le legge una persona. Il sito e il Quaderno non escludono e non scelgono esercizi in base alla tua salute.</li>
+      <li><b>Nessuna diagnosi.</b> Questo è un percorso di allenamento, non un servizio sanitario. Se compare un segnale d'allarme, ti dico di sentire il medico.</li>
+      <li><b>Niente pubblicità, profilazione o vendita dei dati.</b> Il sito non usa cookie di profilazione né statistiche.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="proteggo">
+  <div class="wrap">
+    <h2>Come li proteggo</h2>
+    <ul>
+      <li>Account protetto da password robusta e verifica in due passaggi, a cui accedo solo io.</li>
+      <li>Nessuna copia in chat, sui social o su computer condivisi.</li>
+      <li>Cancellazione alle scadenze scritte sopra.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="diritti">
+  <div class="wrap">
+    <h2>I tuoi diritti</h2>
+    <p>Puoi chiedermi in ogni momento di:</p>
+    <ul>
+      <li>vedere i tuoi dati e averne una copia;</li>
+      <li>correggerli;</li>
+      <li>cancellarli;</li>
+      <li>limitarne l'uso;</li>
+      <li>riceverli in un formato leggibile da un computer.</li>
+    </ul>
+    <p>Puoi anche <b>ritirare il consenso</b>: il ritiro vale da quel momento in poi e non rende illegale quello che è stato fatto prima.</p>
+    <p>Scrivi a <a href="mailto:radicidelmovimento@gmail.com"><b>radicidelmovimento@gmail.com</b></a>: ti rispondo entro un mese.</p>
+    <p>Se pensi che i tuoi dati siano trattati male, puoi fare reclamo al <b>Garante per la protezione dei dati personali</b> (<a href="https://www.garanteprivacy.it" target="_blank" rel="noopener">garanteprivacy.it</a>).</p>
+  </div>
+</section>
+
+<section id="eta">
+  <div class="wrap">
+    <h2>Età</h2>
+    <p>Il percorso è solo per maggiorenni.</p>
+    <h2 class="h-dopo">Modifiche</h2>
+    <p>La data in alto dice quando l'informativa è stata aggiornata. Se cambia qualcosa di importante, te lo scrivo prima.</p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="marchio" href="./"><img src="icona-180.png" alt="">Prima le Radici</a>
+    <ul class="piede-link" aria-label="Le altre pagine">
+      <li><a href="./">Inizio</a></li><li><a href="./#accesso">Ho il codice</a></li><li><a href="piano.html">Il piano su misura</a></li><li><a href="pillole.html">Tutte le pillole</a></li>
+    </ul>
+  </div>
+</footer>
+<script>
+// «Cancella i dati da questo telefono»: tutte le voci qg-* di questo sito, con conferma. Nient'altro esce o entra.
+(function () {
+  "use strict";
+  function $(id) { return document.getElementById(id); }
+  function togli(m) {
+    var n = 0;
+    try {
+      var k = [];
+      for (var i = 0; i < m.length; i++) { var c = m.key(i); if (c && c.indexOf("qg-") === 0) k.push(c); }
+      k.forEach(function (c) { m.removeItem(c); n++; });
+    } catch (e) {}
+    return n;
+  }
+  $("cancella-b").addEventListener("click", function () { $("cancella-conferma").hidden = false; $("cancella-e").textContent = ""; $("cancella-no").focus(); });
+  $("cancella-no").addEventListener("click", function () { $("cancella-conferma").hidden = true; $("cancella-b").focus(); });
+  $("cancella-si").addEventListener("click", function () {
+    var n = 0;
+    try { n += togli(window.localStorage); } catch (e) {}
+    try { n += togli(window.sessionStorage); } catch (e) {}
+    $("cancella-conferma").hidden = true;
+    $("cancella-e").textContent = n ? "Fatto: i dati di questo sito sono stati cancellati da questo browser." : "Non c'era niente da cancellare in questo browser.";
+    $("cancella-b").focus();
+  });
+})();
+</script>
+</body>
+</html>
