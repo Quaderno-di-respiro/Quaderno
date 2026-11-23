@@ -682,7 +682,7 @@
     test.forEach(function (cod) { h += cartaTest(cod, ""); });
     var nq = lista(s.nelQuaderno);
     h += '<div class="one"><h3>Nel Quaderno c\'è di più</h3>' + (nq.length ? "<ul>" + nq.map(function (v) { return "<li>" + esc(v) + "</li>"; }).join("") + "</ul>" : "") +
-      '<p>Si apre col codice che ti do in videochiamata. <a href="piano.html">Come funziona ›</a></p></div>';
+      '<p>Si apre col link personale che ti mando dopo la videochiamata. <a href="piano.html">Come funziona ›</a></p></div>';
     corpo.innerHTML = h;
   }
   function paginaPillole() {

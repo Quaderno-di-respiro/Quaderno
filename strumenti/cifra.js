@@ -2,15 +2,19 @@
 // Costruisce il sito da pubblicare in _site/, con la guida cifrata dalle password: la pagina
 // d'ingresso (index.html, da porta.html), i dati della guida (guida.json) e il PDF cifrato.
 //
-//   CHIAVE_SORGENTE=... PASSWORD=... PASSWORDS=... node strumenti/cifra.js
+//   CHIAVE_SORGENTE=... SEGRETI='{"ACCESSO_NOME":"..."}' PASSWORD=... PASSWORDS=... node strumenti/cifra.js
 //
 // I sorgenti in sorgente/ sono sigillati con CHIAVE_SORGENTE (vedi sigilla.js), così il
 // repository pubblico non contiene la guida in chiaro. Qui si aprono e si richiudono con
 // una chiave nuova a ogni pubblicazione; quella chiave viene poi chiusa una volta per ogni
-// password, e chi apre il sito con una qualsiasi di loro la riapre nel browser.
-// Le password vengono dal segreto PASSWORD (una) e dal segreto PASSWORDS (una per riga; le
-// righe che iniziano con # sono note, per esempio il nome della persona). Togliere una riga
-// e rilanciare il workflow toglie quella password.
+// codice, e chi apre il sito con uno qualsiasi di loro la riapre nel browser.
+// I codici:
+// - gli accessi personali: un segreto per persona, col nome che inizia con ACCESSO_ (per
+//   esempio ACCESSO_NOME). Il workflow li passa tutti in SEGRETI (toJSON(secrets)). Il link
+//   personale è l'indirizzo del sito con #entra=<codice>: la porta lo legge e apre il Quaderno.
+//   Cancellare il segreto e rilanciare il workflow toglie quell'accesso.
+// - il segreto PASSWORD (uno) e il segreto PASSWORDS (uno per riga; le righe che iniziano con
+//   # sono note): i codici di prima, che restano validi finché i segreti ci sono.
 
 const fs = require("fs");
 const path = require("path");
@@ -35,13 +39,23 @@ const grezza = serve("CHIAVE_SORGENTE");
 const trovata = grezza.match(/[A-Za-z0-9+/]{43}=/g);
 const chiaveSorgente = Buffer.from(trovata && trovata.length === 1 ? trovata[0] : grezza.trim(), "base64");
 if (chiaveSorgente.length !== 32) errore(`CHIAVE_SORGENTE non è valida: deve essere il contenuto di segreti/chiave-sorgente.txt, 44 caratteri che finiscono con «=» (questa ne ha ${grezza.trim().length}). Incollala di nuovo nel segreto.`);
-// Le password: PASSWORD da sola, poi PASSWORDS riga per riga. Nei messaggi d'errore si dice
-// solo il numero di riga, mai la password.
+// I codici: prima gli accessi personali (ACCESSO_*), poi PASSWORD, poi PASSWORDS riga per riga.
+// Nei messaggi d'errore si dice solo il nome del segreto o il numero di riga, mai il codice.
 const password = [];
+let personali = 0;
+let segreti = {};
+try { segreti = JSON.parse(process.env.SEGRETI || "{}") || {}; }
+catch (e) { errore("SEGRETI non è un elenco valido: nel workflow deve essere ${{ toJSON(secrets) }}."); }
+Object.keys(segreti).sort().forEach(function (nome) {
+  if (!/^ACCESSO_/i.test(nome)) return;
+  const p = String(segreti[nome] || "").trim();
+  if (p.length < 8) errore(`Il segreto ${nome} ha un codice di ${p.length} caratteri: ne servono almeno 8. Crealo di nuovo dalla pagina accesso-nuovo.html.`);
+  if (!password.includes(p)) { password.push(p); personali++; }
+});
 const una = (process.env.PASSWORD || "").trim();
 if (una) {
   if (una.length < 8) errore(`Il segreto PASSWORD deve avere almeno 8 caratteri (ne ha ${una.length}).`);
-  password.push(una);
+  if (!password.includes(una)) password.push(una);
 }
 (process.env.PASSWORDS || "").split(/\r?\n/).forEach(function (riga, i) {
   const p = riga.trim();
@@ -49,7 +63,7 @@ if (una) {
   if (p.length < 8) errore(`Nel segreto PASSWORDS la riga ${i + 1} ha una password di ${p.length} caratteri: ne servono almeno 8.`);
   if (!password.includes(p)) password.push(p);
 });
-if (!password.length) errore("Manca la password: imposta il segreto PASSWORD o il segreto PASSWORDS (Settings → Secrets and variables → Actions).");
+if (!password.length) errore("Non c'è nessun accesso: crea almeno un segreto ACCESSO_NOME (Settings → Secrets and variables → Actions), per esempio dalla pagina accesso-nuovo.html.");
 
 // Formato dei file cifrati: iv (12 byte) | testo cifrato | tag (16 byte), AES-256-GCM.
 function apri(file) {
@@ -101,4 +115,4 @@ const versione = new Date().toISOString().replace(/\D/g, "").slice(0, 12) + "-" 
 fs.writeFileSync(path.join(USCITA, "sw.js"), fs.readFileSync(path.join(pubblici, "sw.js"), "utf8").replace("__VERSIONE__", versione));
 fs.writeFileSync(path.join(USCITA, ".nojekyll"), "");
 
-console.log(`Sito pronto in _site/ (versione ${versione}): guida ${Math.round(guida.length / 1024)} KB, PDF cifrato, ${password.length} password.`);
+console.log(`Sito pronto in _site/ (versione ${versione}): guida ${Math.round(guida.length / 1024)} KB, PDF cifrato, ${password.length} codici (${personali} accessi personali, ${password.length - personali} da PASSWORD e PASSWORDS).`);

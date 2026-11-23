@@ -27,11 +27,12 @@
 <meta name="apple-mobile-web-app-title" content="Quaderno">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
-// Chi ha una password ricordata entra nella guida senza vedere la facciata: finché la porta (in
-// fondo alla pagina) non ha provato la chiave, la pagina resta vuota, come prima.
+// Chi ha un codice ricordato, o arriva dal suo link personale (#entra=...), entra nella guida senza
+// vedere la facciata: finché la porta (in fondo alla pagina) non ha provato la chiave, la pagina
+// resta vuota, come prima.
 (function () {
   function c(m) { try { return m.getItem("qg-chiave"); } catch (e) { return null; } }
-  try { if (window.crypto && crypto.subtle && (c(localStorage) || c(sessionStorage))) document.documentElement.className += " qg-attesa"; } catch (e) {}
+  try { if (window.crypto && crypto.subtle && (/^#entra=./.test(location.hash) || c(localStorage) || c(sessionStorage))) document.documentElement.className += " qg-attesa"; } catch (e) {}
 })();
 </script>
 <!-- I caratteri sono serviti dal sito: nessuna richiesta a Google Fonts. -->
@@ -330,7 +331,7 @@ footer .marchio { font-size: .95rem; }
         <img src="icona-180.png" alt="">
         <h2 id="porta-t">Hai il codice?</h2>
       </div>
-      <p>Il codice te lo do in videochiamata. Apre il tuo Quaderno su questo telefono.</p>
+      <p>Dopo la videochiamata ti mando un link personale: toccalo e il tuo Quaderno si apre da solo. Se te lo chiede, scrivi qui il codice che trovi nel messaggio.</p>
       <form id="entra" method="post" autocomplete="on">
         <label for="pw">Codice
           <input type="password" id="pw" name="password" autocomplete="current-password" required>
@@ -343,10 +344,10 @@ footer .marchio { font-size: .95rem; }
       <details>
         <summary>Che cosa succede dopo la videochiamata</summary>
         <ol>
-          <li>In videochiamata ti do il tuo codice: è solo tuo. Di solito il codice funziona pochi minuti dopo la videochiamata.</li>
-          <li>Apri questa pagina in Safari (iPhone) o Chrome (Android) e scrivi il codice qui sopra, con «Ricordalo» spuntato.</li>
-          <li>Aggiungi il Quaderno alla schermata Home: su iPhone Condividi › Aggiungi alla schermata Home; su Android menu ⋮ › Aggiungi a schermata Home. Così lo apri come un'app, anche senza internet. Dall'icona sulla Home il tuo diario resta sul telefono; nel solo Safari, dopo 7 giorni senza aprirlo, può sparire.</li>
-          <li>Parti dalla settimana 1. Se cambi telefono, riscrivi il codice sul nuovo. Se il codice non funziona più, scrivimi.</li>
+          <li>Dopo la videochiamata ti mando un messaggio con il tuo link personale e il tuo codice: sono solo tuoi, non girarli ad altri.</li>
+          <li>Tocca il link da Safari (iPhone) o Chrome (Android): il Quaderno si apre e questo telefono lo ricorda.</li>
+          <li>Aggiungi il Quaderno alla schermata Home: su iPhone Condividi › Aggiungi alla schermata Home; su Android menu ⋮ › Aggiungi a schermata Home. Così lo apri come un'app, anche senza internet. Se dall'icona ti chiede il codice, scrivi quello del messaggio. Dall'icona sulla Home il tuo diario resta sul telefono; nel solo Safari, dopo 7 giorni senza aprirlo, può sparire.</li>
+          <li>Parti dalla settimana 1. Se cambi telefono, tocca di nuovo il link sul nuovo. Se il link non funziona più, scrivimi.</li>
         </ol>
       </details>
     </div>
@@ -646,6 +647,15 @@ footer .marchio { font-size: .95rem; }
   var porta = document.getElementById("porta");
   var esito = document.getElementById("esito");
   var vai = document.getElementById("vai");
+  // Il link personale è l'indirizzo del sito con #entra=<codice>. La parte dopo # non arriva mai al
+  // server; qui si legge e si toglie subito dall'indirizzo, così non resta nella barra né in un
+  // segnalibro o in una condivisione della pagina.
+  var dalLink = null;
+  var trovato = /^#entra=([^&]+)/.exec(location.hash);
+  if (trovato) {
+    try { dalLink = decodeURIComponent(trovato[1]); } catch (e) { dalLink = trovato[1]; }
+    try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
+  }
   // La facciata compare solo quando la guida non si apre da sola (vedi lo script in testa).
   function mostra() {
     document.documentElement.classList.remove("qg-attesa");
@@ -707,21 +717,61 @@ footer .marchio { font-size: .95rem; }
     if (document.readyState === "complete") scrivi(); else window.addEventListener("load", scrivi);
   }
   function importa(raw) { return crypto.subtle.importKey("raw", b64(raw), "AES-GCM", true, ["decrypt"]); }
+  // Dal codice alla sua chiave (PBKDF2, gli stessi sale e iterazioni del workflow).
+  function daCodice(pw) {
+    return crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveKey"])
+      .then(function (base) {
+        return crypto.subtle.deriveKey({ name: "PBKDF2", salt: b64(C.sale), iterations: C.iter, hash: "SHA-256" },
+          base, { name: "AES-GCM", length: 256 }, true, ["decrypt"]);
+      });
+  }
+  // Apre la guida col codice e ricorda la chiave del codice, non quella della guida: così resta
+  // valida anche quando la guida si aggiorna, finché l'accesso c'è.
+  function conCodice(pw, dove) {
+    return daCodice(pw).then(function (k) {
+      return apri(k).then(function (r) {
+        return crypto.subtle.exportKey("raw", k).then(function (raw) { scrivi(memoria(dove), a64(raw)); return r; });
+      });
+    });
+  }
+  // I codici personali sono come «k7m2-p9xq-4tfa». Se quello scritto non apre, si riprova una volta
+  // in quella forma: senza spazi, in minuscolo, con i trattini anche se non ci sono.
+  function provaCodice(pw, dove) {
+    var forma = pw.replace(/\s+/g, "").toLowerCase();
+    if (/^[a-z0-9]{12}$/.test(forma)) forma = forma.replace(/^(.{4})(.{4})/, "$1-$2-");
+    return conCodice(pw, dove).catch(function (e) {
+      if (forma === pw || forma.length < 8) throw e;
+      return conCodice(forma, dove);
+    });
+  }
 
   var salvata = leggi(memoria("localStorage")) || leggi(memoria("sessionStorage"));
-  var prima = salvata
-    ? scarica()
-        .then(function () { return importa(salvata).then(apri); })
-        .then(function (r) { entra(r.html, r.k); return true; },
-              function (e) { if (e && e.rete) return "rete"; togli(); return false; })
-    : Promise.resolve(false);
+  var prima;
+  if (dalLink) {
+    // Dal link personale: si apre e si ricorda sempre su questo telefono.
+    prima = scarica()
+      .then(function () { return provaCodice(dalLink, "localStorage"); })
+      .then(function (r) { entra(r.html, r.k); return true; },
+            function (e) { return e && e.rete ? "rete" : "link"; });
+  } else if (salvata) {
+    prima = scarica()
+      .then(function () { return importa(salvata).then(apri); })
+      .then(function (r) { entra(r.html, r.k); return true; },
+            function (e) { if (e && e.rete) return "rete"; togli(); return false; });
+  } else prima = Promise.resolve(false);
 
   prima.then(function (fatto) {
     if (fatto === true) return;
     mostra();
-    // Chi aveva una password ricordata che non vale più va dritto al riquadro; gli altri leggono
-    // la facciata dall'inizio (il fuoco sul campo li porterebbe in fondo alla pagina).
-    if (salvata) {
+    // Chi arriva da un link che non apre, o aveva un codice ricordato che non vale più, va dritto al
+    // riquadro; gli altri leggono la facciata dall'inizio (il fuoco sul campo li porterebbe in fondo).
+    if (dalLink) {
+      esito.textContent = fatto === "rete"
+        ? "Non riesco a scaricare il quaderno: controlla la connessione e tocca di nuovo il link."
+        : "Questo link non apre più il Quaderno: scrivimi e te ne mando uno nuovo.";
+      if (window.QGFacciata) window.QGFacciata.alRiquadro();
+      else { porta.scrollIntoView(); document.getElementById("pw").focus(); }
+    } else if (salvata) {
       esito.textContent = fatto === "rete"
         ? "Non riesco a scaricare il quaderno: controlla la connessione e ricarica la pagina."
         : "Il codice è cambiato o non vale più: scrivi quello che ti ho dato.";
@@ -737,21 +787,8 @@ footer .marchio { font-size: .95rem; }
     esito.className = "ok";
     esito.textContent = "Apro il quaderno…";
     scarica()
-      .then(function () { return crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveKey"]); })
-      .then(function (base) {
-        return crypto.subtle.deriveKey({ name: "PBKDF2", salt: b64(C.sale), iterations: C.iter, hash: "SHA-256" },
-          base, { name: "AES-GCM", length: 256 }, true, ["decrypt"]);
-      })
-      .then(function (k) {
-        // Si ricorda la chiave della password, non quella della guida: così resta valida
-        // anche quando la guida si aggiorna, finché la password è nell'elenco.
-        return apri(k).then(function (r) {
-          return crypto.subtle.exportKey("raw", k).then(function (raw) {
-            scrivi(memoria(document.getElementById("ricorda").checked ? "localStorage" : "sessionStorage"), a64(raw));
-            entra(r.html, r.k);
-          });
-        });
-      })
+      .then(function () { return provaCodice(pw, document.getElementById("ricorda").checked ? "localStorage" : "sessionStorage"); })
+      .then(function (r) { entra(r.html, r.k); })
       .catch(function (err) {
         vai.disabled = false;
         esito.className = "";

@@ -1,6 +1,7 @@
-# Pubblica il Quaderno su GitHub Pages, cifrato con la password del segreto PASSWORD.
-# Parte da solo a ogni aggiornamento dei file; per cambiare password si aggiorna il
-# segreto e si lancia a mano da Actions → Pubblica → Run workflow.
+# Pubblica il Quaderno su GitHub Pages, cifrato con gli accessi personali: un segreto per
+# persona col nome che inizia con ACCESSO_ (più PASSWORD e PASSWORDS, se ci sono ancora).
+# Parte da solo a ogni aggiornamento dei file; dopo aver aggiunto o cancellato un accesso si
+# lancia a mano da Actions → Pubblica → Run workflow.
 name: Pubblica
 
 on:
@@ -25,10 +26,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Cifra la guida con la password
+      - name: Cifra la guida con gli accessi
         run: node strumenti/cifra.js
         env:
           CHIAVE_SORGENTE: ${{ secrets.CHIAVE_SORGENTE }}
+          # tutti i segreti: cifra.js usa solo quelli che iniziano con ACCESSO_
+          SEGRETI: ${{ toJSON(secrets) }}
           PASSWORD: ${{ secrets.PASSWORD }}
           PASSWORDS: ${{ secrets.PASSWORDS }}
       - uses: actions/upload-pages-artifact@v3

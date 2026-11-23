@@ -1,61 +1,65 @@
 # Quaderno del Respiro
 
 La guida a un metodo di respiro e movimento come web app: si apre da un link, si installa sul
-telefono, funziona anche senza internet. Per entrare serve una password, che sul sito si chiama
-**codice**: è quella che dai alla persona in videochiamata (segreto `PASSWORDS`, sotto).
+telefono, funziona anche senza internet. Per entrare ogni persona ha un **accesso personale**:
+un link suo, che apre il Quaderno da solo, e il codice che c'è dentro, da scrivere in «Ho il
+codice» se il telefono lo chiede. Si crea con la pagina `accesso-nuovo.html` (sotto).
 
-## Come funziona la password
+## Come funziona la cifratura
 
-Il repository è pubblico, ma la guida qui dentro è **cifrata** (AES-256): senza password
-i file sono illeggibili, sia nel repository sia sul sito.
+Il repository è pubblico, ma la guida qui dentro è **cifrata** (AES-256): senza un codice
+valido i file sono illeggibili, sia nel repository sia sul sito.
 
 - `sorgente/` contiene guida e PDF sigillati con una chiave che sta solo tra i segreti del
   repository (`CHIAVE_SORGENTE`).
 - A ogni pubblicazione il workflow **Pubblica** li apre e li richiude con una chiave nuova.
-  Quella chiave viene chiusa una volta per ogni password (`PASSWORD` e `PASSWORDS`), e il
-  risultato va su GitHub Pages: la pagina d'ingresso `index.html`, i dati cifrati della guida in
-  `guida.json` e il PDF cifrato.
-- La pagina d'ingresso scarica `guida.json` solo quando serve: con una password ricordata, o
-  quando si preme «Entra». Chi apre il link da Instagram scarica solo la facciata, leggera.
-- Chi apre il sito scrive il suo codice in «Ho il codice» e il browser decifra la guida sul suo
-  dispositivo. Può spuntare «Ricordalo su questo telefono» e non dovrà riscriverlo.
+  Quella chiave viene chiusa una volta per ogni codice (i segreti `ACCESSO_…`, più `PASSWORD`
+  e `PASSWORDS` se ci sono ancora), e il risultato va su GitHub Pages: la pagina d'ingresso
+  `index.html`, i dati cifrati della guida in `guida.json` e il PDF cifrato.
+- La pagina d'ingresso scarica `guida.json` solo quando serve: con un codice ricordato, dal
+  link personale o quando si preme «Entra». Chi apre il link da Instagram scarica solo la
+  facciata, leggera.
+- Il link personale è l'indirizzo del sito con `#entra=` e il codice. La parte dopo `#` non
+  arriva mai al server: la pagina la legge, la toglie subito dalla barra degli indirizzi, apre
+  la guida sul telefono e ricorda la chiave, così la volta dopo si apre da sola.
 
-## Più password, una per persona (anche dal telefono)
+## Accesso personale: un link per persona (anche dal telefono)
 
-Puoi dare a ogni persona una password sua: tutte aprono la stessa guida, e quando ne togli
-una smette di funzionare solo quella.
+Ogni persona ha un segreto suo su GitHub, col nome che inizia con `ACCESSO_` (per esempio
+`ACCESSO_NOME`). Tutti aprono la stessa guida; quando ne cancelli uno smette di funzionare solo
+quello. Non c'è un elenco da riscrivere: si aggiunge e si toglie un segreto alla volta.
 
-1. Sul repository: **Settings → Secrets and variables → Actions**.
-2. Crea il segreto **PASSWORDS** (**New repository secret**) o, se c'è già, tocca la sua
-   matita. Scrivi **una password per riga**, ognuna di almeno 8 caratteri. Le righe che
-   iniziano con `#` sono note per te, per esempio il nome della persona:
+**Dare l'accesso a una persona**
 
-       # Persona 1
-       prima-password
-       # Persona 2
-       seconda-password
+1. Apri **https://quaderno-di-respiro.github.io/Quaderno/accesso-nuovo.html**, scrivi il nome
+   della persona e tocca **Crea il link**. La pagina prepara nome e valore del segreto, il link
+   e il messaggio da mandare. Il codice nasce sul telefono e non va da nessuna parte; la pagina
+   lo tiene solo finché chiudi la scheda.
+2. Tocca **Apri GitHub › Nuovo segreto**: incolla il nome (`ACCESSO_…`) in *Name* e il codice
+   in *Secret*, poi **Add secret**.
+3. Tocca **Apri Actions › Pubblica** › **Run workflow** › **Run workflow** e aspetta la spunta
+   verde (un paio di minuti).
+4. Torna alla pagina, tocca **Controlla che il link funzioni** e, quando dice «Funziona», copia
+   il messaggio e mandalo solo a quella persona.
 
-3. Salva e vai su **Actions → Pubblica → Run workflow → Run workflow**.
+**Togliere l'accesso**: in **Settings → Secrets and variables → Actions** cancella il segreto
+`ACCESSO_…` della persona, poi **Actions → Pubblica → Run workflow**. Dopo un paio di minuti il
+suo link e il suo codice non aprono più il Quaderno, anche se li aveva ricordati.
 
-Per **aggiungere** una persona aggiungi una riga; per **toglierla** cancella la sua riga.
-Poi rilancia il workflow. GitHub non ti mostra più il contenuto di un segreto dopo averlo
-salvato: tieni l'elenco anche da un'altra parte sicura, così quando lo modifichi lo riscrivi
-intero. La password del segreto `PASSWORD` continua a funzionare insieme a queste.
+Chi aveva già scaricato la versione precedente sul telefono la può ancora aprire offline con il
+vecchio codice: il cambio vale per tutto quello che si apre da quel momento.
 
-Se una riga è più corta di 8 caratteri il workflow si ferma e dice quale riga sistemare,
-senza mostrare la password.
+Se un codice è più corto di 8 caratteri il workflow si ferma e dice quale segreto sistemare,
+senza mostrare il codice.
 
-## Cambiare la password (anche dal telefono)
+## La password comune di prima (`PASSWORD` e `PASSWORDS`)
 
-1. Sul repository: **Settings → Secrets and variables → Actions**.
-2. Alla voce **PASSWORD** tocca la matita, scrivi la password nuova (almeno 8 caratteri) e
-   salva con **Update secret**.
-3. Vai su **Actions → Pubblica → Run workflow → Run workflow**.
-4. Dopo un paio di minuti il sito chiede il codice nuovo a tutti, anche a chi aveva
-   spuntato «Ricordalo».
-
-Chi aveva già scaricato la versione precedente sul telefono la può ancora aprire offline con
-la vecchia password: la nuova vale per tutto quello che si apre da quel momento.
+Prima dell'accesso personale si entrava con il segreto `PASSWORD` (uguale per tutti) o con il
+segreto `PASSWORDS` (uno per riga; le righe con `#` sono note). Funzionano ancora, insieme agli
+accessi personali, finché i segreti ci sono. Per toglierli: quando tutti hanno il loro link,
+cancella i segreti `PASSWORD` e `PASSWORDS` in **Settings → Secrets and variables → Actions** e
+rilancia **Actions → Pubblica → Run workflow**. Da quel momento si entra solo con gli accessi
+personali.
 
 ## Aggiornare la guida
 
@@ -267,7 +271,9 @@ l'invito a Instagram. Ricontrolla la riga cambiata.
 
 1. Crea il repository e carica questi file (senza `_site/`).
 2. **Settings → Secrets and variables → Actions → New repository secret**:
-   `CHIAVE_SORGENTE` col contenuto di `segreti/chiave-sorgente.txt`, e `PASSWORD`.
+   `CHIAVE_SORGENTE` col contenuto di `segreti/chiave-sorgente.txt`, e almeno un accesso
+   `ACCESSO_…` con un codice di almeno 8 caratteri. Dopo la prima pubblicazione gli altri si
+   creano con la pagina `accesso-nuovo.html`.
 3. **Settings → Pages → Build and deployment → Source: GitHub Actions**.
 4. **Actions → Pubblica → Run workflow**. L'indirizzo compare nel riepilogo del workflow
    e in Settings → Pages.
