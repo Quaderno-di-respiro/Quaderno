@@ -72,6 +72,7 @@ button.link { background: none; border: 0; padding: 0; color: var(--breath); fon
         <select id="apre">
           <option value="">«Oggi»: il programma di 12 settimane</option>
           <option value="corpo-libero">«Corpo libero»: le domande e il suo allenamento</option>
+          <option value="corpo-libero:forza60">«Corpo libero» con la scheda pronta: forza e tabata, un'ora</option>
         </select>
       </div>
       <button class="btn primary grande" type="submit" style="width:100%">Crea il link</button>
@@ -115,6 +116,15 @@ button.link { background: none; border: 0; padding: 0; color: var(--breath); fon
       <p class="num">Passo 3 di 3</p>
       <h2>Manda il messaggio</h2>
       <p class="piccolo">Mandalo solo a questa persona, quando il link funziona. Niente dati sulla salute nei messaggi.</p>
+      <div class="campo">
+        <label for="apre2">La prima volta il link apre</label>
+        <select id="apre2">
+          <option value="">«Oggi»: il programma di 12 settimane</option>
+          <option value="corpo-libero">«Corpo libero»: le domande e il suo allenamento</option>
+          <option value="corpo-libero:forza60">«Corpo libero» con la scheda pronta: forza e tabata, un'ora</option>
+        </select>
+        <p class="piccolo" style="margin:6px 0 0">Puoi cambiarlo anche adesso: il codice resta lo stesso, cambia solo il link nel messaggio.</p>
+      </div>
       <label for="messaggio" class="sr">Messaggio</label>
       <textarea id="messaggio"></textarea>
       <div class="azioni">
@@ -180,14 +190,20 @@ button.link { background: none; border: 0; padding: 0; color: var(--breath); fon
   function proponiNumero() { var n = primoLibero(0); $("numero").value = n || ""; }
   function sito() { return location.origin + location.pathname.replace(/[^/]*$/, ""); }
   // vai: la parte del Quaderno che il link apre la prima volta («corpo-libero»), vuoto per «Oggi».
+  // scheda: una scheda pronta di «Corpo libero» (in 3-script.html, CL_SCHEDE), al posto delle domande.
   var PARTI = { "corpo-libero": 1 };
-  function messaggio(nome, codice, vai) {
-    var link = sito() + "#entra=" + codice + (PARTI[vai] ? "&vai=" + vai : "");
+  var SCHEDE = { forza60: "Forza e tabata, un'ora" };
+  function leggiApre(v) { var p = String(v || "").split(":"); return { vai: PARTI[p[0]] ? p[0] : "", scheda: PARTI[p[0]] && SCHEDE[p[1]] ? p[1] : "" }; }
+  function valoreApre(b) { return (b.vai || "") + (b.scheda ? ":" + b.scheda : ""); }
+  function messaggio(nome, codice, vai, scheda) {
+    var link = sito() + "#entra=" + codice + (PARTI[vai] ? "&vai=" + vai : "") + (PARTI[vai] && SCHEDE[scheda] ? "&scheda=" + scheda : "");
+    var dopo = " Le volte dopo la ritrovi nella pagina «Oggi», sotto il pulsante grande, o nel menu in alto.\n\n";
+    var due = vai !== "corpo-libero" ? ""
+      : SCHEDE[scheda] ? "2. Si apre su «Corpo libero» con la scheda che ho preparato per te (" + SCHEDE[scheda] + "): radici, forza e tabata, con le dosi che salgono ogni settimana. Se vuoi adattarla ai tuoi attrezzi e al tuo tempo, puoi anche rispondere alle domande." + dopo
+      : "2. Si apre su «Corpo libero»: rispondi alle domande (attrezzi, tempo, livello) e trovi il tuo allenamento, con le dosi che salgono ogni settimana." + dopo;
     return "Ciao " + nome + ", ecco il tuo Quaderno del Respiro. Link e codice sono solo tuoi: non girarli ad altri.\n\n" +
       "1. Tocca il link, meglio da Safari (iPhone) o Chrome (Android): il Quaderno si apre e il telefono lo ricorda.\n" + link + "\n\n" +
-      (vai === "corpo-libero" ? "2. Si apre su «Corpo libero»: rispondi alle domande (attrezzi, tempo, livello) e trovi il tuo allenamento, con le dosi che salgono ogni settimana. Le volte dopo lo ritrovi nella pagina «Oggi», sotto il pulsante grande, o nel menu in alto.\n\n" +
-        "3. Aggiungilo alla schermata Home: così lo apri come un'app, anche senza internet.\n\n"
-        : "2. Aggiungilo alla schermata Home: così lo apri come un'app, anche senza internet.\n\n") +
+      due + (due ? "3. " : "2. ") + "Aggiungilo alla schermata Home: così lo apri come un'app, anche senza internet.\n\n" +
       "Se ti chiede il codice, è: " + codice;
   }
   function leggiBozza() { try { return JSON.parse(sessionStorage.getItem(BOZZA) || "null"); } catch (e) { return null; } }
@@ -196,7 +212,8 @@ button.link { background: none; border: 0; padding: 0; color: var(--breath); fon
   function mostra(b) {
     $("s-nome").textContent = nomeSegreto(b.n);
     $("s-codice").textContent = b.codice;
-    $("messaggio").value = messaggio(b.nome, b.codice, b.vai);
+    $("messaggio").value = messaggio(b.nome, b.codice, b.vai, b.scheda);
+    $("apre2").value = valoreApre(b);
     $("controllo-e").textContent = ""; $("controllo-e").className = "";
     $("crea").hidden = true; $("fatto").hidden = false;
   }
@@ -210,12 +227,20 @@ button.link { background: none; border: 0; padding: 0; color: var(--breath); fon
     var n = parseInt($("numero").value, 10);
     if (!nome) return;
     if (!(n >= 1 && n <= MASSIMO)) { $("numero").setCustomValidity("Scegli un numero da 1 a " + MASSIMO + "."); $("numero").reportValidity(); return; }
-    attuale = { nome: nome, n: n, codice: nuovoCodice(), vai: $("apre").value };
+    var ap = leggiApre($("apre").value);
+    attuale = { nome: nome, n: n, codice: nuovoCodice(), vai: ap.vai, scheda: ap.scheda };
     scriviBozza(attuale);
     mostra(attuale);
     window.scrollTo(0, 0);
   });
   $("numero").addEventListener("input", function () { this.setCustomValidity(""); });
+  // Cambiare dove si apre il link a codice già creato: stesso codice, solo il messaggio cambia.
+  $("apre2").addEventListener("change", function () {
+    if (!attuale) return;
+    var ap = leggiApre(this.value);
+    attuale.vai = ap.vai; attuale.scheda = ap.scheda; scriviBozza(attuale);
+    $("messaggio").value = messaggio(attuale.nome, attuale.codice, attuale.vai, attuale.scheda);
+  });
   // GitHub dice che il nome c'è già: stesso codice, numero dopo (il primo libero in questo elenco).
   $("dopo").addEventListener("click", function () {
     if (!attuale) return;

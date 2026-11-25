@@ -43,6 +43,10 @@ GitHub lo ferma come sospetto e non lo esegue finché qualcuno non lo approva (�
    `&vai=corpo-libero` e, entrati, il Quaderno si apre sulle domande e sull'allenamento a corpo
    libero, invece che su «Oggi». La porta lo legge solo nel link (`strumenti/porta.html`); le
    volte dopo il Quaderno si apre su «Oggi», con il link alla sessione di corpo libero.
+   Con **«Corpo libero» con la scheda pronta** il link finisce anche con `&scheda=forza60`: la
+   persona trova già la sua scheda, senza domande, e può comunque rispondere alle domande per
+   adattarla. Le schede pronte stanno in `CL_SCHEDE` (guida, `3-script.html`) e in `SCHEDE` qui
+   in `accesso-nuovo.html`. A codice già creato si cambia nel Passo 3: il codice resta lo stesso.
 2. Tocca **Apri GitHub › Nuovo segreto**: incolla il nome (`ACCESSO_` e il numero) in *Name* e
    il codice in *Secret*, poi **Add secret**. Se GitHub dice che il nome c'è già, nella pagina
    tocca «usa il numero dopo».
