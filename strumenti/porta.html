@@ -650,10 +650,13 @@ footer .marchio { font-size: .95rem; }
   // Il link personale è l'indirizzo del sito con #entra=<codice>. La parte dopo # non arriva mai al
   // server; qui si legge e si toglie subito dall'indirizzo, così non resta nella barra né in un
   // segnalibro o in una condivisione della pagina.
-  var dalLink = null;
+  var dalLink = null, vaiA = null;
   var trovato = /^#entra=([^&]+)/.exec(location.hash);
   if (trovato) {
     try { dalLink = decodeURIComponent(trovato[1]); } catch (e) { dalLink = trovato[1]; }
+    // &vai=<parte>: la parte del Quaderno da aprire appena entrati (per esempio «corpo-libero»).
+    var verso = /&vai=([a-z0-9-]{1,40})(?:&|$)/.exec(location.hash);
+    if (verso) vaiA = verso[1];
     try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
   }
   // La facciata compare solo quando la guida non si apre da sola (vedi lo script in testa).
@@ -713,7 +716,12 @@ footer .marchio { font-size: .95rem; }
     // La guida decifrata può aprire anche il PDF cifrato con la stessa chiave.
     window.QGPorta = { decifra: function (buf) { var u = new Uint8Array(buf); return crypto.subtle.decrypt({ name: "AES-GCM", iv: u.slice(0, 12) }, k, u.slice(12)); } };
     // Solo a pagina caricata document.open() sostituisce la porta: prima accoderebbe la guida.
-    var scrivi = function () { if (window.QGFacciata) window.QGFacciata.ferma(); document.open(); document.write(html); document.close(); };
+    // Col link «&vai=» l'indirizzo prende la parte scelta un attimo prima della guida, che la apre da sola.
+    var scrivi = function () {
+      if (window.QGFacciata) window.QGFacciata.ferma();
+      if (vaiA) { try { history.replaceState(null, "", location.pathname + location.search + "#" + vaiA); } catch (e) {} vaiA = null; }
+      document.open(); document.write(html); document.close();
+    };
     if (document.readyState === "complete") scrivi(); else window.addEventListener("load", scrivi);
   }
   function importa(raw) { return crypto.subtle.importKey("raw", b64(raw), "AES-GCM", true, ["decrypt"]); }

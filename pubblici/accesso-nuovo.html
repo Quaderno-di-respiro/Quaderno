@@ -34,6 +34,7 @@ textarea { font: inherit; font-size: .95rem; width: 100%; min-height: 15em; padd
 #controllo-e.no { color: var(--err); }
 ol.istr { padding-left: 1.2em; margin: 0 0 .6em; }
 ol.istr li { margin: 0 0 .3em; }
+select { font: inherit; width: 100%; min-height: 50px; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--bordo); background: var(--bg); color: var(--ink); }
 input[type=number] { font: inherit; width: 8em; min-height: 50px; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--bordo); background: var(--bg); color: var(--ink); }
 button.link { background: none; border: 0; padding: 0; color: var(--breath); font: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 .elenco-accessi { list-style: none; padding: 0; margin: 0; }
@@ -65,6 +66,13 @@ button.link { background: none; border: 0; padding: 0; color: var(--breath); fon
         <label for="numero">Numero dell'accesso (da 1 a 50)</label>
         <input type="number" id="numero" min="1" max="50" step="1" inputmode="numeric" required>
         <p class="piccolo" style="margin:6px 0 0">Ti propongo il primo libero tra quelli creati da questo telefono. Se hai creato accessi da un altro telefono, controlla su GitHub quali numeri ci sono già.</p>
+      </div>
+      <div class="campo">
+        <label for="apre">La prima volta il link apre</label>
+        <select id="apre">
+          <option value="">«Oggi»: il programma di 12 settimane</option>
+          <option value="corpo-libero">«Corpo libero»: le domande e il suo allenamento</option>
+        </select>
       </div>
       <button class="btn primary grande" type="submit" style="width:100%">Crea il link</button>
     </form>
@@ -171,11 +179,15 @@ button.link { background: none; border: 0; padding: 0; color: var(--breath); fon
   }
   function proponiNumero() { var n = primoLibero(0); $("numero").value = n || ""; }
   function sito() { return location.origin + location.pathname.replace(/[^/]*$/, ""); }
-  function messaggio(nome, codice) {
-    var link = sito() + "#entra=" + codice;
+  // vai: la parte del Quaderno che il link apre la prima volta («corpo-libero»), vuoto per «Oggi».
+  var PARTI = { "corpo-libero": 1 };
+  function messaggio(nome, codice, vai) {
+    var link = sito() + "#entra=" + codice + (PARTI[vai] ? "&vai=" + vai : "");
     return "Ciao " + nome + ", ecco il tuo Quaderno del Respiro. Link e codice sono solo tuoi: non girarli ad altri.\n\n" +
       "1. Tocca il link, meglio da Safari (iPhone) o Chrome (Android): il Quaderno si apre e il telefono lo ricorda.\n" + link + "\n\n" +
-      "2. Aggiungilo alla schermata Home: così lo apri come un'app, anche senza internet.\n\n" +
+      (vai === "corpo-libero" ? "2. Si apre su «Corpo libero»: rispondi alle domande (attrezzi, tempo, livello) e trovi il tuo allenamento, con le dosi che salgono ogni settimana. Le volte dopo lo ritrovi nella pagina «Oggi», sotto il pulsante grande, o nel menu in alto.\n\n" +
+        "3. Aggiungilo alla schermata Home: così lo apri come un'app, anche senza internet.\n\n"
+        : "2. Aggiungilo alla schermata Home: così lo apri come un'app, anche senza internet.\n\n") +
       "Se ti chiede il codice, è: " + codice;
   }
   function leggiBozza() { try { return JSON.parse(sessionStorage.getItem(BOZZA) || "null"); } catch (e) { return null; } }
@@ -184,7 +196,7 @@ button.link { background: none; border: 0; padding: 0; color: var(--breath); fon
   function mostra(b) {
     $("s-nome").textContent = nomeSegreto(b.n);
     $("s-codice").textContent = b.codice;
-    $("messaggio").value = messaggio(b.nome, b.codice);
+    $("messaggio").value = messaggio(b.nome, b.codice, b.vai);
     $("controllo-e").textContent = ""; $("controllo-e").className = "";
     $("crea").hidden = true; $("fatto").hidden = false;
   }
@@ -198,7 +210,7 @@ button.link { background: none; border: 0; padding: 0; color: var(--breath); fon
     var n = parseInt($("numero").value, 10);
     if (!nome) return;
     if (!(n >= 1 && n <= MASSIMO)) { $("numero").setCustomValidity("Scegli un numero da 1 a " + MASSIMO + "."); $("numero").reportValidity(); return; }
-    attuale = { nome: nome, n: n, codice: nuovoCodice() };
+    attuale = { nome: nome, n: n, codice: nuovoCodice(), vai: $("apre").value };
     scriviBozza(attuale);
     mostra(attuale);
     window.scrollTo(0, 0);
@@ -222,7 +234,7 @@ button.link { background: none; border: 0; padding: 0; color: var(--breath); fon
     }
     attuale = null; scriviBozza(null);
     disegnaElenco(); proponiNumero();
-    $("nome").value = ""; $("fatto").hidden = true; $("crea").hidden = false; $("nome").focus();
+    $("nome").value = ""; $("apre").value = ""; $("fatto").hidden = true; $("crea").hidden = false; $("nome").focus();
   });
 
   // Copia: negli appunti se il browser lo permette, altrimenti seleziona il testo.

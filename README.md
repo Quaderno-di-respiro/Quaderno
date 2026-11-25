@@ -39,6 +39,10 @@ GitHub lo ferma come sospetto e non lo esegue finché qualcuno non lo approva (�
    della persona, controlla il numero proposto e tocca **Crea il link**. La pagina prepara nome
    e valore del segreto, il link e il messaggio da mandare. Il codice nasce sul telefono e non
    va da nessuna parte; la pagina lo tiene solo finché chiudi la scheda.
+   In «La prima volta il link apre» puoi scegliere **Corpo libero**: il link finisce con
+   `&vai=corpo-libero` e, entrati, il Quaderno si apre sulle domande e sull'allenamento a corpo
+   libero, invece che su «Oggi». La porta lo legge solo nel link (`strumenti/porta.html`); le
+   volte dopo il Quaderno si apre su «Oggi», con il link alla sessione di corpo libero.
 2. Tocca **Apri GitHub › Nuovo segreto**: incolla il nome (`ACCESSO_` e il numero) in *Name* e
    il codice in *Secret*, poi **Add secret**. Se GitHub dice che il nome c'è già, nella pagina
    tocca «usa il numero dopo».
